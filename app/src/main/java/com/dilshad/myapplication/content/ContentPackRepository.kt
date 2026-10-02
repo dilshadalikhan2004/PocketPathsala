@@ -49,6 +49,8 @@ class ContentPackRepository(private val database: AppDatabase) {
         dao.getLatestSetupJob(packId, version)
     }
 
+    suspend fun deleteBook(bookId: String) = withContext(Dispatchers.IO) { database.deleteCatalogBook(bookId) }
+
     suspend fun getOrCreateChapterQuiz(chapter: String): CachedChapterQuiz? =
         withContext(Dispatchers.IO) { RoomContentRetriever(dao, database).getOrCreateChapterQuiz(chapter) }
 

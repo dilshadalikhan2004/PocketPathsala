@@ -15,3 +15,6 @@ The top bar displays a subtle offline badge:
 * `● Offline AI Engine Ready`
 
 No background cloud network requests, tracking, or telemetry are ever made.
+
+## Curriculum files
+Catalog URLs identify official sources only. Acquired books are stored in private app storage for offline use; the app does not upload downloaded books.

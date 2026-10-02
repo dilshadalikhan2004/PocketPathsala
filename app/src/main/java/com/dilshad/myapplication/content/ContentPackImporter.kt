@@ -24,7 +24,8 @@ data class PackMetadata(
     val board: String,
     val classLevel: String,
     val subject: String,
-    val licensingNote: String
+    val licensingNote: String,
+    val catalogBookId: String? = null
 )
 
 sealed interface SetupProgress {
@@ -61,7 +62,7 @@ class ContentPackImporter(
                 ContentChunkEntity(UUID.randomUUID().toString(), metadata.id, metadata.version, chunk.chapter, chunk.section, chunk.pageNumber, chunk.text, chunk.citation)
             }
             emitAndSave(SetupProgress.CachingQuizzes(0, 0), metadata, jobId)
-            repository.saveImportedPack(ContentPackEntity(metadata.id, metadata.version, metadata.bookTitle, metadata.board, metadata.classLevel, metadata.subject, metadata.licensingNote), chunks)
+            repository.saveImportedPack(ContentPackEntity(metadata.id, metadata.version, metadata.bookTitle, metadata.board, metadata.classLevel, metadata.subject, metadata.licensingNote, catalogBookId = metadata.catalogBookId), chunks)
             emitAndSave(SetupProgress.Ready(1, 1), metadata, jobId)
         } catch (error: Exception) {
             val message = error.message ?: error::class.simpleName ?: "Import failed"
@@ -87,7 +88,11 @@ class ContentPackImporter(
     }
 
     private suspend fun extract(uri: Uri, report: suspend (SetupProgress) -> Unit): List<ExtractedPage> {
-        val mime = context.contentResolver.getType(uri)?.lowercase() ?: ""
+        val mime = context.contentResolver.getType(uri)?.lowercase() ?: when {
+            uri.path?.lowercase()?.endsWith(".pdf") == true -> "application/pdf"
+            uri.path?.lowercase()?.endsWith(".txt") == true -> "text/plain"
+            else -> ""
+        }
         requireSupportedMime(mime)
         return when {
             mime == "application/pdf" -> extractPdf(uri, report)

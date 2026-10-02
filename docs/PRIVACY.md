@@ -7,3 +7,5 @@
    * **Export Learning Data**: Export progress, mastery scores, and quiz history to a local JSON file (`Settings -> Export Data`).
    * **Delete Local Data**: Instant local wipe of student data (`Settings -> Delete All Data`).
 4. **Permissions**: Camera and Microphone permissions are requested explicitly only when using Camera Scan or Voice Tutor modes.
+
+5. **Curriculum downloads**: Catalog URLs are official-source metadata. Downloaded or locally imported books stay in private app storage, and no downloaded book is uploaded.
