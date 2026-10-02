@@ -21,7 +21,7 @@ import com.dilshad.myapplication.data.db.entities.*
         CachedQuizQuestionEntity::class, SetupJobEntity::class, GenerationRequestEntity::class,
         BenchmarkResultEntity::class, AcquiredBookEntity::class
     ],
-    version = 7,
+    version = 8,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -50,7 +50,7 @@ abstract class AppDatabase : RoomDatabase() {
         fun getInstance(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "lentera_database.db")
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7).build()
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8).build()
                 INSTANCE = instance
                 instance
             }
@@ -101,6 +101,12 @@ abstract class AppDatabase : RoomDatabase() {
                 database.execSQL("CREATE INDEX IF NOT EXISTS index_acquired_books_updatedAt ON acquired_books(updatedAt)")
                 database.execSQL("ALTER TABLE content_packs ADD COLUMN catalogBookId TEXT")
                 database.execSQL("CREATE INDEX IF NOT EXISTS index_content_packs_catalogBookId ON content_packs(catalogBookId)")
+            }
+        }
+
+        internal val MIGRATION_7_8 = object : androidx.room.migration.Migration(7, 8) {
+            override fun migrate(database: androidx.sqlite.db.SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE content_packs ADD COLUMN language TEXT NOT NULL DEFAULT 'English'")
             }
         }
 

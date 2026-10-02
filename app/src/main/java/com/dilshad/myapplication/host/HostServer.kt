@@ -4,6 +4,7 @@ import android.content.res.AssetManager
 import com.dilshad.myapplication.content.ContentDao
 import com.dilshad.myapplication.content.ContentPackRepository
 import com.dilshad.myapplication.content.ContentRetriever
+import com.dilshad.myapplication.content.RetrievalFilter
 import com.dilshad.myapplication.content.RetrievedChunk
 import com.dilshad.myapplication.model.GenerationEvent
 import com.dilshad.myapplication.model.GenerationOptions
@@ -113,7 +114,7 @@ class HostServer(
             throw HostException(400, "INVALID_CHAPTER", "Unknown chapter.")
         if (language !in setOf("English", "Hindi"))
             throw HostException(400, "INVALID_LANGUAGE", "Language must be English or Hindi.")
-        val evidence = retriever.retrieve(question, request.chapterId, 3)
+        val evidence = retriever.retrieve(question, RetrievalFilter(chapter = request.chapterId), 3)
             .filter { it.score >= 0.25 }
         val id = java.util.UUID.randomUUID().toString()
         val channel = Channel<HostSseEvent>(Channel.BUFFERED)
@@ -241,3 +242,5 @@ class HostServer(
 }
 
 private class HostException(val status: Int, val code: String, override val message: String) : Exception(message)
+
+

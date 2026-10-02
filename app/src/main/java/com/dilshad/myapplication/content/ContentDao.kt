@@ -10,6 +10,18 @@ interface ContentDao {
     @Query("SELECT * FROM content_packs WHERE isActive = 1 ORDER BY createdAt DESC LIMIT 1")
     suspend fun getActivePack(): ContentPackEntity?
 
+    @Query("""
+        SELECT p.* FROM content_packs p
+        INNER JOIN acquired_books a ON a.bookId = p.catalogBookId AND a.state = 'READY'
+        WHERE p.isActive = 1 AND p.catalogBookId IS NOT NULL
+          AND (:classLevel IS NULL OR p.classLevel = CAST(:classLevel AS TEXT))
+          AND (:subject IS NULL OR LOWER(p.subject) = LOWER(:subject))
+          AND (:language IS NULL OR LOWER(p.language) = LOWER(:language))
+          AND (:bookId IS NULL OR p.catalogBookId = :bookId)
+        ORDER BY p.createdAt DESC LIMIT 1
+    """)
+    suspend fun getActiveReadyCatalogPack(classLevel: Int?, subject: String?, language: String?, bookId: String?): ContentPackEntity?
+
     @Query("SELECT DISTINCT chapter FROM content_chunks WHERE packId = :packId AND version = :version ORDER BY chapter")
     suspend fun getChapters(packId: String, version: Int): List<String>
 

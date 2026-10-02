@@ -24,7 +24,7 @@ class HostServerTest {
         val dao = FakeDao()
         dao.chunks += chunk
         return HostServer(dao, object : ContentRetriever {
-            override suspend fun retrieve(query: String, chapter: String?, limit: Int) =
+            override suspend fun retrieve(query: String, filter: RetrievalFilter, limit: Int) =
                 if (evidence) listOf(RetrievedChunk(chunk.sourceText, chunk.chapter, chunk.section, 1, .9, chunk.sourceCitation)) else emptyList()
         }, GenerationQueue(2, DeterministicTutorModel()))
     }
@@ -59,7 +59,7 @@ class HostServerTest {
     @Test fun queueCapacityReturnsExplicitResponse() = runBlocking {
         val release = CompletableDeferred<Unit>()
         val host = HostServer(FakeDao().also { it.chunks += chunk }, object : ContentRetriever {
-            override suspend fun retrieve(query: String, chapter: String?, limit: Int) =
+            override suspend fun retrieve(query: String, filter: RetrievalFilter, limit: Int) =
                 listOf(RetrievedChunk(chunk.sourceText, chunk.chapter, chunk.section, 1, .9, chunk.sourceCitation))
         }, GenerationQueue(1, BlockingTutorModel(release)))
         val body = """{"chapterId":"Light","question":"reflection","language":"English"}"""
@@ -72,7 +72,7 @@ class HostServerTest {
         val host = HostServer(
             FakeDao(),
             object : ContentRetriever {
-                override suspend fun retrieve(query: String, chapter: String?, limit: Int) = emptyList<RetrievedChunk>()
+                override suspend fun retrieve(query: String, filter: RetrievalFilter, limit: Int) = emptyList<RetrievedChunk>()
             },
             GenerationQueue(1),
             staticContent = mapOf(
@@ -98,6 +98,7 @@ class HostServerTest {
     private class FakeDao : ContentDao {
         val chunks = mutableListOf<ContentChunkEntity>()
         override suspend fun getActivePack() = pack
+        override suspend fun getActiveReadyCatalogPack(classLevel: Int?, subject: String?, language: String?, bookId: String?) = pack
         override suspend fun getChapters(packId: String, version: Int) = chunks.map { it.chapter }.distinct()
         override suspend fun getChunksForSearch(packId: String, version: Int, chapter: String?) = chunks.filter { chapter == null || it.chapter == chapter }
         override suspend fun insertPack(pack: ContentPackEntity)=1L
@@ -136,3 +137,4 @@ class HostServerTest {
         }
     }
 }
+

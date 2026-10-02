@@ -25,7 +25,8 @@ data class PackMetadata(
     val classLevel: String,
     val subject: String,
     val licensingNote: String,
-    val catalogBookId: String? = null
+    val catalogBookId: String? = null,
+    val language: String = "English"
 )
 
 sealed interface SetupProgress {
@@ -62,7 +63,7 @@ class ContentPackImporter(
                 ContentChunkEntity(UUID.randomUUID().toString(), metadata.id, metadata.version, chunk.chapter, chunk.section, chunk.pageNumber, chunk.text, chunk.citation)
             }
             emitAndSave(SetupProgress.CachingQuizzes(0, 0), metadata, jobId)
-            repository.saveImportedPack(ContentPackEntity(metadata.id, metadata.version, metadata.bookTitle, metadata.board, metadata.classLevel, metadata.subject, metadata.licensingNote, catalogBookId = metadata.catalogBookId), chunks)
+            repository.saveImportedPack(ContentPackEntity(metadata.id, metadata.version, metadata.bookTitle, metadata.board, metadata.classLevel, metadata.subject, metadata.licensingNote, catalogBookId = metadata.catalogBookId, language = metadata.language), chunks)
             emitAndSave(SetupProgress.Ready(1, 1), metadata, jobId)
         } catch (error: Exception) {
             val message = error.message ?: error::class.simpleName ?: "Import failed"

@@ -6,8 +6,16 @@ import com.google.gson.Gson
 import java.util.UUID
 
 interface ContentRetriever {
-    suspend fun retrieve(query: String, chapter: String?, limit: Int): List<RetrievedChunk>
+    suspend fun retrieve(query: String, filter: RetrievalFilter = RetrievalFilter(), limit: Int = 3): List<RetrievedChunk>
 }
+
+data class RetrievalFilter(
+    val classLevel: Int? = null,
+    val subject: String? = null,
+    val language: String? = null,
+    val bookId: String? = null,
+    val chapter: String? = null
+)
 
 data class RetrievedChunk(
     val text: String,
@@ -15,7 +23,9 @@ data class RetrievedChunk(
     val section: String,
     val pageNumber: Int,
     val score: Double,
-    val citation: String
+    val citation: String,
+    val bookId: String? = null,
+    val bookTitle: String? = null
 ) {
     @Deprecated("Use pageNumber")
     val page: Int get() = pageNumber
@@ -39,17 +49,17 @@ class RoomContentRetriever(
 ) : ContentRetriever {
     private val gson = Gson()
 
-    override suspend fun retrieve(query: String, chapter: String?, limit: Int): List<RetrievedChunk> {
+    override suspend fun retrieve(query: String, filter: RetrievalFilter, limit: Int): List<RetrievedChunk> {
         if (limit <= 0) return emptyList()
         val tokens = tokenize(query)
         if (tokens.isEmpty()) return emptyList()
-        val pack = dao.getActivePack() ?: return emptyList()
-        return dao.getChunksForSearch(pack.id, pack.version, chapter)
+        val pack = dao.getActiveReadyCatalogPack(filter.classLevel, filter.subject, filter.language, filter.bookId) ?: return emptyList()
+        return dao.getChunksForSearch(pack.id, pack.version, filter.chapter)
             .map { chunk ->
                 val documentTokens = tokenize("${chunk.chapter} ${chunk.section} ${chunk.sourceText}")
                 val overlap = tokens.count { it in documentTokens }
                 val score = overlap.toDouble() / tokens.distinct().size.toDouble()
-                RetrievedChunk(chunk.sourceText, chunk.chapter, chunk.section, chunk.pageNumber, score, chunk.sourceCitation)
+                RetrievedChunk(chunk.sourceText, chunk.chapter, chunk.section, chunk.pageNumber, score, chunk.sourceCitation, pack.catalogBookId, pack.bookTitle)
             }
             .filter { it.score >= confidenceThreshold }
             .sortedWith(compareByDescending<RetrievedChunk> { it.score }.thenBy { it.pageNumber }.thenBy { it.citation })

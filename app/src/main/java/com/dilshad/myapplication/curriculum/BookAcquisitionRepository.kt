@@ -137,7 +137,7 @@ class BookAcquisitionRepository(
             }
             save(bookId, entry, AcquisitionState.ACQUIRED, privateFile.path, privateFile.length(), privateFile.length(), null, uri.toString())
             save(bookId, entry, AcquisitionState.INDEXING, privateFile.path, privateFile.length(), privateFile.length(), null, uri.toString())
-            val metadata = PackMetadata(bookId, catalogVersion(), entry.title, "NCERT", entry.classLevel.toString(), entry.subject, entry.licensingNote, bookId)
+            val metadata = PackMetadata(bookId, catalogVersion(), entry.title, "NCERT", entry.classLevel.toString(), entry.subject, entry.licensingNote, bookId, entry.language)
             val importer = ContentPackImporter(context, contentPacks)
             importer.import(Uri.fromFile(privateFile), metadata).collect { progress ->
                 send(progress)

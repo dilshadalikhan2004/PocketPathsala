@@ -15,6 +15,7 @@ data class ContentPackEntity(
     val licensingNote: String,
     val isActive: Boolean = false,
     val catalogBookId: String? = null,
+    val language: String = "English",
     val createdAt: Long = System.currentTimeMillis()
 )
 

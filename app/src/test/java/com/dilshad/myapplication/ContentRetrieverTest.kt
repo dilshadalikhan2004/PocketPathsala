@@ -12,7 +12,7 @@ class ContentRetrieverTest {
         dao.chunks += ContentChunkEntity("a", "pack", 3, "Algebra", "Linear", 7, "A line has a slope.", "Book, Algebra, Linear, p. 7")
         dao.chunks += ContentChunkEntity("b", "pack", 3, "Geometry", "Angles", 2, "Angles meet at a vertex.", "Book, Geometry, Angles, p. 2")
 
-        val result = RoomContentRetriever(dao).retrieve("slope", chapter = "Algebra", limit = 5)
+        val result = RoomContentRetriever(dao).retrieve("slope", RetrievalFilter(chapter = "Algebra"), 5)
 
         assertEquals(1, result.size)
         assertEquals("Book, Algebra, Linear, p. 7", result.single().citation)
@@ -24,7 +24,7 @@ class ContentRetrieverTest {
         val dao = FakeContentDao()
         dao.chunks += ContentChunkEntity("a", "pack", 3, "Algebra", "Linear", 7, "A line has a slope.", "citation")
 
-        assertTrue(RoomContentRetriever(dao).retrieve("photosynthesis", chapter = null, limit = 5).isEmpty())
+        assertTrue(RoomContentRetriever(dao).retrieve("photosynthesis", RetrievalFilter(), 5).isEmpty())
     }
 
     @Test
@@ -55,9 +55,10 @@ class ContentRetrieverTest {
         val chunks = mutableListOf<ContentChunkEntity>()
         val savedQuizzes = mutableListOf<CachedQuizEntity>()
         val savedQuestions = mutableListOf<CachedQuizQuestionEntity>()
-        private val pack = ContentPackEntity("pack", 3, "Book", "Board", "10", "Science", "local", true)
+        private val pack = ContentPackEntity("pack", 3, "Book", "Board", "10", "Science", "local", true, "book", "English")
 
         override suspend fun getActivePack() = pack
+        override suspend fun getActiveReadyCatalogPack(classLevel: Int?, subject: String?, language: String?, bookId: String?) = pack
         override suspend fun getChapters(packId: String, version: Int) = chunks.map { it.chapter }.distinct()
         override suspend fun getChunksForSearch(packId: String, version: Int, chapter: String?) =
             chunks.filter { chapter == null || it.chapter == chapter }
