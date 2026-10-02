@@ -188,8 +188,13 @@ class BookAcquisitionRepository(
         val path = uri.path?.lowercase().orEmpty()
         val signature = context.contentResolver.openInputStream(uri)?.use { input ->
             val bytes = ByteArray(PDF_SIGNATURE.size)
-            val count = input.read(bytes)
-            if (count == bytes.size) bytes else null
+            var offset = 0
+            while (offset < bytes.size) {
+                val count = input.read(bytes, offset, bytes.size - offset)
+                if (count < 0) break
+                offset += count
+            }
+            if (offset == bytes.size) bytes else null
         }
         return resolveMime(provided, path, signature)
     }
