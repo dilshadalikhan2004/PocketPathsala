@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102a43">
+  <title>PocketPathshala</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<main class="shell">
+  <header class="topbar">
+    <div><p class="eyebrow">OFFLINE STUDY HOST</p><h1>PocketPathshala</h1></div>
+    <span id="connection" class="pill pending">Connecting…</span>
+  </header>
+  <section class="panel controls">
+    <div class="row split">
+      <label>Chapter <select id="chapter"><option value="">Loading chapters…</option></select></label>
+      <label>Language <select id="language"><option>English</option><option>Hindi</option></select></label>
+    </div>
+    <label>Answer style <select id="mode"><option value="SHORT">Short answer</option><option value="BOARD_EXAM">Board-exam answer</option></select></label>
+    <label for="question">Ask from this pack</label>
+    <textarea id="question" rows="4" maxlength="2000" placeholder="e.g. Explain reflection of light"></textarea>
+    <div class="row actions"><button id="ask" class="primary">Ask question</button><button id="retry" hidden>Retry</button><button id="quiz">Open cached quiz</button></div>
+    <p id="status" class="status" role="status">Checking the host…</p>
+  </section>
+  <section id="answer-panel" class="panel" hidden>
+    <div class="section-heading"><h2>Answer</h2><span id="provider" class="muted"></span></div>
+    <div id="answer" class="answer"></div>
+    <h3>Citations</h3><div id="citations" class="cards"></div>
+    <details><summary>Evidence used</summary><div id="evidence" class="evidence"></div></details>
+  </section>
+  <section id="quiz-panel" class="panel" hidden><div class="section-heading"><h2 id="quiz-title">Cached quiz</h2><span class="muted">Works while generation is busy</span></div><div id="quiz-list"></div></section>
+  <footer>Local pack only · no account · works without internet</footer>
+</main>
+<script src="/app.js"></script>
+</body>
+</html>
