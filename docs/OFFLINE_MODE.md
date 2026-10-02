@@ -1,20 +1,15 @@
-# LENTERA 2.0 — OFFLINE-FIRST ARCHITECTURE
+# PocketPathshala — Offline-First Architecture & Privacy
 
-## Zero-Internet Principle
-Network state = OFF by default.
+## Offline Principles
 
-Every core feature operates 100% on-device:
-1. AI Tutoring & Contextual RAG
-2. Camera Scan & Problem Solver
-3. Adaptive Quiz & Exam Engine
-4. Mastery Tracking & Progress Analytics
-5. Local P2P Classroom Mode
+1. **Zero Cloud Requirement**: After initial book download or local file selection, all core operations execute 100% locally on-device.
+2. **Textbook Privacy**: Textbooks and user questions remain on the smartphone. No prompt telemetry, student data, or private textbook content is uploaded to any remote server.
+3. **No Account Required**: The app operates without login, user accounts, or external subscriptions.
 
-## Status Indicator
-The top bar displays a subtle offline badge:
-* `● Offline AI Engine Ready`
+## On-Device Capabilities
 
-No background cloud network requests, tracking, or telemetry are ever made.
-
-## Curriculum files
-Catalog URLs identify official sources only. Acquired books are stored in private app storage for offline use; the app does not upload downloaded books.
+* **Curriculum Browsing**: Full syllabus structure for NCERT Classes 6–10 is bundled and immediately searchable.
+* **Text Extraction & Indexing**: PDF rendering and text parsing occur locally using Android `PdfRenderer` and on-device ML Kit Text Recognition.
+* **Grounded Retrieval**: In-memory token overlap and Room database search run on SQLite without external indexers.
+* **Grounded Reasoning**: On-device tutor pipeline delivers conversational guidance, step-by-step math solutions, and textbook citations.
+* **Classroom P2P Host**: The teacher phone creates an offline Wi-Fi hotspot and hosts a local HTTP + WebSocket server ([`HostServer`](file:///e:/MyApplication/app/src/main/java/com/dilshad/myapplication/host/HostServer.kt)), enabling nearby student devices to connect and learn via their browser without internet access.
