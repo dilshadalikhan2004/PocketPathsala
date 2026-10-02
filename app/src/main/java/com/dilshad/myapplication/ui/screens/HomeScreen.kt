@@ -33,7 +33,8 @@ fun HomeScreen(
     onNavigateToScan: () -> Unit,
     onNavigateToPractice: () -> Unit,
     onNavigateToClassroom: () -> Unit,
-    onStartRemedialLesson: () -> Unit
+    onStartRemedialLesson: () -> Unit,
+    onNavigateToCurriculum: () -> Unit = {}
 ) {
     val context = LocalContext.current
     val db = remember { AppDatabase.getInstance(context) }
@@ -241,6 +242,16 @@ fun HomeScreen(
                     modifier = Modifier.weight(1f),
                     onClick = onNavigateToClassroom
                 )
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            OutlinedButton(
+                onClick = onNavigateToCurriculum,
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Icon(Icons.AutoMirrored.Filled.MenuBook, contentDescription = null, modifier = Modifier.size(18.dp))
+                Spacer(modifier = Modifier.width(8.dp))
+                Text("Browse & Download NCERT Textbooks (Classes 6–10)", fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
             }
         }
 

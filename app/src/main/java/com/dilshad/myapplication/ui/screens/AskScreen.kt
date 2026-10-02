@@ -18,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DeleteSweep
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.MicOff
@@ -42,16 +43,22 @@ import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import java.util.UUID
 
+import com.dilshad.myapplication.content.RetrievalFilter
+import com.dilshad.myapplication.curriculum.BookCatalogEntry
+import com.dilshad.myapplication.curriculum.CurriculumCatalogRepository
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AskScreen(
     initialPrompt: String? = null,
+    initialBookId: String? = null,
     onPromptConsumed: (() -> Unit)? = null
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val db = remember { AppDatabase.getInstance(context) }
     val repository = remember { LenteraRepository(db) }
+    val catalogRepo = remember { CurriculumCatalogRepository(context) }
     val gson = remember { Gson() }
 
     var messages by remember { mutableStateOf(listOf<MessageEntity>()) }
@@ -59,6 +66,12 @@ fun AskScreen(
     var difficulty by remember { mutableStateOf("MEDIUM") }
     var isThinking by remember { mutableStateOf(false) }
     var voiceError by remember { mutableStateOf<String?>(null) }
+
+    var catalogBooks by remember { mutableStateOf<List<BookCatalogEntry>>(emptyList()) }
+    var selectedBookId by remember { mutableStateOf<String?>(initialBookId) }
+    var selectedChapter by remember { mutableStateOf<String?>(null) }
+    var showBookPicker by remember { mutableStateOf(false) }
+    var showChapterPicker by remember { mutableStateOf(false) }
 
     val voiceEngine = remember {
         VoiceEngine(
@@ -98,8 +111,8 @@ fun AskScreen(
                     id = UUID.randomUUID().toString(),
                     conversationId = "default_conversation",
                     sender = "AI",
-                    text = "Hello! I am LENTERA, your offline AI teacher. Ask me anything about Class 10 Science, Physics, Chemistry, Biology, or Mathematics!",
-                    sourcesJson = "[\"CBSE Class 10 STEM Curriculum\"]"
+                    text = "Hello! I am PocketPathshala, your offline AI teacher. Ask me anything about your NCERT textbooks (Classes 6–10) in Science, Math, and Social Science!",
+                    sourcesJson = "[\"NCERT Classes 6–10 Curriculum\"]"
                 )
                 db.dao().saveMessage(initial)
                 messages = listOf(initial)
@@ -111,6 +124,15 @@ fun AskScreen(
 
     LaunchedEffect(Unit) {
         loadMessages()
+        try {
+            catalogBooks = catalogRepo.load().entries
+        } catch (_: Exception) {}
+    }
+
+    LaunchedEffect(initialBookId) {
+        if (!initialBookId.isNullOrBlank()) {
+            selectedBookId = initialBookId
+        }
     }
 
     val listState = rememberLazyListState()
@@ -122,11 +144,20 @@ fun AskScreen(
 
             scope.launch {
                 try {
+                    val activeBook = catalogBooks.firstOrNull { it.bookId == selectedBookId }
+                    val filter = RetrievalFilter(
+                        classLevel = activeBook?.classLevel,
+                        subject = activeBook?.subject,
+                        language = activeBook?.language,
+                        bookId = selectedBookId,
+                        chapter = selectedChapter
+                    )
                     AIOrchestrator.processQuery(
                         conversationId = "default_conversation",
                         userPrompt = promptText,
                         difficulty = difficulty,
-                        database = db
+                        database = db,
+                        filter = filter
                     )
                     messages = repository.loadConversation("default_conversation")
                     listState.animateScrollToItem((messages.size - 1).coerceAtLeast(0))
@@ -186,6 +217,105 @@ fun AskScreen(
                 .fillMaxSize()
                 .padding(padding)
         ) {
+            // Textbook Scope Filter Row
+            val activeBook = catalogBooks.firstOrNull { it.bookId == selectedBookId }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .horizontalScroll(rememberScrollState())
+                    .padding(horizontal = 16.dp, vertical = 6.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                InputChip(
+                    selected = selectedBookId != null,
+                    onClick = { showBookPicker = true },
+                    label = { Text(activeBook?.let { "Book: ${it.title}" } ?: "Scope: All Textbooks", fontSize = 11.sp) },
+                    trailingIcon = if (selectedBookId != null) {
+                        {
+                            IconButton(onClick = { selectedBookId = null; selectedChapter = null }, modifier = Modifier.size(16.dp)) {
+                                Icon(Icons.Default.Close, contentDescription = "Clear Book", modifier = Modifier.size(12.dp))
+                            }
+                        }
+                    } else null
+                )
+
+                if (activeBook != null) {
+                    InputChip(
+                        selected = selectedChapter != null,
+                        onClick = { showChapterPicker = true },
+                        label = { Text(if (selectedChapter != null) "Ch: $selectedChapter" else "All Chapters", fontSize = 11.sp) },
+                        trailingIcon = if (selectedChapter != null) {
+                            {
+                                IconButton(onClick = { selectedChapter = null }, modifier = Modifier.size(16.dp)) {
+                                    Icon(Icons.Default.Close, contentDescription = "Clear Chapter", modifier = Modifier.size(12.dp))
+                                }
+                            }
+                        } else null
+                    )
+                }
+            }
+
+            if (showBookPicker) {
+                AlertDialog(
+                    onDismissRequest = { showBookPicker = false },
+                    title = { Text("Select Textbook Scope", fontSize = 16.sp, fontWeight = FontWeight.Bold) },
+                    text = {
+                        LazyColumn(modifier = Modifier.fillMaxWidth().heightIn(max = 300.dp)) {
+                            item {
+                                TextButton(
+                                    onClick = { selectedBookId = null; selectedChapter = null; showBookPicker = false },
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text("All Textbooks / Built-in Corpus", modifier = Modifier.fillMaxWidth())
+                                }
+                            }
+                            items(catalogBooks) { book ->
+                                TextButton(
+                                    onClick = { selectedBookId = book.bookId; selectedChapter = null; showBookPicker = false },
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text("Class ${book.classLevel} • ${book.title}", modifier = Modifier.fillMaxWidth())
+                                }
+                            }
+                        }
+                    },
+                    confirmButton = {
+                        TextButton(onClick = { showBookPicker = false }) { Text("Close") }
+                    }
+                )
+            }
+
+            if (showChapterPicker && activeBook != null) {
+                AlertDialog(
+                    onDismissRequest = { showChapterPicker = false },
+                    title = { Text("Select Chapter (${activeBook.title})", fontSize = 16.sp, fontWeight = FontWeight.Bold) },
+                    text = {
+                        LazyColumn(modifier = Modifier.fillMaxWidth().heightIn(max = 300.dp)) {
+                            item {
+                                TextButton(
+                                    onClick = { selectedChapter = null; showChapterPicker = false },
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text("All Chapters", modifier = Modifier.fillMaxWidth())
+                                }
+                            }
+                            items(activeBook.chapters) { ch ->
+                                TextButton(
+                                    onClick = { selectedChapter = ch.title; showChapterPicker = false },
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text("Ch ${ch.number}. ${ch.title}", modifier = Modifier.fillMaxWidth())
+                                }
+                            }
+                        }
+                    },
+                    confirmButton = {
+                        TextButton(onClick = { showChapterPicker = false }) { Text("Close") }
+                    }
+                )
+            }
+
             LazyColumn(
                 state = listState,
                 modifier = Modifier
@@ -335,6 +465,12 @@ fun MessageBubble(
         }
     }
 
+    val isNoEvidence = remember(message.text) {
+        !isUser && (message.text.contains("couldn't find enough evidence", ignoreCase = true) ||
+                message.text.contains("no relevant evidence", ignoreCase = true) ||
+                message.text.contains("evidence unavailable", ignoreCase = true))
+    }
+
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = if (isUser) Alignment.End else Alignment.Start
@@ -346,11 +482,41 @@ fun MessageBubble(
                 bottomStart = if (isUser) 16.dp else 4.dp,
                 bottomEnd = if (isUser) 4.dp else 16.dp
             ),
-            color = if (isUser) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
-            contentColor = if (isUser) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
+            color = when {
+                isUser -> MaterialTheme.colorScheme.primary
+                isNoEvidence -> MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.85f)
+                else -> MaterialTheme.colorScheme.surfaceVariant
+            },
+            contentColor = when {
+                isUser -> MaterialTheme.colorScheme.onPrimary
+                isNoEvidence -> MaterialTheme.colorScheme.onErrorContainer
+                else -> MaterialTheme.colorScheme.onSurfaceVariant
+            },
             modifier = Modifier.widthIn(max = 330.dp)
         ) {
             Column(modifier = Modifier.padding(14.dp)) {
+                if (isNoEvidence) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        Surface(
+                            shape = RoundedCornerShape(4.dp),
+                            color = MaterialTheme.colorScheme.error
+                        ) {
+                            Text(
+                                "NOT FOUND",
+                                color = Color.White,
+                                fontSize = 9.sp,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                            )
+                        }
+                        Text("Evidence Not Found in Scope", fontSize = 11.sp, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.error)
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+
                 Text(text = message.text, fontSize = 14.sp, lineHeight = 20.sp)
 
                 if (!isUser) {
@@ -369,13 +535,25 @@ fun MessageBubble(
 
                         if (sources.isNotEmpty()) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
-                                Icon(Icons.Default.AutoAwesome, contentDescription = null, modifier = Modifier.size(12.dp), tint = MaterialTheme.colorScheme.primary)
-                                Spacer(modifier = Modifier.width(4.dp))
+                                Surface(
+                                    shape = RoundedCornerShape(4.dp),
+                                    color = Color(0xFF2E7D32).copy(alpha = 0.2f)
+                                ) {
+                                    Text(
+                                        "VERIFIED",
+                                        color = Color(0xFF2E7D32),
+                                        fontSize = 9.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        modifier = Modifier.padding(horizontal = 5.dp, vertical = 2.dp)
+                                    )
+                                }
+                                Spacer(modifier = Modifier.width(6.dp))
                                 Text(
                                     text = sources.first(),
                                     fontSize = 10.sp,
                                     fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.primary
+                                    color = MaterialTheme.colorScheme.primary,
+                                    maxLines = 1
                                 )
                             }
                         }

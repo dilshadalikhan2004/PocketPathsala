@@ -34,7 +34,8 @@ data class GenerationResult(
     val text: String,
     val sources: List<String>,
     val confidence: Double,
-    val isGrounded: Boolean
+    val isGrounded: Boolean,
+    val noRelevantEvidence: Boolean = false
 )
 
 interface LocalLLM {

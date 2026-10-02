@@ -26,6 +26,7 @@ import androidx.navigation.compose.rememberNavController
 import com.dilshad.myapplication.ui.Screen
 import com.dilshad.myapplication.ui.screens.AskScreen
 import com.dilshad.myapplication.ui.screens.ClassroomScreen
+import com.dilshad.myapplication.ui.screens.CurriculumScreen
 import com.dilshad.myapplication.ui.screens.HomeScreen
 import com.dilshad.myapplication.ui.screens.MindMapScreen
 import com.dilshad.myapplication.ui.screens.PracticeScreen
@@ -54,10 +55,12 @@ fun LenteraMainApp() {
     val currentRoute = navBackStackEntry?.destination?.route
 
     var pendingAskPrompt by remember { mutableStateOf<String?>(null) }
+    var pendingAskBookId by remember { mutableStateOf<String?>(null) }
     var pendingPracticeTopic by remember { mutableStateOf<String?>(null) }
 
     val bottomNavScreens = listOf(
         Screen.Home,
+        Screen.Curriculum,
         Screen.Ask,
         Screen.Scan,
         Screen.Practice,
@@ -86,7 +89,7 @@ fun LenteraMainApp() {
                             }
                         },
                         icon = { Icon(screen.icon, contentDescription = screen.title) },
-                        label = { Text(screen.title, fontSize = 10.sp, maxLines = 1, softWrap = false) }
+                        label = { Text(screen.title, fontSize = 9.sp, maxLines = 1, softWrap = false) }
                     )
                 }
             }
@@ -103,13 +106,26 @@ fun LenteraMainApp() {
                     onNavigateToScan = { navController.navigate(Screen.Scan.route) },
                     onNavigateToPractice = { navController.navigate(Screen.Practice.route) },
                     onNavigateToClassroom = { navController.navigate(Screen.Classroom.route) },
-                    onStartRemedialLesson = { navController.navigate(Screen.Progress.route) }
+                    onStartRemedialLesson = { navController.navigate(Screen.Progress.route) },
+                    onNavigateToCurriculum = { navController.navigate(Screen.Curriculum.route) }
+                )
+            }
+            composable(Screen.Curriculum.route) {
+                CurriculumScreen(
+                    onOpenAsk = { bookId ->
+                        pendingAskBookId = bookId
+                        navController.navigate(Screen.Ask.route)
+                    }
                 )
             }
             composable(Screen.Ask.route) {
                 AskScreen(
                     initialPrompt = pendingAskPrompt,
-                    onPromptConsumed = { pendingAskPrompt = null }
+                    initialBookId = pendingAskBookId,
+                    onPromptConsumed = {
+                        pendingAskPrompt = null
+                        pendingAskBookId = null
+                    }
                 )
             }
             composable(Screen.Scan.route) {

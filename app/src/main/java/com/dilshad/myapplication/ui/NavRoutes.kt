@@ -10,10 +10,12 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Insights
 import androidx.compose.material.icons.filled.Quiz
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class Screen(val route: String, val title: String, val icon: ImageVector) {
     object Home : Screen("home", "Home", Icons.Default.Home)
+    object Curriculum : Screen("curriculum", "Books", Icons.AutoMirrored.Filled.MenuBook)
     object Ask : Screen("ask", "Ask", Icons.AutoMirrored.Filled.Chat)
     object Scan : Screen("scan", "Scan", Icons.Default.CameraAlt)
     object Practice : Screen("practice", "Practice", Icons.Default.Quiz)

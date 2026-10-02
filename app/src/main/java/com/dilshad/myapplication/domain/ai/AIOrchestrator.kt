@@ -1,5 +1,8 @@
 package com.dilshad.myapplication.domain.ai
 
+import com.dilshad.myapplication.content.ContentRetriever
+import com.dilshad.myapplication.content.RetrievalFilter
+import com.dilshad.myapplication.content.RoomContentRetriever
 import com.dilshad.myapplication.data.db.AppDatabase
 import com.dilshad.myapplication.data.db.entities.ConversationEntity
 import com.dilshad.myapplication.data.db.entities.MessageEntity
@@ -31,31 +34,97 @@ object AIOrchestrator {
         userPrompt: String,
         difficulty: String = "MEDIUM",
         database: AppDatabase? = null,
-        generationQueue: GenerationQueue = queue
+        generationQueue: GenerationQueue = queue,
+        filter: RetrievalFilter = RetrievalFilter(),
+        importedRetriever: ContentRetriever? = null
     ): GenerationResult {
         // Retrieve student profile language if database is available
-        val preferredLanguage = database?.dao()?.getProfile()?.preferredLanguage ?: "English"
+        val preferredLanguage = database?.dao()?.getProfile()?.preferredLanguage ?: filter.language ?: "English"
 
-        // 1. Local RAG Retrieval with expanded curriculum semantic search
-        val ragResults = LocalRAGEngine.search(userPrompt, maxResults = 3)
+        val effectiveRetriever: ContentRetriever? = importedRetriever ?: database?.let { RoomContentRetriever(it.contentDao()) }
 
-        // 2. Generate grounded response with student's language and difficulty settings
-        val options = GenerationOptions(
-            language = preferredLanguage,
-            difficulty = difficulty,
-            stream = false
-        )
-        val requestId = UUID.randomUUID().toString()
-        val evidence = ragResults.map {
-            RetrievedChunk(
-                text = it.chunk.content,
-                chapter = it.chunk.chapter,
-                section = it.chunk.section,
-                pageNumber = 0,
-                score = it.score,
-                citation = it.chunk.sourceCitation
-            )
+        val evidence: List<RetrievedChunk>
+        val isGrounded: Boolean
+        val confidence: Double
+
+        if (effectiveRetriever != null) {
+            val importedEvidence = effectiveRetriever.retrieve(userPrompt, filter, limit = 3)
+            if (importedEvidence.isNotEmpty()) {
+                evidence = importedEvidence
+                isGrounded = true
+                confidence = importedEvidence.first().score
+            } else if (filter.bookId != null || filter.chapter != null) {
+                val notFoundMsg = if (filter.chapter != null) {
+                    "I couldn't find enough evidence in Chapter ${filter.chapter}. Try selecting another chapter or searching the whole book."
+                } else {
+                    "I couldn't find enough evidence for this question in the selected book. Try searching another book or asking about a covered topic."
+                }
+                val noEvidenceResult = GenerationResult(
+                    text = notFoundMsg,
+                    sources = emptyList(),
+                    confidence = 0.0,
+                    isGrounded = false,
+                    noRelevantEvidence = true
+                )
+                saveMessages(database, conversationId, userPrompt, noEvidenceResult, "General", "Curriculum")
+                return noEvidenceResult
+            } else {
+                val ragResults = LocalRAGEngine.search(userPrompt, maxResults = 3)
+                if (ragResults.any { it.isReliable }) {
+                    evidence = ragResults.map {
+                        RetrievedChunk(
+                            text = it.chunk.content,
+                            chapter = it.chunk.chapter,
+                            section = it.chunk.section,
+                            pageNumber = 0,
+                            score = it.score,
+                            citation = it.chunk.sourceCitation
+                        )
+                    }
+                    isGrounded = true
+                    confidence = ragResults.first().score
+                } else if (filter.classLevel != null || filter.subject != null) {
+                    val noEvidenceResult = GenerationResult(
+                        text = "No relevant evidence is available in the acquired books. Download or import the relevant NCERT book, or ask about a supported topic.",
+                        sources = emptyList(),
+                        confidence = 0.0,
+                        isGrounded = false,
+                        noRelevantEvidence = true
+                    )
+                    saveMessages(database, conversationId, userPrompt, noEvidenceResult, "General", "Curriculum")
+                    return noEvidenceResult
+                } else {
+                    evidence = ragResults.map {
+                        RetrievedChunk(
+                            text = it.chunk.content,
+                            chapter = it.chunk.chapter,
+                            section = it.chunk.section,
+                            pageNumber = 0,
+                            score = it.score,
+                            citation = it.chunk.sourceCitation
+                        )
+                    }
+                    isGrounded = ragResults.any { it.isReliable }
+                    confidence = ragResults.firstOrNull()?.score ?: 0.15
+                }
+            }
+        } else {
+            val ragResults = LocalRAGEngine.search(userPrompt, maxResults = 3)
+            evidence = ragResults.map {
+                RetrievedChunk(
+                    text = it.chunk.content,
+                    chapter = it.chunk.chapter,
+                    section = it.chunk.section,
+                    pageNumber = 0,
+                    score = it.score,
+                    citation = it.chunk.sourceCitation
+                )
+            }
+            isGrounded = ragResults.any { it.isReliable }
+            confidence = ragResults.firstOrNull()?.score ?: 0.15
         }
+
+        val requestId = UUID.randomUUID().toString()
         val ticket = try {
             generationQueue.enqueue(
                 GenerationRequest(
@@ -73,23 +142,42 @@ object AIOrchestrator {
         val failure = events.filterIsInstance<GenerationEvent.Failure>().firstOrNull()
         if (failure != null) throw IllegalStateException(failure.message)
         val resultText = events.filterIsInstance<GenerationEvent.Token>().joinToString("") { it.value }
-        val sources = events.filterIsInstance<GenerationEvent.Citation>().map { it.value }.distinct()
-        val provider = events.filterIsInstance<GenerationEvent.Done>().lastOrNull()?.provider
+        val sources = (events.filterIsInstance<GenerationEvent.Citation>().map { it.value } + evidence.map { it.citation }).filter { it.isNotBlank() }.distinct()
         val result = GenerationResult(
             text = resultText,
             sources = sources,
-            confidence = ragResults.firstOrNull()?.score ?: 0.15,
-            isGrounded = ragResults.any { it.isReliable }
+            confidence = confidence,
+            isGrounded = isGrounded,
+            noRelevantEvidence = false
         )
 
-        // 3. Persist user message and AI response to Room DB
+        saveMessages(
+            database,
+            conversationId,
+            userPrompt,
+            result,
+            evidence.firstOrNull()?.chapter ?: "General",
+            evidence.firstOrNull()?.let { "STEM" } ?: "General"
+        )
+
+        return result
+    }
+
+    private suspend fun saveMessages(
+        database: AppDatabase?,
+        conversationId: String,
+        userPrompt: String,
+        result: GenerationResult,
+        topic: String,
+        subject: String
+    ) {
         database?.dao()?.let { dao ->
             dao.saveConversation(
                 ConversationEntity(
                     id = conversationId,
                     title = userPrompt.take(48),
-                    topic = ragResults.firstOrNull()?.chunk?.topic ?: "General",
-                    subject = ragResults.firstOrNull()?.chunk?.subject ?: "STEM"
+                    topic = topic,
+                    subject = subject
                 )
             )
             val userMsg = MessageEntity(
@@ -110,8 +198,6 @@ object AIOrchestrator {
             dao.saveMessage(userMsg)
             dao.saveMessage(aiMsg)
         }
-
-        return result
     }
 
     fun processQueryStream(
