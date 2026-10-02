@@ -34,16 +34,21 @@ class BookAcquisitionRepository(
     private val context: Context,
     private val catalog: CurriculumCatalogRepository,
     private val curriculumDao: CurriculumDao,
-    private val contentPacks: ContentPackRepository
+    private val contentPacks: ContentPackRepository,
+    private val entryResolver: (suspend (String) -> BookCatalogEntry?)? = null,
+    private val catalogVersionResolver: (suspend () -> Int)? = null
 ) {
     private val jobs = ConcurrentHashMap<String, Job>()
     private val storageDir: File = File(context.filesDir, BOOK_DIRECTORY)
 
     fun download(bookId: String): Flow<AcquisitionEvent> = channelFlow {
         val job = coroutineContext[Job] ?: error("Acquisition flow has no coroutine job")
-        jobs[bookId] = job
-        val entry = catalog.find(bookId) ?: run {
+        val entry = findBook(bookId) ?: run {
             send(AcquisitionEvent.Failed("Book not found in curriculum catalog: $bookId"))
+            return@channelFlow
+        }
+        if (jobs.putIfAbsent(bookId, job) != null) {
+            send(AcquisitionEvent.Failed("An acquisition is already active for book: $bookId"))
             return@channelFlow
         }
         val finalFile = fileFor(bookId, "pdf")
@@ -94,9 +99,11 @@ class BookAcquisitionRepository(
                 connection.disconnect()
             }
         } catch (cancelled: CancellationException) {
-            partFile.delete()
-            if (finalFile.exists()) finalFile.delete()
-            save(bookId, entry, AcquisitionState.NOT_ACQUIRED, null, 0, null, null)
+            withContext(NonCancellable) {
+                partFile.delete()
+                if (finalFile.exists()) finalFile.delete()
+                save(bookId, entry, AcquisitionState.NOT_ACQUIRED, null, 0, null, null)
+            }
             throw cancelled
         } catch (error: Exception) {
             partFile.delete()
@@ -109,14 +116,18 @@ class BookAcquisitionRepository(
 
     suspend fun importLocal(bookId: String, uri: Uri): Flow<SetupProgress> = channelFlow {
         val job = coroutineContext[Job] ?: error("Acquisition flow has no coroutine job")
-        jobs[bookId] = job
-        val entry = catalog.find(bookId) ?: run {
+        val entry = findBook(bookId) ?: run {
             send(SetupProgress.Failed("Book not found in curriculum catalog: $bookId"))
             return@channelFlow
         }
-        val mime = context.contentResolver.getType(uri)?.substringBefore(';')?.trim()?.lowercase().orEmpty()
-        val privateFile = fileFor(bookId, if (mime == "application/pdf") "pdf" else "txt")
+        if (jobs.putIfAbsent(bookId, job) != null) {
+            send(SetupProgress.Failed("An acquisition is already active for book: $bookId"))
+            return@channelFlow
+        }
+        var privateFile = fileFor(bookId, "txt")
         try {
+            val mime = resolveMime(uri)
+            privateFile = fileFor(bookId, if (mime == "application/pdf") "pdf" else "txt")
             ContentPackImporter.requireSupportedMime(mime)
             storageDir.mkdirs()
             withContext(Dispatchers.IO) {
@@ -126,7 +137,7 @@ class BookAcquisitionRepository(
             }
             save(bookId, entry, AcquisitionState.ACQUIRED, privateFile.path, privateFile.length(), privateFile.length(), null, uri.toString())
             save(bookId, entry, AcquisitionState.INDEXING, privateFile.path, privateFile.length(), privateFile.length(), null, uri.toString())
-            val metadata = PackMetadata(bookId, catalog.load().schemaVersion, entry.title, "NCERT", entry.classLevel.toString(), entry.subject, entry.licensingNote, bookId)
+            val metadata = PackMetadata(bookId, catalogVersion(), entry.title, "NCERT", entry.classLevel.toString(), entry.subject, entry.licensingNote, bookId)
             val importer = ContentPackImporter(context, contentPacks)
             importer.import(Uri.fromFile(privateFile), metadata).collect { progress ->
                 send(progress)
@@ -137,8 +148,10 @@ class BookAcquisitionRepository(
                 }
             }
         } catch (cancelled: CancellationException) {
-            privateFile.delete()
-            save(bookId, entry, AcquisitionState.NOT_ACQUIRED, null, 0, null, null)
+            withContext(NonCancellable) {
+                privateFile.delete()
+                save(bookId, entry, AcquisitionState.NOT_ACQUIRED, null, 0, null, null)
+            }
             throw cancelled
         } catch (error: Exception) {
             privateFile.delete()
@@ -163,7 +176,22 @@ class BookAcquisitionRepository(
     }
 
     private suspend fun save(bookId: String, entry: BookCatalogEntry, state: AcquisitionState, path: String?, bytes: Long, total: Long?, error: String?, sourceUri: String? = null) {
-        curriculumDao.upsertAcquisition(AcquiredBookEntity(bookId, catalog.load().schemaVersion, state.name, path, sourceUri, bytes, total, error, System.currentTimeMillis()))
+        curriculumDao.upsertAcquisition(AcquiredBookEntity(bookId, catalogVersion(), state.name, path, sourceUri, bytes, total, error, System.currentTimeMillis()))
+    }
+
+    private suspend fun findBook(bookId: String): BookCatalogEntry? = entryResolver?.invoke(bookId) ?: catalog.find(bookId)
+
+    private suspend fun catalogVersion(): Int = catalogVersionResolver?.invoke() ?: catalog.load().schemaVersion
+
+    private fun resolveMime(uri: Uri): String {
+        val provided = context.contentResolver.getType(uri)?.substringBefore(';')?.trim()?.lowercase().orEmpty()
+        val path = uri.path?.lowercase().orEmpty()
+        val signature = context.contentResolver.openInputStream(uri)?.use { input ->
+            val bytes = ByteArray(PDF_SIGNATURE.size)
+            val count = input.read(bytes)
+            if (count == bytes.size) bytes else null
+        }
+        return resolveMime(provided, path, signature)
     }
 
     private fun fileFor(bookId: String, extension: String): File = File(storageDir, "${safeName(bookId)}.$extension")
@@ -185,6 +213,14 @@ class BookAcquisitionRepository(
 
 
     companion object {
+        internal fun resolveMime(provided: String, path: String, signature: ByteArray?): String {
+            val normalized = provided.trim().lowercase()
+            if (normalized.isNotEmpty()) return normalized
+            if (path.endsWith(".pdf")) return "application/pdf"
+            if (path.endsWith(".txt")) return "text/plain"
+            return if (signature != null && java.util.Arrays.equals(signature, PDF_SIGNATURE)) "application/pdf" else ""
+        }
+
         private const val BOOK_DIRECTORY = "books"
         private const val BUFFER_SIZE = 8192
         private const val CONNECT_TIMEOUT_MS = 15_000
