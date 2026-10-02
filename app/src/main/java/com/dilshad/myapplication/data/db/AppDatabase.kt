@@ -1,10 +1,13 @@
-package com.dilshad.myapplication.data.db
+﻿package com.dilshad.myapplication.data.db
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.withTransaction
 import com.dilshad.myapplication.content.*
+import com.dilshad.myapplication.curriculum.AcquiredBookEntity
+import com.dilshad.myapplication.curriculum.CurriculumDao
 import com.dilshad.myapplication.data.db.entities.*
 
 @Database(
@@ -16,14 +19,30 @@ import com.dilshad.myapplication.data.db.entities.*
         ClassroomQuizResultEntity::class, ScanEntity::class, ContentPackEntity::class,
         ContentChunkEntity::class, ContentEmbeddingEntity::class, CachedQuizEntity::class,
         CachedQuizQuestionEntity::class, SetupJobEntity::class, GenerationRequestEntity::class,
-        BenchmarkResultEntity::class
+        BenchmarkResultEntity::class, AcquiredBookEntity::class
     ],
-    version = 6,
+    version = 7,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun dao(): AppDao
     abstract fun contentDao(): ContentDao
+    abstract fun curriculumDao(): CurriculumDao
+
+    suspend fun deleteCatalogBook(bookId: String): Int = withTransaction {
+        val deletedAcquisition = curriculumDao().deleteAcquisition(bookId)
+        queryCatalogCleanup("DELETE FROM cached_quiz_questions WHERE packId IN (SELECT id FROM content_packs WHERE catalogBookId = ?)", bookId)
+        queryCatalogCleanup("DELETE FROM cached_quizzes WHERE packId IN (SELECT id FROM content_packs WHERE catalogBookId = ?)", bookId)
+        queryCatalogCleanup("DELETE FROM content_embeddings WHERE packId IN (SELECT id FROM content_packs WHERE catalogBookId = ?)", bookId)
+        queryCatalogCleanup("DELETE FROM content_chunks WHERE packId IN (SELECT id FROM content_packs WHERE catalogBookId = ?)", bookId)
+        queryCatalogCleanup("DELETE FROM setup_jobs WHERE packId IN (SELECT id FROM content_packs WHERE catalogBookId = ?)", bookId)
+        queryCatalogCleanup("DELETE FROM content_packs WHERE catalogBookId = ?", bookId)
+        deletedAcquisition
+    }
+
+    private fun queryCatalogCleanup(sql: String, bookId: String) {
+        openHelper.writableDatabase.execSQL(sql, arrayOf(bookId))
+    }
 
     companion object {
         @Volatile private var INSTANCE: AppDatabase? = null
@@ -31,7 +50,7 @@ abstract class AppDatabase : RoomDatabase() {
         fun getInstance(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "lentera_database.db")
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6).build()
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7).build()
                 INSTANCE = instance
                 instance
             }
@@ -74,6 +93,17 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        internal val MIGRATION_6_7 = object : androidx.room.migration.Migration(6, 7) {
+            override fun migrate(database: androidx.sqlite.db.SupportSQLiteDatabase) {
+                database.execSQL("CREATE TABLE IF NOT EXISTS acquired_books (bookId TEXT NOT NULL PRIMARY KEY, catalogVersion INTEGER NOT NULL, state TEXT NOT NULL, localPath TEXT, sourceUri TEXT, bytesDownloaded INTEGER NOT NULL, totalBytes INTEGER, errorMessage TEXT, updatedAt INTEGER NOT NULL)")
+                database.execSQL("CREATE INDEX IF NOT EXISTS index_acquired_books_state ON acquired_books(state)")
+                database.execSQL("CREATE INDEX IF NOT EXISTS index_acquired_books_catalogVersion ON acquired_books(catalogVersion)")
+                database.execSQL("CREATE INDEX IF NOT EXISTS index_acquired_books_updatedAt ON acquired_books(updatedAt)")
+                database.execSQL("ALTER TABLE content_packs ADD COLUMN catalogBookId TEXT")
+                database.execSQL("CREATE INDEX IF NOT EXISTS index_content_packs_catalogBookId ON content_packs(catalogBookId)")
+            }
+        }
+
         internal val MIGRATION_5_6 = object : androidx.room.migration.Migration(5, 6) {
             override fun migrate(database: androidx.sqlite.db.SupportSQLiteDatabase) {
                 database.execSQL("CREATE TABLE IF NOT EXISTS benchmark_results (id TEXT NOT NULL PRIMARY KEY, workloadId TEXT NOT NULL, state TEXT NOT NULL, elapsedNanos INTEGER, timestamp INTEGER NOT NULL, deviceModel TEXT NOT NULL, androidVersion TEXT NOT NULL, provider TEXT NOT NULL, packId TEXT)")
@@ -81,3 +111,4 @@ abstract class AppDatabase : RoomDatabase() {
         }
     }
 }
+

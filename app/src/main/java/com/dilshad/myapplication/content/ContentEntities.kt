@@ -1,10 +1,10 @@
-﻿package com.dilshad.myapplication.content
+package com.dilshad.myapplication.content
 
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "content_packs", indices = [Index(value = ["isActive"])])
+@Entity(tableName = "content_packs", indices = [Index(value = ["isActive"]), Index(value = ["catalogBookId"])])
 data class ContentPackEntity(
     @PrimaryKey val id: String,
     val version: Int,
@@ -14,6 +14,7 @@ data class ContentPackEntity(
     val subject: String,
     val licensingNote: String,
     val isActive: Boolean = false,
+    val catalogBookId: String? = null,
     val createdAt: Long = System.currentTimeMillis()
 )
 
