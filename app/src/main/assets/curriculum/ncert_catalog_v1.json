@@ -1,0 +1,426 @@
+﻿{
+    "schemaVersion":  1,
+    "sourceName":  "NCERT",
+    "entries":  [
+                    {
+                        "bookId":  "ncert-class-6-mathematics-en",
+                        "classLevel":  6,
+                        "subject":  "Mathematics",
+                        "language":  "English",
+                        "title":  "NCERT Class 6 Mathematics",
+                        "edition":  "2025",
+                        "officialUrl":  "https://ncert.nic.in/textbook.php",
+                        "chapters":  [
+                                         {
+                                             "chapterId":  "ncert-class-6-mathematics-en-ch-1",
+                                             "number":  "1",
+                                             "title":  "Knowing Our Numbers",
+                                             "sections":  [
+
+                                                          ]
+                                         },
+                                         {
+                                             "chapterId":  "ncert-class-6-mathematics-en-ch-2",
+                                             "number":  "2",
+                                             "title":  "Whole Numbers",
+                                             "sections":  [
+
+                                                          ]
+                                         }
+                                     ],
+                        "licensingNote":  "Metadata only. Textbook body text is not bundled; consult the official NCERT source."
+                    },
+                    {
+                        "bookId":  "ncert-class-6-science-en",
+                        "classLevel":  6,
+                        "subject":  "Science",
+                        "language":  "English",
+                        "title":  "NCERT Class 6 Science",
+                        "edition":  "2025",
+                        "officialUrl":  "https://ncert.nic.in/textbook.php",
+                        "chapters":  [
+                                         {
+                                             "chapterId":  "ncert-class-6-science-en-ch-1",
+                                             "number":  "1",
+                                             "title":  "Food: Where Does It Come From?",
+                                             "sections":  [
+
+                                                          ]
+                                         },
+                                         {
+                                             "chapterId":  "ncert-class-6-science-en-ch-2",
+                                             "number":  "2",
+                                             "title":  "Components of Food",
+                                             "sections":  [
+
+                                                          ]
+                                         }
+                                     ],
+                        "licensingNote":  "Metadata only. Textbook body text is not bundled; consult the official NCERT source."
+                    },
+                    {
+                        "bookId":  "ncert-class-6-social-science-en",
+                        "classLevel":  6,
+                        "subject":  "Social Science",
+                        "language":  "English",
+                        "title":  "NCERT Class 6 Social Science",
+                        "edition":  "2025",
+                        "officialUrl":  "https://ncert.nic.in/textbook.php",
+                        "chapters":  [
+                                         {
+                                             "chapterId":  "ncert-class-6-social-science-en-ch-1",
+                                             "number":  "1",
+                                             "title":  "What, Where, How and When?",
+                                             "sections":  [
+
+                                                          ]
+                                         },
+                                         {
+                                             "chapterId":  "ncert-class-6-social-science-en-ch-2",
+                                             "number":  "2",
+                                             "title":  "On the Trail of the Earliest People",
+                                             "sections":  [
+
+                                                          ]
+                                         }
+                                     ],
+                        "licensingNote":  "Metadata only. Textbook body text is not bundled; consult the official NCERT source."
+                    },
+                    {
+                        "bookId":  "ncert-class-7-mathematics-en",
+                        "classLevel":  7,
+                        "subject":  "Mathematics",
+                        "language":  "English",
+                        "title":  "NCERT Class 7 Mathematics",
+                        "edition":  "2025",
+                        "officialUrl":  "https://ncert.nic.in/textbook.php",
+                        "chapters":  [
+                                         {
+                                             "chapterId":  "ncert-class-7-mathematics-en-ch-1",
+                                             "number":  "1",
+                                             "title":  "Knowing Our Numbers",
+                                             "sections":  [
+
+                                                          ]
+                                         },
+                                         {
+                                             "chapterId":  "ncert-class-7-mathematics-en-ch-2",
+                                             "number":  "2",
+                                             "title":  "Whole Numbers",
+                                             "sections":  [
+
+                                                          ]
+                                         }
+                                     ],
+                        "licensingNote":  "Metadata only. Textbook body text is not bundled; consult the official NCERT source."
+                    },
+                    {
+                        "bookId":  "ncert-class-7-science-en",
+                        "classLevel":  7,
+                        "subject":  "Science",
+                        "language":  "English",
+                        "title":  "NCERT Class 7 Science",
+                        "edition":  "2025",
+                        "officialUrl":  "https://ncert.nic.in/textbook.php",
+                        "chapters":  [
+                                         {
+                                             "chapterId":  "ncert-class-7-science-en-ch-1",
+                                             "number":  "1",
+                                             "title":  "Food: Where Does It Come From?",
+                                             "sections":  [
+
+                                                          ]
+                                         },
+                                         {
+                                             "chapterId":  "ncert-class-7-science-en-ch-2",
+                                             "number":  "2",
+                                             "title":  "Components of Food",
+                                             "sections":  [
+
+                                                          ]
+                                         }
+                                     ],
+                        "licensingNote":  "Metadata only. Textbook body text is not bundled; consult the official NCERT source."
+                    },
+                    {
+                        "bookId":  "ncert-class-7-social-science-en",
+                        "classLevel":  7,
+                        "subject":  "Social Science",
+                        "language":  "English",
+                        "title":  "NCERT Class 7 Social Science",
+                        "edition":  "2025",
+                        "officialUrl":  "https://ncert.nic.in/textbook.php",
+                        "chapters":  [
+                                         {
+                                             "chapterId":  "ncert-class-7-social-science-en-ch-1",
+                                             "number":  "1",
+                                             "title":  "What, Where, How and When?",
+                                             "sections":  [
+
+                                                          ]
+                                         },
+                                         {
+                                             "chapterId":  "ncert-class-7-social-science-en-ch-2",
+                                             "number":  "2",
+                                             "title":  "On the Trail of the Earliest People",
+                                             "sections":  [
+
+                                                          ]
+                                         }
+                                     ],
+                        "licensingNote":  "Metadata only. Textbook body text is not bundled; consult the official NCERT source."
+                    },
+                    {
+                        "bookId":  "ncert-class-8-mathematics-en",
+                        "classLevel":  8,
+                        "subject":  "Mathematics",
+                        "language":  "English",
+                        "title":  "NCERT Class 8 Mathematics",
+                        "edition":  "2025",
+                        "officialUrl":  "https://ncert.nic.in/textbook.php",
+                        "chapters":  [
+                                         {
+                                             "chapterId":  "ncert-class-8-mathematics-en-ch-1",
+                                             "number":  "1",
+                                             "title":  "Knowing Our Numbers",
+                                             "sections":  [
+
+                                                          ]
+                                         },
+                                         {
+                                             "chapterId":  "ncert-class-8-mathematics-en-ch-2",
+                                             "number":  "2",
+                                             "title":  "Whole Numbers",
+                                             "sections":  [
+
+                                                          ]
+                                         }
+                                     ],
+                        "licensingNote":  "Metadata only. Textbook body text is not bundled; consult the official NCERT source."
+                    },
+                    {
+                        "bookId":  "ncert-class-8-science-en",
+                        "classLevel":  8,
+                        "subject":  "Science",
+                        "language":  "English",
+                        "title":  "NCERT Class 8 Science",
+                        "edition":  "2025",
+                        "officialUrl":  "https://ncert.nic.in/textbook.php",
+                        "chapters":  [
+                                         {
+                                             "chapterId":  "ncert-class-8-science-en-ch-1",
+                                             "number":  "1",
+                                             "title":  "Food: Where Does It Come From?",
+                                             "sections":  [
+
+                                                          ]
+                                         },
+                                         {
+                                             "chapterId":  "ncert-class-8-science-en-ch-2",
+                                             "number":  "2",
+                                             "title":  "Components of Food",
+                                             "sections":  [
+
+                                                          ]
+                                         }
+                                     ],
+                        "licensingNote":  "Metadata only. Textbook body text is not bundled; consult the official NCERT source."
+                    },
+                    {
+                        "bookId":  "ncert-class-8-social-science-en",
+                        "classLevel":  8,
+                        "subject":  "Social Science",
+                        "language":  "English",
+                        "title":  "NCERT Class 8 Social Science",
+                        "edition":  "2025",
+                        "officialUrl":  "https://ncert.nic.in/textbook.php",
+                        "chapters":  [
+                                         {
+                                             "chapterId":  "ncert-class-8-social-science-en-ch-1",
+                                             "number":  "1",
+                                             "title":  "What, Where, How and When?",
+                                             "sections":  [
+
+                                                          ]
+                                         },
+                                         {
+                                             "chapterId":  "ncert-class-8-social-science-en-ch-2",
+                                             "number":  "2",
+                                             "title":  "On the Trail of the Earliest People",
+                                             "sections":  [
+
+                                                          ]
+                                         }
+                                     ],
+                        "licensingNote":  "Metadata only. Textbook body text is not bundled; consult the official NCERT source."
+                    },
+                    {
+                        "bookId":  "ncert-class-9-mathematics-en",
+                        "classLevel":  9,
+                        "subject":  "Mathematics",
+                        "language":  "English",
+                        "title":  "NCERT Class 9 Mathematics",
+                        "edition":  "2025",
+                        "officialUrl":  "https://ncert.nic.in/textbook.php",
+                        "chapters":  [
+                                         {
+                                             "chapterId":  "ncert-class-9-mathematics-en-ch-1",
+                                             "number":  "1",
+                                             "title":  "Knowing Our Numbers",
+                                             "sections":  [
+
+                                                          ]
+                                         },
+                                         {
+                                             "chapterId":  "ncert-class-9-mathematics-en-ch-2",
+                                             "number":  "2",
+                                             "title":  "Whole Numbers",
+                                             "sections":  [
+
+                                                          ]
+                                         }
+                                     ],
+                        "licensingNote":  "Metadata only. Textbook body text is not bundled; consult the official NCERT source."
+                    },
+                    {
+                        "bookId":  "ncert-class-9-science-en",
+                        "classLevel":  9,
+                        "subject":  "Science",
+                        "language":  "English",
+                        "title":  "NCERT Class 9 Science",
+                        "edition":  "2025",
+                        "officialUrl":  "https://ncert.nic.in/textbook.php",
+                        "chapters":  [
+                                         {
+                                             "chapterId":  "ncert-class-9-science-en-ch-1",
+                                             "number":  "1",
+                                             "title":  "Food: Where Does It Come From?",
+                                             "sections":  [
+
+                                                          ]
+                                         },
+                                         {
+                                             "chapterId":  "ncert-class-9-science-en-ch-2",
+                                             "number":  "2",
+                                             "title":  "Components of Food",
+                                             "sections":  [
+
+                                                          ]
+                                         }
+                                     ],
+                        "licensingNote":  "Metadata only. Textbook body text is not bundled; consult the official NCERT source."
+                    },
+                    {
+                        "bookId":  "ncert-class-9-social-science-en",
+                        "classLevel":  9,
+                        "subject":  "Social Science",
+                        "language":  "English",
+                        "title":  "NCERT Class 9 Social Science",
+                        "edition":  "2025",
+                        "officialUrl":  "https://ncert.nic.in/textbook.php",
+                        "chapters":  [
+                                         {
+                                             "chapterId":  "ncert-class-9-social-science-en-ch-1",
+                                             "number":  "1",
+                                             "title":  "What, Where, How and When?",
+                                             "sections":  [
+
+                                                          ]
+                                         },
+                                         {
+                                             "chapterId":  "ncert-class-9-social-science-en-ch-2",
+                                             "number":  "2",
+                                             "title":  "On the Trail of the Earliest People",
+                                             "sections":  [
+
+                                                          ]
+                                         }
+                                     ],
+                        "licensingNote":  "Metadata only. Textbook body text is not bundled; consult the official NCERT source."
+                    },
+                    {
+                        "bookId":  "ncert-class-10-mathematics-en",
+                        "classLevel":  10,
+                        "subject":  "Mathematics",
+                        "language":  "English",
+                        "title":  "NCERT Class 10 Mathematics",
+                        "edition":  "2025",
+                        "officialUrl":  "https://ncert.nic.in/textbook.php",
+                        "chapters":  [
+                                         {
+                                             "chapterId":  "ncert-class-10-mathematics-en-ch-1",
+                                             "number":  "1",
+                                             "title":  "Knowing Our Numbers",
+                                             "sections":  [
+
+                                                          ]
+                                         },
+                                         {
+                                             "chapterId":  "ncert-class-10-mathematics-en-ch-2",
+                                             "number":  "2",
+                                             "title":  "Whole Numbers",
+                                             "sections":  [
+
+                                                          ]
+                                         }
+                                     ],
+                        "licensingNote":  "Metadata only. Textbook body text is not bundled; consult the official NCERT source."
+                    },
+                    {
+                        "bookId":  "ncert-class-10-science-en",
+                        "classLevel":  10,
+                        "subject":  "Science",
+                        "language":  "English",
+                        "title":  "NCERT Class 10 Science",
+                        "edition":  "2025",
+                        "officialUrl":  "https://ncert.nic.in/textbook.php",
+                        "chapters":  [
+                                         {
+                                             "chapterId":  "ncert-class-10-science-en-ch-1",
+                                             "number":  "1",
+                                             "title":  "Food: Where Does It Come From?",
+                                             "sections":  [
+
+                                                          ]
+                                         },
+                                         {
+                                             "chapterId":  "ncert-class-10-science-en-ch-2",
+                                             "number":  "2",
+                                             "title":  "Components of Food",
+                                             "sections":  [
+
+                                                          ]
+                                         }
+                                     ],
+                        "licensingNote":  "Metadata only. Textbook body text is not bundled; consult the official NCERT source."
+                    },
+                    {
+                        "bookId":  "ncert-class-10-social-science-en",
+                        "classLevel":  10,
+                        "subject":  "Social Science",
+                        "language":  "English",
+                        "title":  "NCERT Class 10 Social Science",
+                        "edition":  "2025",
+                        "officialUrl":  "https://ncert.nic.in/textbook.php",
+                        "chapters":  [
+                                         {
+                                             "chapterId":  "ncert-class-10-social-science-en-ch-1",
+                                             "number":  "1",
+                                             "title":  "What, Where, How and When?",
+                                             "sections":  [
+
+                                                          ]
+                                         },
+                                         {
+                                             "chapterId":  "ncert-class-10-social-science-en-ch-2",
+                                             "number":  "2",
+                                             "title":  "On the Trail of the Earliest People",
+                                             "sections":  [
+
+                                                          ]
+                                         }
+                                     ],
+                        "licensingNote":  "Metadata only. Textbook body text is not bundled; consult the official NCERT source."
+                    }
+                ]
+}
