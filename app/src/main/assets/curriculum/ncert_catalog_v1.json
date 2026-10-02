@@ -59,16 +59,16 @@
                         "licensingNote":  "Metadata only. Textbook body text is not bundled; consult the official NCERT source."
                     },
                     {
-                        "bookId":  "ncert-class-6-social-science-en",
+                        "bookId":  "ncert-class-6-history-en",
                         "classLevel":  6,
-                        "subject":  "Social Science",
+                        "subject":  "History",
                         "language":  "English",
-                        "title":  "NCERT Class 6 Social Science",
+                        "title":  "NCERT Class 6 History",
                         "edition":  "2025",
                         "officialUrl":  "https://ncert.nic.in/textbook.php",
                         "chapters":  [
                                          {
-                                             "chapterId":  "ncert-class-6-social-science-en-ch-1",
+                                             "chapterId":  "ncert-class-6-history-en-ch-1",
                                              "number":  "1",
                                              "title":  "What, Where, How and When?",
                                              "sections":  [
@@ -76,7 +76,7 @@
                                                           ]
                                          },
                                          {
-                                             "chapterId":  "ncert-class-6-social-science-en-ch-2",
+                                             "chapterId":  "ncert-class-6-history-en-ch-2",
                                              "number":  "2",
                                              "title":  "On the Trail of the Earliest People",
                                              "sections":  [
@@ -98,7 +98,7 @@
                                          {
                                              "chapterId":  "ncert-class-7-mathematics-en-ch-1",
                                              "number":  "1",
-                                             "title":  "Knowing Our Numbers",
+                                             "title":  "Integers",
                                              "sections":  [
 
                                                           ]
@@ -106,7 +106,7 @@
                                          {
                                              "chapterId":  "ncert-class-7-mathematics-en-ch-2",
                                              "number":  "2",
-                                             "title":  "Whole Numbers",
+                                             "title":  "Fractions and Decimals",
                                              "sections":  [
 
                                                           ]
@@ -126,7 +126,7 @@
                                          {
                                              "chapterId":  "ncert-class-7-science-en-ch-1",
                                              "number":  "1",
-                                             "title":  "Food: Where Does It Come From?",
+                                             "title":  "Nutrition in Plants",
                                              "sections":  [
 
                                                           ]
@@ -134,7 +134,7 @@
                                          {
                                              "chapterId":  "ncert-class-7-science-en-ch-2",
                                              "number":  "2",
-                                             "title":  "Components of Food",
+                                             "title":  "Nutrition in Animals",
                                              "sections":  [
 
                                                           ]
@@ -143,26 +143,26 @@
                         "licensingNote":  "Metadata only. Textbook body text is not bundled; consult the official NCERT source."
                     },
                     {
-                        "bookId":  "ncert-class-7-social-science-en",
+                        "bookId":  "ncert-class-7-history-en",
                         "classLevel":  7,
-                        "subject":  "Social Science",
+                        "subject":  "History",
                         "language":  "English",
-                        "title":  "NCERT Class 7 Social Science",
+                        "title":  "NCERT Class 7 History",
                         "edition":  "2025",
                         "officialUrl":  "https://ncert.nic.in/textbook.php",
                         "chapters":  [
                                          {
-                                             "chapterId":  "ncert-class-7-social-science-en-ch-1",
+                                             "chapterId":  "ncert-class-7-history-en-ch-1",
                                              "number":  "1",
-                                             "title":  "What, Where, How and When?",
+                                             "title":  "Tracing Changes Through a Thousand Years",
                                              "sections":  [
 
                                                           ]
                                          },
                                          {
-                                             "chapterId":  "ncert-class-7-social-science-en-ch-2",
+                                             "chapterId":  "ncert-class-7-history-en-ch-2",
                                              "number":  "2",
-                                             "title":  "On the Trail of the Earliest People",
+                                             "title":  "New Kings and Kingdoms",
                                              "sections":  [
 
                                                           ]
@@ -182,7 +182,7 @@
                                          {
                                              "chapterId":  "ncert-class-8-mathematics-en-ch-1",
                                              "number":  "1",
-                                             "title":  "Knowing Our Numbers",
+                                             "title":  "Rational Numbers",
                                              "sections":  [
 
                                                           ]
@@ -190,7 +190,7 @@
                                          {
                                              "chapterId":  "ncert-class-8-mathematics-en-ch-2",
                                              "number":  "2",
-                                             "title":  "Whole Numbers",
+                                             "title":  "Linear Equations in One Variable",
                                              "sections":  [
 
                                                           ]
@@ -210,7 +210,7 @@
                                          {
                                              "chapterId":  "ncert-class-8-science-en-ch-1",
                                              "number":  "1",
-                                             "title":  "Food: Where Does It Come From?",
+                                             "title":  "Crop Production and Management",
                                              "sections":  [
 
                                                           ]
@@ -218,7 +218,7 @@
                                          {
                                              "chapterId":  "ncert-class-8-science-en-ch-2",
                                              "number":  "2",
-                                             "title":  "Components of Food",
+                                             "title":  "Microorganisms: Friend and Foe",
                                              "sections":  [
 
                                                           ]
@@ -227,26 +227,26 @@
                         "licensingNote":  "Metadata only. Textbook body text is not bundled; consult the official NCERT source."
                     },
                     {
-                        "bookId":  "ncert-class-8-social-science-en",
+                        "bookId":  "ncert-class-8-history-en",
                         "classLevel":  8,
-                        "subject":  "Social Science",
+                        "subject":  "History",
                         "language":  "English",
-                        "title":  "NCERT Class 8 Social Science",
+                        "title":  "NCERT Class 8 History",
                         "edition":  "2025",
                         "officialUrl":  "https://ncert.nic.in/textbook.php",
                         "chapters":  [
                                          {
-                                             "chapterId":  "ncert-class-8-social-science-en-ch-1",
+                                             "chapterId":  "ncert-class-8-history-en-ch-1",
                                              "number":  "1",
-                                             "title":  "What, Where, How and When?",
+                                             "title":  "How, When and Where",
                                              "sections":  [
 
                                                           ]
                                          },
                                          {
-                                             "chapterId":  "ncert-class-8-social-science-en-ch-2",
+                                             "chapterId":  "ncert-class-8-history-en-ch-2",
                                              "number":  "2",
-                                             "title":  "On the Trail of the Earliest People",
+                                             "title":  "From Trade to Territory",
                                              "sections":  [
 
                                                           ]
@@ -266,7 +266,7 @@
                                          {
                                              "chapterId":  "ncert-class-9-mathematics-en-ch-1",
                                              "number":  "1",
-                                             "title":  "Knowing Our Numbers",
+                                             "title":  "Number Systems",
                                              "sections":  [
 
                                                           ]
@@ -274,7 +274,7 @@
                                          {
                                              "chapterId":  "ncert-class-9-mathematics-en-ch-2",
                                              "number":  "2",
-                                             "title":  "Whole Numbers",
+                                             "title":  "Polynomials",
                                              "sections":  [
 
                                                           ]
@@ -294,7 +294,7 @@
                                          {
                                              "chapterId":  "ncert-class-9-science-en-ch-1",
                                              "number":  "1",
-                                             "title":  "Food: Where Does It Come From?",
+                                             "title":  "Matter in Our Surroundings",
                                              "sections":  [
 
                                                           ]
@@ -302,7 +302,7 @@
                                          {
                                              "chapterId":  "ncert-class-9-science-en-ch-2",
                                              "number":  "2",
-                                             "title":  "Components of Food",
+                                             "title":  "Is Matter Around Us Pure?",
                                              "sections":  [
 
                                                           ]
@@ -311,26 +311,26 @@
                         "licensingNote":  "Metadata only. Textbook body text is not bundled; consult the official NCERT source."
                     },
                     {
-                        "bookId":  "ncert-class-9-social-science-en",
+                        "bookId":  "ncert-class-9-history-en",
                         "classLevel":  9,
-                        "subject":  "Social Science",
+                        "subject":  "History",
                         "language":  "English",
-                        "title":  "NCERT Class 9 Social Science",
+                        "title":  "NCERT Class 9 History",
                         "edition":  "2025",
                         "officialUrl":  "https://ncert.nic.in/textbook.php",
                         "chapters":  [
                                          {
-                                             "chapterId":  "ncert-class-9-social-science-en-ch-1",
+                                             "chapterId":  "ncert-class-9-history-en-ch-1",
                                              "number":  "1",
-                                             "title":  "What, Where, How and When?",
+                                             "title":  "The French Revolution",
                                              "sections":  [
 
                                                           ]
                                          },
                                          {
-                                             "chapterId":  "ncert-class-9-social-science-en-ch-2",
+                                             "chapterId":  "ncert-class-9-history-en-ch-2",
                                              "number":  "2",
-                                             "title":  "On the Trail of the Earliest People",
+                                             "title":  "Socialism in Europe and the Russian Revolution",
                                              "sections":  [
 
                                                           ]
@@ -350,7 +350,7 @@
                                          {
                                              "chapterId":  "ncert-class-10-mathematics-en-ch-1",
                                              "number":  "1",
-                                             "title":  "Knowing Our Numbers",
+                                             "title":  "Real Numbers",
                                              "sections":  [
 
                                                           ]
@@ -358,7 +358,7 @@
                                          {
                                              "chapterId":  "ncert-class-10-mathematics-en-ch-2",
                                              "number":  "2",
-                                             "title":  "Whole Numbers",
+                                             "title":  "Polynomials",
                                              "sections":  [
 
                                                           ]
@@ -378,7 +378,7 @@
                                          {
                                              "chapterId":  "ncert-class-10-science-en-ch-1",
                                              "number":  "1",
-                                             "title":  "Food: Where Does It Come From?",
+                                             "title":  "Chemical Reactions and Equations",
                                              "sections":  [
 
                                                           ]
@@ -386,7 +386,7 @@
                                          {
                                              "chapterId":  "ncert-class-10-science-en-ch-2",
                                              "number":  "2",
-                                             "title":  "Components of Food",
+                                             "title":  "Acids, Bases and Salts",
                                              "sections":  [
 
                                                           ]
@@ -395,26 +395,26 @@
                         "licensingNote":  "Metadata only. Textbook body text is not bundled; consult the official NCERT source."
                     },
                     {
-                        "bookId":  "ncert-class-10-social-science-en",
+                        "bookId":  "ncert-class-10-history-en",
                         "classLevel":  10,
-                        "subject":  "Social Science",
+                        "subject":  "History",
                         "language":  "English",
-                        "title":  "NCERT Class 10 Social Science",
+                        "title":  "NCERT Class 10 History",
                         "edition":  "2025",
                         "officialUrl":  "https://ncert.nic.in/textbook.php",
                         "chapters":  [
                                          {
-                                             "chapterId":  "ncert-class-10-social-science-en-ch-1",
+                                             "chapterId":  "ncert-class-10-history-en-ch-1",
                                              "number":  "1",
-                                             "title":  "What, Where, How and When?",
+                                             "title":  "The Rise of Nationalism in Europe",
                                              "sections":  [
 
                                                           ]
                                          },
                                          {
-                                             "chapterId":  "ncert-class-10-social-science-en-ch-2",
+                                             "chapterId":  "ncert-class-10-history-en-ch-2",
                                              "number":  "2",
-                                             "title":  "On the Trail of the Earliest People",
+                                             "title":  "Nationalism in India",
                                              "sections":  [
 
                                                           ]
