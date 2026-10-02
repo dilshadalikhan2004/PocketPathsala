@@ -44,50 +44,51 @@ class GenerationQueueTest {
             override suspend fun generate(p: String, c: List<RetrievedChunk>, o: GenerationOptions) = flow<GenerationEvent> {
                 kotlinx.coroutines.delay(10_000)
             }
-
-            @Test fun rejectsRequestsWhenCapacityIsFull() = runBlocking {
-                val release = CompletableDeferred<Unit>()
-                val queue = GenerationQueue(object : TutorModel {
-                    override suspend fun generate(p: String, c: List<RetrievedChunk>, o: GenerationOptions) = flow<GenerationEvent> {
-                        release.await()
-                    }
-                }, 1)
-                queue.enqueue(GenerationRequest("first", listOf(evidence)))
-                withTimeout(1000) { while (queue.state.value.activeRequestId == null) kotlinx.coroutines.delay(10) }
-                try {
-                    queue.enqueue(GenerationRequest("second", listOf(evidence)))
-                    fail("Expected queue capacity rejection")
-                } catch (error: QueueFullException) {
-                    assertEquals(1, error.capacity)
-                } finally {
-                    release.complete(Unit)
-                }
-            }
-
-            @Test fun cancellationStopsAlreadyStartedProvider() = runBlocking {
-                val started = CompletableDeferred<Unit>()
-                val cancelled = CompletableDeferred<Unit>()
-                val queue = GenerationQueue(object : TutorModel {
-                    override suspend fun generate(p: String, c: List<RetrievedChunk>, o: GenerationOptions) = flow<GenerationEvent> {
-                        started.complete(Unit)
-                        try {
-                            kotlinx.coroutines.awaitCancellation()
-                        } finally {
-                            cancelled.complete(Unit)
-                        }
-                    }
-                }, 1)
-                val ticket = queue.enqueue(GenerationRequest("running", listOf(evidence)))
-                withTimeout(1000) { started.await() }
-                assertTrue(queue.cancel(ticket.requestId))
-                withTimeout(1000) { cancelled.await() }
-                assertEquals("CANCELLED", (withTimeout(1000) { ticket.events.first() } as GenerationEvent.Failure).code)
-            }
         }, 2)
         val ticket = queue.enqueue(GenerationRequest("cancel", listOf(evidence)))
+        withTimeout(1000) { while (queue.state.value.activeRequestId == null) kotlinx.coroutines.delay(10) }
         assertTrue(queue.cancel(ticket.requestId))
         val event = withTimeout(1000) { ticket.events.first() }
         assertTrue(event is GenerationEvent.Failure && event.code == "CANCELLED")
+    }
+
+    @Test fun rejectsRequestsWhenCapacityIsFull() = runBlocking {
+        val release = CompletableDeferred<Unit>()
+        val queue = GenerationQueue(object : TutorModel {
+            override suspend fun generate(p: String, c: List<RetrievedChunk>, o: GenerationOptions) = flow<GenerationEvent> {
+                release.await()
+            }
+        }, 1)
+        queue.enqueue(GenerationRequest("first", listOf(evidence)))
+        withTimeout(1000) { while (queue.state.value.activeRequestId == null) kotlinx.coroutines.delay(10) }
+        try {
+            queue.enqueue(GenerationRequest("second", listOf(evidence)))
+            fail("Expected queue capacity rejection")
+        } catch (error: QueueFullException) {
+            assertEquals(1, error.capacity)
+        } finally {
+            release.complete(Unit)
+        }
+    }
+
+    @Test fun cancellationStopsAlreadyStartedProvider() = runBlocking {
+        val started = CompletableDeferred<Unit>()
+        val cancelled = CompletableDeferred<Unit>()
+        val queue = GenerationQueue(object : TutorModel {
+            override suspend fun generate(p: String, c: List<RetrievedChunk>, o: GenerationOptions) = flow<GenerationEvent> {
+                started.complete(Unit)
+                try {
+                    kotlinx.coroutines.awaitCancellation()
+                } finally {
+                    cancelled.complete(Unit)
+                }
+            }
+        }, 1)
+        val ticket = queue.enqueue(GenerationRequest("running", listOf(evidence)))
+        withTimeout(1000) { started.await() }
+        assertTrue(queue.cancel(ticket.requestId))
+        withTimeout(1000) { cancelled.await() }
+        assertEquals("CANCELLED", (withTimeout(1000) { ticket.events.first() } as GenerationEvent.Failure).code)
     }
 
     @Test fun deterministicModelRejectsEmptyEvidenceAndLabelsFallback() = runBlocking {

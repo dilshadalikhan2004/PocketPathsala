@@ -1,38 +1,292 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#102a43">
-  <title>PocketPathshala</title>
-  <link rel="stylesheet" href="/styles.css">
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/>
+  <title>PocketPathshala — Offline NCERT AI Hub</title>
+  <link rel="stylesheet" href="/styles.css"/>
 </head>
 <body>
-<main class="shell">
-  <header class="topbar">
-    <div><p class="eyebrow">OFFLINE STUDY HOST</p><h1>PocketPathshala</h1></div>
-    <span id="connection" class="pill pending">Connecting…</span>
-  </header>
-  <section class="panel controls">
-    <div class="row split">
-      <label>Chapter <select id="chapter"><option value="">Loading chapters…</option></select></label>
-      <label>Language <select id="language"><option>English</option><option>Hindi</option></select></label>
+<div class="app-shell">
+
+  <!-- TOP HEADER -->
+  <header class="top-header">
+    <div class="top-status-row">
+      <div style="display:flex;align-items:center;gap:4px;">
+        <span id="clock-display" class="code-citation" style="font-weight:bold;">09:41</span>
+        <span>✈</span>
+      </div>
+      <div class="offline-pill">
+        <span class="pulse-dot"></span>
+        <span id="connection-pill" class="caps-label" style="color:var(--green);">OFFLINE READY</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:4px;">
+        <span class="code-citation" style="font-weight:bold;">84%</span>
+        <span>🔋</span>
+      </div>
     </div>
-    <label>Answer style <select id="mode"><option value="SHORT">Short answer</option><option value="BOARD_EXAM">Board-exam answer</option></select></label>
-    <label for="question">Ask from this pack</label>
-    <textarea id="question" rows="4" maxlength="2000" placeholder="e.g. Explain reflection of light"></textarea>
-    <div class="row actions"><button id="ask" class="primary">Ask question</button><button id="retry" hidden>Retry</button><button id="quiz">Open cached quiz</button></div>
-    <p id="status" class="status" role="status">Checking the host…</p>
-  </section>
-  <section id="answer-panel" class="panel" hidden>
-    <div class="section-heading"><h2>Answer</h2><span id="provider" class="muted"></span></div>
-    <div id="answer" class="answer"></div>
-    <h3>Citations</h3><div id="citations" class="cards"></div>
-    <details><summary>Evidence used</summary><div id="evidence" class="evidence"></div></details>
-  </section>
-  <section id="quiz-panel" class="panel" hidden><div class="section-heading"><h2 id="quiz-title">Cached quiz</h2><span class="muted">Works while generation is busy</span></div><div id="quiz-list"></div></section>
-  <footer>Local pack only · no account · works without internet</footer>
-</main>
+    <div class="top-branding-row">
+      <div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span class="brand-title">POCKETPATHSHALA</span>
+          <span id="std-badge" class="track-pill mono">STD 10</span>
+        </div>
+        <div class="brand-sub mono">NCERT CURRICULUM • OFFLINE READY</div>
+      </div>
+      <button id="profile-btn" class="profile-avatar-btn" type="button" title="Student Profile">👤</button>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+
+    <!-- 1. GREETING & TACTICAL STATUS -->
+    <section class="greeting-section">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <span id="track-pill" class="track-pill caps-label">CLASS 10 • SCIENCE TRACK</span>
+        <span class="code-citation" style="color:var(--muted);">● Ready to learn offline</span>
+      </div>
+      <span class="caps-label" style="color:var(--secondary);margin-top:6px;">DAILY PEDAGOGICAL REGISTER</span>
+      <h1 id="greeting-headline" class="greeting-title" style="cursor:pointer;" title="Click to customize profile">
+        Good morning, <span id="student-name" style="text-decoration:underline;text-decoration-color:var(--orange);">Scholar</span>.
+      </h1>
+      <p class="greeting-sub">Ready for day <span id="streak-days">1</span> of your study plan.</p>
+    </section>
+
+    <!-- 2. ACTIVE CHAPTER HERO MODULE CARD -->
+    <section class="hero-card">
+      <div class="bookmark-tab caps-label">
+        <span id="active-page">PAGE 161</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <span id="active-chapter-num" class="ch-badge mono">CH-10</span>
+        <span id="active-book-title" class="caps-label" style="color:var(--muted);">NCERT SCIENCE • TEXTBOOK CORE</span>
+      </div>
+      <div>
+        <span class="caps-label" style="color:var(--secondary);">CONTINUE ACTIVE STUDY</span>
+        <h2 id="active-chapter-title" class="hero-headline">LIGHT: REFLECTION &amp; REFRACTION</h2>
+      </div>
+      <div class="inset-excerpt">
+        <div style="display:flex;justify-content:space-between;">
+          <span class="caps-label" style="color:var(--muted);font-size:10px;">ACTIVE CONCEPT FOCUS</span>
+          <span id="active-section-focus" class="code-citation" style="font-weight:bold;">§ 10.1 LAWS OF REFLECTION</span>
+        </div>
+        <p id="active-concept-excerpt" style="font-size:13px;line-height:18px;">
+          "Recall that the angle of incidence is equal to the angle of reflection: &ang;i = &ang;r. The incident ray, the normal to the mirror at the point of incidence and the reflected ray, all lie in the same plane..."
+        </p>
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+          <span class="caps-label" style="color:var(--ink);">✓ <span id="active-mastery">78% MASTERED</span></span>
+          <span id="active-sections-completed" class="code-citation" style="color:var(--muted);">11 / 14 SECTIONS COMPLETED</span>
+        </div>
+        <div class="stepped-bar">
+          <div class="stepped-bar-seg fill"></div>
+          <div class="stepped-bar-seg fill"></div>
+          <div class="stepped-bar-seg fill"></div>
+          <div class="stepped-bar-seg fill"></div>
+          <div class="stepped-bar-seg fill"></div>
+          <div class="stepped-bar-seg fill"></div>
+          <div class="stepped-bar-seg fill"></div>
+          <div class="stepped-bar-seg active"></div>
+          <div class="stepped-bar-seg"></div>
+          <div class="stepped-bar-seg"></div>
+        </div>
+      </div>
+      <button id="continue-study-btn" class="continue-btn" type="button">
+        <span>📖 CONTINUE READING</span>
+        <span id="continue-page-label" class="mono">PAGE 161 &rarr;</span>
+      </button>
+    </section>
+
+    <!-- 3. VISUAL PEDAGOGY LOOP -->
+    <section>
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+        <span class="caps-label" style="color:var(--muted);">OFFLINE STUDY LOOP</span>
+        <span id="loop-active-indicator" class="code-citation" style="color:var(--secondary);">ACTIVE: STEP 02</span>
+      </div>
+      <div class="loop-grid" role="tablist">
+        <button id="step-01" class="loop-tab" data-step="01" type="button">
+          <span class="editorial-num" style="color:var(--muted);">01</span>
+          <span class="caps-label">BOOK</span>
+          <span style="font-size:10px;">✓</span>
+        </button>
+        <button id="step-02" class="loop-tab active" data-step="02" type="button">
+          <span class="editorial-num">02</span>
+          <span class="caps-label">CHAPTER</span>
+          <span style="font-size:10px;">▲</span>
+        </button>
+        <button id="step-03" class="loop-tab" data-step="03" type="button">
+          <span class="editorial-num" style="color:var(--muted);">03</span>
+          <span class="caps-label">ASK TUTOR</span>
+          <span style="font-size:10px;">🎙</span>
+        </button>
+        <button id="step-04" class="loop-tab" data-step="04" type="button">
+          <span class="editorial-num" style="color:var(--muted);">04</span>
+          <span class="caps-label">DRILL</span>
+          <span style="font-size:10px;">⏱</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- 4. GROUNDED TOOLS BENTO GRID -->
+    <section style="display:flex;flex-direction:column;gap:8px;">
+      <div style="display:flex;justify-content:space-between;">
+        <span class="caps-label" style="color:var(--muted);">GROUNDED TOOLS</span>
+        <span class="caps-label" style="color:var(--muted);font-size:10px;">CORE STUDY TOOLS</span>
+      </div>
+
+      <!-- Bento 1: ASK YOUR TEXTBOOK -->
+      <div class="bento-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span class="ch-badge mono">01</span>
+            <span style="font-weight:bold;font-size:13px;text-transform:uppercase;">ASK YOUR TEXTBOOK</span>
+          </div>
+          <button id="voice-ask-btn" class="chip-btn mono" type="button" style="color:var(--secondary);font-weight:bold;">🎙 VOICE ASK</button>
+        </div>
+        <p style="font-size:12px;color:var(--muted);">Ask any question directly grounded in your verified NCERT syllabus pages.</p>
+        <div class="search-box">
+          <input id="question-input" type="text" class="search-input" placeholder="Why does copper vessel develop a greenish coat?" />
+          <button id="ask-btn" class="search-submit" type="button">&rarr;</button>
+        </div>
+        <div class="chip-row">
+          <button class="chip-btn" type="button">Why does copper vessel develop a greenish coat?</button>
+          <button class="chip-btn" type="button">What is ductility?</button>
+          <button class="chip-btn" type="button">Explain reflection of light</button>
+        </div>
+      </div>
+
+      <!-- Bento Split: Flash Quiz & Mind Map -->
+      <div class="bento-row">
+        <!-- Flashquiz -->
+        <div class="bento-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span class="ch-badge mono">02</span>
+            <span id="last-quiz-score" class="caps-label" style="background:var(--orange);color:#fff;padding:2px 4px;">4/5 LAST</span>
+          </div>
+          <div style="font-weight:bold;font-size:12px;">FLASH QUIZ</div>
+          <p id="quiz-desc" style="font-size:11px;color:var(--muted);line-height:1.3;">5 rapid questions on active chapter.</p>
+          <button id="quiz-btn" class="drill-btn" type="button">
+            <span>START DRILL</span>
+            <span>⚡</span>
+          </button>
+        </div>
+
+        <!-- Mind Map -->
+        <div class="bento-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span class="ch-badge mono">03</span>
+            <span class="code-citation" style="color:var(--muted);">NODE GRAPH</span>
+          </div>
+          <div style="font-weight:bold;font-size:12px;">MIND MAP</div>
+          <div style="background:var(--mid);height:36px;display:flex;align-items:center;justify-content:center;position:relative;">
+            <span style="font-size:18px;">⚬—●—⚬</span>
+          </div>
+          <span id="axiom-count" class="caps-label" style="color:var(--muted);font-size:9px;">32 LINKED AXIOMS</span>
+          <button id="expand-graph-btn" class="drill-btn" type="button">
+            <span>EXPAND GRAPH</span>
+            <span>⎈</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. REAL-TIME ANSWER DRAWER -->
+    <section id="answer-drawer" class="drawer hidden">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span class="caps-label" style="color:var(--secondary);font-weight:bold;">GROUNDED ANSWER</span>
+        <button id="close-answer-btn" style="border:none;background:none;cursor:pointer;font-weight:bold;">✕ CLOSE</button>
+      </div>
+      <p id="answer-status" class="code-citation" style="color:var(--orange);">Retrieving textbook evidence...</p>
+      <div id="answer-text" style="font-size:14px;line-height:1.5;white-space:pre-wrap;"></div>
+      <div id="citations-container" style="display:flex;flex-direction:column;gap:4px;"></div>
+    </section>
+
+    <!-- 6. REAL-TIME QUIZ DRAWER -->
+    <section id="quiz-drawer" class="drawer hidden" style="border-color:var(--primary);">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span id="quiz-title-display" class="caps-label" style="font-weight:bold;">CHAPTER QUIZ</span>
+        <button id="close-quiz-btn" style="border:none;background:none;cursor:pointer;font-weight:bold;">✕ CLOSE</button>
+      </div>
+      <div id="quiz-question-list" style="display:flex;flex-direction:column;gap:12px;"></div>
+    </section>
+
+    <!-- 7. OFFLINE STORAGE & LIBRARY SHELF -->
+    <section>
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+        <span class="caps-label" style="color:var(--muted);">OFFLINE REPO VAULT</span>
+        <span class="code-citation" style="color:var(--muted);">INTERNAL FLASH MOUNT</span>
+      </div>
+      <div id="bookshelf-container" class="shelf-container"></div>
+    </section>
+
+    <!-- 8. TEXTBOOK VERIFICATION STAMP -->
+    <section class="stamp-banner caps-label">
+      🛡 VERIFIED NCERT 2024-25 • FULLY AVAILABLE OFFLINE
+    </section>
+
+  </main>
+
+  <!-- BOTTOM NAVIGATION -->
+  <nav class="bottom-nav">
+    <div class="nav-grid">
+      <a class="nav-tab-btn active" href="#home">
+        <span class="editorial-num">01</span>
+        <span>HOME</span>
+      </a>
+      <a class="nav-tab-btn" href="#learn">
+        <span class="editorial-num">02</span>
+        <span>LEARN</span>
+      </a>
+      <a class="nav-tab-btn" href="#ask">
+        <span class="editorial-num">03</span>
+        <span>ASK</span>
+      </a>
+      <a class="nav-tab-btn" href="#practice">
+        <span class="editorial-num">04</span>
+        <span>PRACTICE</span>
+      </a>
+    </div>
+  </nav>
+
+</div>
+
+<!-- PROFILE MODAL -->
+<div id="profile-modal" class="modal-overlay hidden">
+  <div class="modal-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <h3 style="font-size:16px;font-weight:bold;text-transform:uppercase;">Student Profile</h3>
+      <button id="close-profile-modal" style="border:none;background:none;font-size:16px;cursor:pointer;">✕</button>
+    </div>
+    <p style="font-size:12px;color:var(--muted);">Customize your name and grade for offline NCERT learning.</p>
+    <div>
+      <label for="student-name-input" class="caps-label" style="display:block;margin-bottom:2px;">Your Full Name</label>
+      <input id="student-name-input" type="text" class="input-field" placeholder="e.g. Aarav, Priya, Rohan" />
+    </div>
+    <div>
+      <label for="student-class-select" class="caps-label" style="display:block;margin-bottom:2px;">Class / Standard</label>
+      <select id="student-class-select" class="input-field">
+        <option value="6">Class 6</option>
+        <option value="7">Class 7</option>
+        <option value="8">Class 8</option>
+        <option value="9">Class 9</option>
+        <option value="10" selected>Class 10</option>
+      </select>
+    </div>
+    <div>
+      <label for="student-lang-select" class="caps-label" style="display:block;margin-bottom:2px;">Preferred Language</label>
+      <select id="student-lang-select" class="input-field">
+        <option value="English" selected>English</option>
+        <option value="Hindi">Hindi</option>
+      </select>
+    </div>
+    <button id="save-profile-btn" class="continue-btn" type="button" style="justify-content:center;margin-top:6px;">
+      SAVE PROFILE
+    </button>
+  </div>
+</div>
+
 <script src="/app.js"></script>
 </body>
 </html>

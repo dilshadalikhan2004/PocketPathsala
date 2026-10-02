@@ -102,7 +102,15 @@ fun LenteraMainApp() {
         ) {
             composable(Screen.Home.route) {
                 HomeScreen(
-                    onNavigateToAsk = { navController.navigate(Screen.Ask.route) },
+                    onNavigateToAsk = { prompt, bookId ->
+                        if (!prompt.isNullOrBlank()) {
+                            pendingAskPrompt = prompt
+                        }
+                        if (!bookId.isNullOrBlank()) {
+                            pendingAskBookId = bookId
+                        }
+                        navController.navigate(Screen.Ask.route)
+                    },
                     onNavigateToScan = { navController.navigate(Screen.Scan.route) },
                     onNavigateToPractice = { navController.navigate(Screen.Practice.route) },
                     onNavigateToClassroom = { navController.navigate(Screen.Classroom.route) },
