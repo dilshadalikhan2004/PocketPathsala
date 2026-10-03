@@ -1,12 +1,14 @@
 package com.dilshad.myapplication.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
@@ -14,27 +16,26 @@ import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.HourglassTop
-import androidx.compose.material.icons.filled.Quiz
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Timer
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.dilshad.myapplication.data.LenteraRepository
 import com.dilshad.myapplication.data.db.AppDatabase
 import com.dilshad.myapplication.data.db.entities.QuestionEntity
 import com.dilshad.myapplication.data.db.entities.QuizEntity
-import com.dilshad.myapplication.data.LenteraRepository
 import com.dilshad.myapplication.domain.quiz.EvaluationResult
 import com.dilshad.myapplication.domain.quiz.QuizEngine
+import com.dilshad.myapplication.ui.theme.*
 import com.google.gson.Gson
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -134,453 +135,518 @@ fun PracticeScreen(
         }
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
-        // Swiss Segmented Control Tab Row
-        TabRow(
-            selectedTabIndex = practiceTab,
-            containerColor = Color(0xFFF0EEE8),
-            contentColor = Color(0xFFFD591E),
-            indicator = { tabPositions ->
-                TabRowDefaults.SecondaryIndicator(
-                    modifier = Modifier.tabIndicatorOffset(tabPositions[practiceTab]),
-                    color = Color(0xFFFD591E)
-                )
-            }
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(FigmaTheme.Paper)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 20.dp, vertical = 16.dp)
         ) {
-            Tab(
-                selected = practiceTab == 0,
-                onClick = { practiceTab = 0 },
-                text = {
-                    Text(
-                        text = "01 PRACTICE DRILL",
-                        fontFamily = FontFamily.Monospace,
-                        fontWeight = if (practiceTab == 0) FontWeight.Bold else FontWeight.Medium,
-                        fontSize = 11.sp
-                    )
-                }
+            // 1. PAGE HEADER (Matching prototype .product-page-head)
+            FigmaPageHead(
+                label = "03 / PRACTICE",
+                title = "TEST WHAT\nYOU READ.",
+                copy = "Source-backed adaptive questions generated from indexed material."
             )
-            Tab(
-                selected = practiceTab == 1,
-                onClick = { practiceTab = 1 },
-                text = {
-                    Text(
-                        text = "02 MASTERY & MIND MAP",
-                        fontFamily = FontFamily.Monospace,
-                        fontWeight = if (practiceTab == 1) FontWeight.Bold else FontWeight.Medium,
-                        fontSize = 11.sp
-                    )
-                }
-            )
-        }
 
-        if (practiceTab == 1) {
-            Box(modifier = Modifier.fillMaxSize()) {
-                ProgressScreen(onNavigateToMindMap = onNavigateToMindMap)
-            }
-        } else {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp)
-                    .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column {
-                Text(
-                    text = if (isExamMode) "Timed Full Exam" else "Adaptive Practice Quiz",
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold
-                )
-                Text("Adaptive questions with syllabus mastery tracking", fontSize = 12.sp, color = Color.Gray)
-            }
+            Spacer(modifier = Modifier.height(14.dp))
 
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text("Full Exam", fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
-                Spacer(modifier = Modifier.width(4.dp))
-                Switch(
-                    checked = isExamMode,
-                    onCheckedChange = {
-                        isExamMode = it
-                        timerSeconds = 600
-                    }
-                )
-            }
-        }
-
-        // Topic Filter Chips (for adaptive practice)
-        if (!isExamMode) {
+            // 2. TAB SWITCHER (Brutalist style)
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .horizontalScroll(rememberScrollState()),
-                horizontalArrangement = Arrangement.spacedBy(6.dp)
-            ) {
-                val topics = listOf(
-                    "Refraction", "Reflection", "Eye Defects", "Dispersion & Prism",
-                    "Electricity", "Acids & Bases", "Chemical Reactions",
-                    "Life Processes", "Real Numbers", "Quadratic Equations", "Arithmetic Progression", "Trigonometry"
-                )
-                topics.forEach { t ->
-                    FilterChip(
-                        selected = selectedTopic.contains(t, ignoreCase = true) || t.contains(selectedTopic, ignoreCase = true),
-                        onClick = { selectedTopic = t },
-                        label = { Text(t, fontSize = 11.sp) }
-                    )
-                }
-            }
-        }
-
-        // Timer banner for exam mode
-        if (isExamMode) {
-            Surface(
-                shape = RoundedCornerShape(12.dp),
-                color = if (timerSeconds < 120) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.secondaryContainer,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Row(
-                    modifier = Modifier.padding(12.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(Icons.Default.Timer, contentDescription = null)
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = "Time Remaining: ${timerSeconds / 60}:${String.format("%02d", timerSeconds % 60)}",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 14.sp
-                        )
-                    }
-                    Text("6 Questions", fontSize = 12.sp)
-                }
-            }
-        }
-
-        if (!isQuizCompleted && questions.isNotEmpty() && currentQuestionIndex < questions.size) {
-            val q = questions[currentQuestionIndex]
-            val options: List<String> = remember(q.optionsJson) {
-                try {
-                    gson.fromJson(q.optionsJson, Array<String>::class.java)?.toList() ?: emptyList()
-                } catch (e: Exception) {
-                    emptyList()
-                }
-            }
-
-            Card(
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
+                BrutalistChip(
+                    text = "01 PRACTICE DRILL",
+                    selected = practiceTab == 0,
+                    onClick = { practiceTab = 0 },
+                    modifier = Modifier.weight(1f)
+                )
+                BrutalistChip(
+                    text = "02 MASTERY & MIND MAP",
+                    selected = practiceTab == 1,
+                    onClick = { practiceTab = 1 },
+                    modifier = Modifier.weight(1f)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(14.dp))
+
+            if (practiceTab == 1) {
+                Box(modifier = Modifier.fillMaxSize()) {
+                    ProgressScreen(onNavigateToMindMap = onNavigateToMindMap)
+                }
+            } else {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    // Mode Toggle: Timed Full Exam vs Adaptive Practice
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            text = "Question ${currentQuestionIndex + 1} of ${questions.size}",
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                        Surface(
-                            shape = RoundedCornerShape(6.dp),
-                            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)
+                        FigmaLabel(if (isExamMode) "TIMED FULL EXAM" else "ADAPTIVE PRACTICE")
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
                             Text(
-                                text = q.questionType,
-                                fontSize = 10.sp,
+                                text = "FULL EXAM",
+                                fontFamily = FontFamily.Monospace,
                                 fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                fontSize = 10.sp,
+                                color = FigmaTheme.Ink
+                            )
+                            Switch(
+                                checked = isExamMode,
+                                onCheckedChange = {
+                                    isExamMode = it
+                                    timerSeconds = 600
+                                },
+                                colors = SwitchDefaults.colors(
+                                    checkedThumbColor = FigmaTheme.White,
+                                    checkedTrackColor = FigmaTheme.Ink,
+                                    uncheckedThumbColor = FigmaTheme.Ink,
+                                    uncheckedTrackColor = FigmaTheme.Paper
+                                )
                             )
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(8.dp))
-                    LinearProgressIndicator(
-                        progress = { (currentQuestionIndex + 1).toFloat() / questions.size },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(6.dp)
-                    )
-
-                    Spacer(modifier = Modifier.height(14.dp))
-                    Text(
-                        text = q.questionText,
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    if (options.isNotEmpty()) {
-                        // Multiple Choice Options
-                        options.forEach { opt ->
-                            val isSelected = selectedAnswer == opt
-                            val isCorrectOption = opt == q.correctAnswer
-                            val containerColor = when {
-                                !isAnswerChecked && isSelected -> MaterialTheme.colorScheme.primaryContainer
-                                isAnswerChecked && isCorrectOption -> Color(0xFFC8E6C9)
-                                isAnswerChecked && isSelected && !isCorrectOption -> Color(0xFFFFCDD2)
-                                else -> MaterialTheme.colorScheme.surface
+                    // Topic Filter Chips (for adaptive practice)
+                    if (!isExamMode) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .horizontalScroll(rememberScrollState()),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            val topics = listOf(
+                                "Refraction", "Reflection", "Eye Defects", "Dispersion & Prism",
+                                "Electricity", "Acids & Bases", "Chemical Reactions",
+                                "Life Processes", "Real Numbers", "Quadratic Equations", "Arithmetic Progression", "Trigonometry"
+                            )
+                            topics.forEach { t ->
+                                BrutalistChip(
+                                    text = t,
+                                    selected = selectedTopic.contains(t, ignoreCase = true) || t.contains(selectedTopic, ignoreCase = true),
+                                    onClick = { selectedTopic = t }
+                                )
                             }
+                        }
+                    }
 
-                            Surface(
-                                shape = RoundedCornerShape(12.dp),
-                                color = containerColor,
+                    // Timer banner for exam mode
+                    if (isExamMode) {
+                        BrutalistCard(
+                            backgroundColor = if (timerSeconds < 120) FigmaTheme.Salmon else FigmaTheme.Yellow,
+                            shadowOffset = 4.dp
+                        ) {
+                            Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(vertical = 4.dp),
-                                onClick = {
-                                    if (!isAnswerChecked) {
-                                        selectedAnswer = opt
-                                    }
-                                }
+                                    .padding(14.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Row(
-                                    modifier = Modifier.padding(14.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                ) {
+                                    Icon(Icons.Default.Timer, contentDescription = null, tint = FigmaTheme.Ink)
+                                    Text(
+                                        text = "TIME REMAINING: ${timerSeconds / 60}:${String.format("%02d", timerSeconds % 60)}",
+                                        fontFamily = FontFamily.Monospace,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 12.sp,
+                                        color = FigmaTheme.Ink
+                                    )
+                                }
+                                Text(
+                                    text = "6 QUESTIONS",
+                                    fontFamily = FontFamily.Monospace,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 10.sp,
+                                    color = FigmaTheme.Ink
+                                )
+                            }
+                        }
+                    }
+
+                    if (!isQuizCompleted && questions.isNotEmpty() && currentQuestionIndex < questions.size) {
+                        val q = questions[currentQuestionIndex]
+                        val options: List<String> = remember(q.optionsJson) {
+                            try {
+                                gson.fromJson(q.optionsJson, Array<String>::class.java)?.toList() ?: emptyList()
+                            } catch (e: Exception) {
+                                emptyList()
+                            }
+                        }
+
+                        // QUIZ QUESTION CARD (Matching prototype .continue-quiz)
+                        BrutalistCard(
+                            backgroundColor = FigmaTheme.White,
+                            shadowOffset = 7.dp
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(20.dp),
+                                verticalArrangement = Arrangement.spacedBy(14.dp)
+                            ) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    RadioButton(
-                                        selected = isSelected,
-                                        onClick = {
-                                            if (!isAnswerChecked) {
-                                                selectedAnswer = opt
+                                    FigmaLabel("PRACTICE · LOCAL MATERIAL")
+                                    Text(
+                                        text = "QUESTION ${currentQuestionIndex + 1} OF ${questions.size}",
+                                        fontFamily = FontFamily.Monospace,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 10.sp,
+                                        color = FigmaTheme.Muted
+                                    )
+                                }
+
+                                Text(
+                                    text = q.questionText.uppercase(),
+                                    style = FigmaTheme.HeadlineCompact,
+                                    lineHeight = 28.sp
+                                )
+
+                                Spacer(modifier = Modifier.height(2.dp))
+
+                                // Multiple Choices matching prototype .quiz-answers
+                                if (options.isNotEmpty()) {
+                                    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                                        options.forEachIndexed { index, opt ->
+                                            val isSelected = selectedAnswer == opt
+                                            val isCorrectOption = opt == q.correctAnswer
+                                            val choiceLetter = ('A' + index).toString()
+
+                                            val bg = when {
+                                                isAnswerChecked && isCorrectOption -> FigmaTheme.Mint
+                                                isAnswerChecked && isSelected && !isCorrectOption -> FigmaTheme.Salmon
+                                                isSelected -> FigmaTheme.Ink
+                                                else -> FigmaTheme.White
+                                            }
+
+                                            val textColor = if (isSelected && !isAnswerChecked) FigmaTheme.White else FigmaTheme.Ink
+
+                                            Box(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .background(bg)
+                                                    .border(1.5.dp, FigmaTheme.Ink)
+                                                    .clickable(enabled = !isAnswerChecked) {
+                                                        selectedAnswer = opt
+                                                    }
+                                                    .padding(14.dp)
+                                            ) {
+                                                Row(
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                                                ) {
+                                                    // Letter badge
+                                                    Box(
+                                                        modifier = Modifier
+                                                            .size(28.dp)
+                                                            .background(if (isSelected && !isAnswerChecked) FigmaTheme.Orange else FigmaTheme.Paper)
+                                                            .border(1.dp, FigmaTheme.Ink),
+                                                        contentAlignment = Alignment.Center
+                                                    ) {
+                                                        Text(
+                                                            text = choiceLetter,
+                                                            fontFamily = FontFamily.Monospace,
+                                                            fontWeight = FontWeight.Bold,
+                                                            fontSize = 12.sp,
+                                                            color = FigmaTheme.Ink
+                                                        )
+                                                    }
+
+                                                    Text(
+                                                        text = opt,
+                                                        fontFamily = FontFamily.SansSerif,
+                                                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                                                        fontSize = 14.sp,
+                                                        lineHeight = 20.sp,
+                                                        color = textColor,
+                                                        modifier = Modifier.weight(1f)
+                                                    )
+
+                                                    if (isAnswerChecked && isCorrectOption) {
+                                                        Icon(Icons.Default.Check, contentDescription = "Correct", tint = FigmaTheme.Green, modifier = Modifier.size(18.dp))
+                                                    }
+                                                }
                                             }
                                         }
+                                    }
+                                } else {
+                                    // Numerical input
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .background(FigmaTheme.White)
+                                            .border(1.5.dp, FigmaTheme.Ink)
+                                            .padding(14.dp)
+                                    ) {
+                                        BasicTextField(
+                                            value = selectedAnswer,
+                                            onValueChange = { if (!isAnswerChecked) selectedAnswer = it },
+                                            enabled = !isAnswerChecked,
+                                            singleLine = true,
+                                            textStyle = TextStyle(
+                                                fontFamily = FontFamily.Monospace,
+                                                fontWeight = FontWeight.Bold,
+                                                fontSize = 14.sp,
+                                                color = FigmaTheme.Ink
+                                            ),
+                                            modifier = Modifier.fillMaxWidth()
+                                        )
+                                    }
+                                }
+
+                                // Answer checked feedback
+                                if (isAnswerChecked && evaluationResult != null) {
+                                    val eval = evaluationResult!!
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .background(if (eval.isCorrect) FigmaTheme.Mint else FigmaTheme.Salmon)
+                                            .border(1.5.dp, FigmaTheme.Ink)
+                                            .padding(14.dp)
+                                    ) {
+                                        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                            Row(
+                                                verticalAlignment = Alignment.CenterVertically,
+                                                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                            ) {
+                                                FigmaLabel(if (eval.isCorrect) "CORRECT" else "NOT QUITE")
+                                                Text(
+                                                    text = "· ${q.sourceCitation}",
+                                                    fontFamily = FontFamily.Monospace,
+                                                    fontSize = 9.sp,
+                                                    color = FigmaTheme.Muted
+                                                )
+                                            }
+                                            Text(
+                                                text = q.explanation,
+                                                fontFamily = FontFamily.Serif,
+                                                fontSize = 13.sp,
+                                                lineHeight = 18.sp,
+                                                color = FigmaTheme.Ink
+                                            )
+                                        }
+                                    }
+                                }
+
+                                // Action Buttons
+                                if (!isAnswerChecked) {
+                                    BrutalistButton(
+                                        text = "CHECK ANSWER",
+                                        onClick = {
+                                            if (selectedAnswer.isNotBlank()) {
+                                                scope.launch {
+                                                    val result = QuizEngine.submitQuestionAnswer(
+                                                        quizId = q.quizId,
+                                                        question = q,
+                                                        studentAnswer = selectedAnswer,
+                                                        database = db
+                                                    )
+                                                    evaluationResult = result
+                                                    isAnswerChecked = true
+                                                    if (result.isCorrect) totalScore++
+                                                    answeredRecords = answeredRecords + AnsweredQuestionRecord(q, selectedAnswer, result)
+                                                }
+                                            }
+                                        },
+                                        enabled = selectedAnswer.isNotBlank(),
+                                        backgroundColor = FigmaTheme.Orange,
+                                        textColor = FigmaTheme.Ink,
+                                        shadowOffset = 5.dp
                                     )
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    Text(
-                                        text = opt,
-                                        fontSize = 13.sp,
-                                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                                } else {
+                                    BrutalistButton(
+                                        text = if (currentQuestionIndex < questions.size - 1) "NEXT QUESTION" else "FINISH & VIEW RESULTS",
+                                        onClick = {
+                                            if (currentQuestionIndex < questions.size - 1) {
+                                                currentQuestionIndex++
+                                                selectedAnswer = ""
+                                                isAnswerChecked = false
+                                                evaluationResult = null
+                                            } else {
+                                                isQuizCompleted = true
+                                            }
+                                        },
+                                        backgroundColor = FigmaTheme.Ink,
+                                        textColor = FigmaTheme.White,
+                                        shadowOffset = 5.dp
                                     )
                                 }
                             }
                         }
-                    } else {
-                        // Numerical Question Input
-                        OutlinedTextField(
-                            value = selectedAnswer,
-                            onValueChange = { if (!isAnswerChecked) selectedAnswer = it },
-                            label = { Text("Enter Numerical Value (SI Units)") },
-                            modifier = Modifier.fillMaxWidth(),
-                            enabled = !isAnswerChecked,
-                            singleLine = true
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    if (!isAnswerChecked) {
-                        Button(
-                            onClick = {
-                                if (selectedAnswer.isNotBlank()) {
-                                    scope.launch {
-                                        val result = QuizEngine.submitQuestionAnswer(
-                                            quizId = q.quizId,
-                                            question = q,
-                                            studentAnswer = selectedAnswer,
-                                            database = db
-                                        )
-                                        evaluationResult = result
-                                        isAnswerChecked = true
-                                        if (result.isCorrect) totalScore++
-                                        answeredRecords = answeredRecords + AnsweredQuestionRecord(q, selectedAnswer, result)
-                                    }
-                                }
-                            },
-                            enabled = selectedAnswer.isNotBlank(),
-                            modifier = Modifier.fillMaxWidth()
+                    } else if (isQuizCompleted) {
+                        // POST-QUIZ RESULTS (Matching prototype .score-product & .feedback)
+                        BrutalistCard(
+                            backgroundColor = FigmaTheme.White,
+                            shadowOffset = 7.dp
                         ) {
-                            Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(16.dp))
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Text("Check Answer")
-                        }
-                    } else {
-                        // Answer Feedback & Next Button
-                        evaluationResult?.let { eval ->
-                            Surface(
-                                shape = RoundedCornerShape(12.dp),
-                                color = if (eval.isCorrect) Color(0xFFE8F5E9) else Color(0xFFFFEBEE),
-                                modifier = Modifier.fillMaxWidth()
+                            Column(
+                                modifier = Modifier.padding(24.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.spacedBy(12.dp)
                             ) {
-                                Column(modifier = Modifier.padding(12.dp)) {
-                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                FigmaLabel("ANSWER CHECKED")
+
+                                Row(
+                                    verticalAlignment = Alignment.Bottom,
+                                    horizontalArrangement = Arrangement.Center
+                                ) {
+                                    Text(
+                                        text = "$totalScore",
+                                        fontFamily = FontFamily.SansSerif,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 72.sp,
+                                        lineHeight = 72.sp,
+                                        color = FigmaTheme.Ink
+                                    )
+                                    Text(
+                                        text = " / ${questions.size}",
+                                        fontFamily = FontFamily.SansSerif,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 28.sp,
+                                        color = FigmaTheme.Muted,
+                                        modifier = Modifier.padding(bottom = 8.dp)
+                                    )
+                                }
+
+                                val pct = if (questions.isNotEmpty()) (totalScore * 100) / questions.size else 0
+                                Box(
+                                    modifier = Modifier
+                                        .background(if (pct >= 60) FigmaTheme.Mint else FigmaTheme.Salmon)
+                                        .border(1.dp, FigmaTheme.Ink)
+                                        .padding(horizontal = 12.dp, vertical = 4.dp)
+                                ) {
+                                    Text(
+                                        text = if (pct >= 60) "PASSED · $pct% MASTERED" else "NEEDS REVIEW · $pct%",
+                                        fontFamily = FontFamily.Monospace,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 11.sp,
+                                        color = FigmaTheme.Ink
+                                    )
+                                }
+
+                                val incorrectRecords = answeredRecords.filter { !it.evaluation.isCorrect }
+                                if (incorrectRecords.isNotEmpty()) {
+                                    Spacer(modifier = Modifier.height(4.dp))
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .background(FigmaTheme.Salmon)
+                                            .border(1.dp, FigmaTheme.Ink)
+                                            .padding(14.dp)
+                                    ) {
+                                        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                            FigmaLabel("AREAS NEEDING ATTENTION")
+                                            incorrectRecords.map { it.question.conceptId.replace("concept_", "").replace("_", " ") }.distinct().forEach { concept ->
+                                                Text(
+                                                    text = "• ${concept.uppercase()}",
+                                                    fontFamily = FontFamily.Monospace,
+                                                    fontSize = 11.sp,
+                                                    fontWeight = FontWeight.Bold,
+                                                    color = FigmaTheme.Ink
+                                                )
+                                            }
+                                        }
+                                    }
+
+                                    BrutalistButton(
+                                        text = "OPEN TARGETED REMEDIAL",
+                                        onClick = onRemedialTriggered,
+                                        backgroundColor = FigmaTheme.Orange,
+                                        textColor = FigmaTheme.Ink,
+                                        shadowOffset = 4.dp
+                                    )
+                                }
+
+                                BrutalistButton(
+                                    text = "PRACTICE ANOTHER QUIZ",
+                                    onClick = { loadQuiz() },
+                                    backgroundColor = FigmaTheme.Paper,
+                                    textColor = FigmaTheme.Ink,
+                                    shadowOffset = 4.dp
+                                )
+                            }
+                        }
+
+                        // Detailed Review List
+                        FigmaLabel("DETAILED QUESTION REVIEW")
+
+                        answeredRecords.forEachIndexed { idx, record ->
+                            BrutalistCard(
+                                backgroundColor = if (record.evaluation.isCorrect) FigmaTheme.Mint else FigmaTheme.Salmon,
+                                shadowOffset = 4.dp
+                            ) {
+                                Column(
+                                    modifier = Modifier.padding(14.dp),
+                                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                                ) {
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Text(
+                                            text = "Q${idx + 1}: ${record.question.questionText}",
+                                            fontFamily = FontFamily.SansSerif,
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 13.sp,
+                                            color = FigmaTheme.Ink,
+                                            modifier = Modifier.weight(1f)
+                                        )
                                         Icon(
-                                            imageVector = if (eval.isCorrect) Icons.Default.CheckCircle else Icons.Default.Close,
+                                            imageVector = if (record.evaluation.isCorrect) Icons.Default.CheckCircle else Icons.Default.Close,
                                             contentDescription = null,
-                                            tint = if (eval.isCorrect) Color(0xFF2E7D32) else Color(0xFFC62828),
+                                            tint = if (record.evaluation.isCorrect) FigmaTheme.Green else Color(0xFFC62828),
                                             modifier = Modifier.size(18.dp)
                                         )
-                                        Spacer(modifier = Modifier.width(8.dp))
+                                    }
+                                    Text(
+                                        text = "YOUR ANSWER: ${record.studentAnswer}",
+                                        fontFamily = FontFamily.Monospace,
+                                        fontSize = 11.sp,
+                                        color = FigmaTheme.Ink
+                                    )
+                                    if (!record.evaluation.isCorrect) {
                                         Text(
-                                            text = if (eval.isCorrect) "Correct!" else "Incorrect (Correct: ${q.correctAnswer})",
+                                            text = "CORRECT: ${record.question.correctAnswer}",
+                                            fontFamily = FontFamily.Monospace,
                                             fontWeight = FontWeight.Bold,
-                                            color = if (eval.isCorrect) Color(0xFF2E7D32) else Color(0xFFC62828),
-                                            fontSize = 13.sp
+                                            fontSize = 11.sp,
+                                            color = FigmaTheme.Green
                                         )
                                     }
-                                    Spacer(modifier = Modifier.height(4.dp))
                                     Text(
-                                        text = q.explanation,
+                                        text = "EXPLANATION: ${record.question.explanation}",
+                                        fontFamily = FontFamily.Serif,
                                         fontSize = 12.sp,
-                                        color = Color.DarkGray
-                                    )
-                                    Spacer(modifier = Modifier.height(4.dp))
-                                    Text(
-                                        text = "Source: ${q.sourceCitation}",
-                                        fontSize = 10.sp,
-                                        fontWeight = FontWeight.SemiBold,
-                                        color = MaterialTheme.colorScheme.primary
+                                        color = FigmaTheme.Muted
                                     )
                                 }
                             }
                         }
-
-                        Spacer(modifier = Modifier.height(12.dp))
-
-                        Button(
-                            onClick = {
-                                if (currentQuestionIndex < questions.size - 1) {
-                                    currentQuestionIndex++
-                                    selectedAnswer = ""
-                                    isAnswerChecked = false
-                                    evaluationResult = null
-                                } else {
-                                    isQuizCompleted = true
-                                }
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text(if (currentQuestionIndex < questions.size - 1) "Next Question" else "Finish & View Results")
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null, modifier = Modifier.size(16.dp))
-                        }
-                    }
-                }
-            }
-        } else if (isQuizCompleted) {
-            // Post-Quiz Full Results & Mastery Analysis
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
-            ) {
-                Column(
-                    modifier = Modifier.padding(20.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.CheckCircle,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(48.dp)
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "Assessment Completed!",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = "Final Score: $totalScore / ${questions.size} (${if (questions.isNotEmpty()) (totalScore * 100) / questions.size else 0}%)",
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.ExtraBold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    val incorrectRecords = answeredRecords.filter { !it.evaluation.isCorrect }
-                    if (incorrectRecords.isNotEmpty()) {
-                        Surface(
-                            shape = RoundedCornerShape(12.dp),
-                            color = MaterialTheme.colorScheme.errorContainer,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Column(modifier = Modifier.padding(12.dp)) {
-                                Text(
-                                    text = "Areas Needing Attention (${incorrectRecords.size} concepts):",
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 12.sp,
-                                    color = MaterialTheme.colorScheme.onErrorContainer
-                                )
-                                incorrectRecords.map { it.question.conceptId.replace("concept_", "").replace("_", " ") }.distinct().forEach { concept ->
-                                    Text("• ${concept.replaceFirstChar { it.uppercase() }}", fontSize = 12.sp, color = MaterialTheme.colorScheme.onErrorContainer)
-                                }
-                            }
-                        }
-
-                        Spacer(modifier = Modifier.height(12.dp))
-                        Button(
-                            onClick = onRemedialTriggered,
-                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Icon(Icons.Default.AutoAwesome, contentDescription = null, modifier = Modifier.size(16.dp))
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Text("Open Targeted Remedial Lessons")
-                        }
                     }
 
-                    Spacer(modifier = Modifier.height(8.dp))
-                    OutlinedButton(
-                        onClick = { loadQuiz() },
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Icon(Icons.Default.Refresh, contentDescription = null, modifier = Modifier.size(16.dp))
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text("Practice Another Quiz")
-                    }
-                }
-            }
-
-            // Detailed Question Review Breakdown
-            Text(
-                text = "Detailed Question Review",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
-
-            answeredRecords.forEachIndexed { idx, record ->
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = if (record.evaluation.isCorrect) Color(0xFFF1F8E9) else Color(0xFFFFEBEE)
-                    )
-                ) {
-                    Column(modifier = Modifier.padding(12.dp)) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text("Q${idx + 1}: ${record.question.questionText}", fontWeight = FontWeight.Bold, fontSize = 13.sp, modifier = Modifier.weight(1f))
-                            Icon(
-                                imageVector = if (record.evaluation.isCorrect) Icons.Default.CheckCircle else Icons.Default.Close,
-                                contentDescription = null,
-                                tint = if (record.evaluation.isCorrect) Color(0xFF2E7D32) else Color(0xFFC62828),
-                                modifier = Modifier.size(18.dp)
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text("Your Answer: ${record.studentAnswer}", fontSize = 12.sp)
-                        if (!record.evaluation.isCorrect) {
-                            Text("Correct Answer: ${record.question.correctAnswer}", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = Color(0xFF2E7D32))
-                        }
-                        Text("Explanation: ${record.question.explanation}", fontSize = 11.sp, color = Color.DarkGray)
-                    }
+                    Spacer(modifier = Modifier.height(100.dp))
                 }
             }
         }
     }
-}
-}
 }

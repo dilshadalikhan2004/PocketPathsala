@@ -6,26 +6,28 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.dilshad.myapplication.ui.theme.FigmaTheme
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -100,49 +102,78 @@ fun PocketPathshalaApp() {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
-            NavigationBar(
-                containerColor = Color(0xFFFBF9F3),
-                tonalElevation = 0.dp,
-                modifier = Modifier.border(
-                    BorderStroke(1.dp, Color(0xFFC5C6CD).copy(alpha = 0.35f))
-                )
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 14.dp, vertical = 10.dp)
+                    .height(66.dp),
+                shape = RoundedCornerShape(14.dp),
+                color = FigmaTheme.White,
+                border = BorderStroke(1.5.dp, FigmaTheme.Ink),
+                shadowElevation = 8.dp
             ) {
-                bottomNavScreens.forEachIndexed { index, screen ->
-                    val isSelected = currentRoute == screen.route
-                    NavigationBarItem(
-                        selected = isSelected,
-                        onClick = {
-                            if (screen.route == Screen.Home.route) {
-                                navController.popBackStack(Screen.Home.route, inclusive = false)
-                            } else if (currentRoute != screen.route) {
-                                navigateToTab(screen.route)
+                Row(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    bottomNavScreens.forEachIndexed { index, screen ->
+                        val isSelected = currentRoute == screen.route
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxHeight()
+                                .background(if (isSelected) FigmaTheme.Ink else FigmaTheme.White)
+                                .clickable {
+                                    if (screen.route == Screen.Home.route) {
+                                        navController.popBackStack(Screen.Home.route, inclusive = false)
+                                    } else if (currentRoute != screen.route) {
+                                        navigateToTab(screen.route)
+                                    }
+                                },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            // Top orange accent line when selected
+                            if (isSelected) {
+                                Box(
+                                    modifier = Modifier
+                                        .align(Alignment.TopCenter)
+                                        .width(32.dp)
+                                        .height(3.dp)
+                                        .background(FigmaTheme.Orange, RoundedCornerShape(bottomStart = 3.dp, bottomEnd = 3.dp))
+                                )
                             }
-                        },
-                        icon = {
-                            Icon(
-                                imageVector = screen.icon,
-                                contentDescription = screen.title
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Icon(
+                                    imageVector = screen.icon,
+                                    contentDescription = screen.title,
+                                    tint = if (isSelected) FigmaTheme.White else FigmaTheme.Muted,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                                Spacer(modifier = Modifier.height(3.dp))
+                                Text(
+                                    text = "0${index + 1} ${screen.title.uppercase()}",
+                                    fontFamily = FontFamily.Monospace,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 9.sp,
+                                    letterSpacing = 0.6.sp,
+                                    color = if (isSelected) FigmaTheme.White else FigmaTheme.Muted,
+                                    maxLines = 1,
+                                    softWrap = false
+                                )
+                            }
+                        }
+                        if (index < bottomNavScreens.lastIndex) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .width(1.dp)
+                                    .background(FigmaTheme.Hairline)
                             )
-                        },
-                        label = {
-                            Text(
-                                text = "0${index + 1} ${screen.title.uppercase()}",
-                                fontFamily = FontFamily.Monospace,
-                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                                fontSize = 10.sp,
-                                letterSpacing = 0.5.sp,
-                                maxLines = 1,
-                                softWrap = false
-                            )
-                        },
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = Color(0xFFFD591E),
-                            selectedTextColor = Color(0xFFFD591E),
-                            indicatorColor = Color(0xFFFD591E).copy(alpha = 0.12f),
-                            unselectedIconColor = Color(0xFF75777D),
-                            unselectedTextColor = Color(0xFF75777D)
-                        )
-                    )
+                        }
+                    }
                 }
             }
         }

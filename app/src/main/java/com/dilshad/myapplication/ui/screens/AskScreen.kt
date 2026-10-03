@@ -4,9 +4,6 @@ import android.Manifest
 import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.*
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -15,30 +12,27 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
@@ -51,28 +45,11 @@ import com.dilshad.myapplication.data.db.entities.MessageEntity
 import com.dilshad.myapplication.domain.ai.AIOrchestrator
 import com.dilshad.myapplication.domain.voice.VoiceEngine
 import com.dilshad.myapplication.domain.voice.VoiceState
+import com.dilshad.myapplication.ui.theme.*
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import java.util.UUID
 
-// Swiss Textbook Design System Palette (NCERT Offline Aesthetic)
-private val SwissSurface = Color(0xFFFBF9F3)
-private val SwissSurfaceContainerLowest = Color(0xFFFFFFFF)
-private val SwissSurfaceContainerLow = Color(0xFFF5F3ED)
-private val SwissSurfaceContainer = Color(0xFFF0EEE8)
-private val SwissSurfaceContainerHigh = Color(0xFFEAE8E2)
-private val SwissSurfaceContainerHighest = Color(0xFFE4E2DD)
-private val SwissPrimary = Color(0xFF000000)
-private val SwissSecondary = Color(0xFFAE3200)
-private val SwissSecondaryContainer = Color(0xFFFD591E)
-private val SwissOnSecondaryContainer = Color(0xFF521300)
-private val SwissOnSurface = Color(0xFF1B1C18)
-private val SwissOnSurfaceVariant = Color(0xFF44474C)
-private val SwissOutlineVariant = Color(0xFFC5C6CD)
-private val SwissGreen = Color(0xFF047857)
-private val SwissGreenLight = Color(0xFF10B981)
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AskScreen(
     initialPrompt: String? = null,
@@ -98,24 +75,12 @@ fun AskScreen(
     var selectedClassLevel by remember { mutableIntStateOf(10) }
     var selectedBookId by remember { mutableStateOf<String?>(initialBookId ?: "ncert-class-10-science") }
     var selectedChapter by remember { mutableStateOf<String?>("Light - Reflection and Refraction") }
-    var selectedScopeMode by remember { mutableStateOf("CURRENT_PAGE") } // "CURRENT_PAGE" or "ENTIRE_TEXTBOOK"
-    var activePageRange by remember { mutableStateOf("P. 161–180") }
+    var selectedScopeMode by remember { mutableStateOf("CURRENT_PAGE") } // "CURRENT_PAGE", "CURRENT_CHAPTER", "ENTIRE_BOOK"
+    var activePageRange by remember { mutableStateOf("PAGE 161–180") }
 
     var showClassPicker by remember { mutableStateOf(false) }
     var showBookPicker by remember { mutableStateOf(false) }
     var showChapterPicker by remember { mutableStateOf(false) }
-
-    // Pulsing animation for active offline NPU / retrieval inference
-    val infiniteTransition = rememberInfiniteTransition(label = "pulse")
-    val pulseAlpha by infiniteTransition.animateFloat(
-        initialValue = 0.4f,
-        targetValue = 1.0f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(800, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "pulseAlpha"
-    )
 
     val voiceEngine = remember {
         VoiceEngine(
@@ -228,317 +193,186 @@ fun AskScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(SwissSurface)
+            .background(FigmaTheme.Paper)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(scrollState)
-                .padding(horizontal = 16.dp, vertical = 12.dp),
-            verticalArrangement = Arrangement.spacedBy(14.dp)
+                .padding(horizontal = 20.dp, vertical = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(18.dp)
         ) {
-            // 1. HEADER SECTION (No mock OS status bar, clean application title)
-            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            // 1. PAGE HEADER (Pixel-identical to .product-page-head)
+            FigmaPageHead(
+                label = "02 / ASK",
+                title = "ASK YOUR\nTEXTBOOK.",
+                copy = "Search real textbook evidence grounded on this device."
+            )
+
+            // 2. CONTEXT BOX (Matching prototype .context-box)
+            // Left border: 4dp solid #4F7B72, Background: FigmaTheme.Mint, Border: 1.5dp FigmaTheme.Ink
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(FigmaTheme.Mint)
+                    .border(1.5.dp, FigmaTheme.Ink)
+            ) {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(14.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    // BOOK Column
+                    Column(
+                        modifier = Modifier
+                            .clickable { showBookPicker = true }
+                            .weight(1f),
+                        verticalArrangement = Arrangement.spacedBy(2.dp)
                     ) {
-                        Surface(
-                            shape = RoundedCornerShape(2.dp),
-                            color = SwissPrimary
-                        ) {
-                            Text(
-                                text = "SECTION 03",
-                                color = Color.White,
-                                fontFamily = FontFamily.Monospace,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 10.sp,
-                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
-                            )
-                        }
-                        Text(
-                            text = "STUDY COMPANION",
-                            fontFamily = FontFamily.Monospace,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 11.sp,
-                            color = SwissOnSurfaceVariant
-                        )
-                    }
-                }
-
-                Text(
-                    text = "03 / ASK",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 28.sp,
-                    letterSpacing = (-0.5).sp,
-                    color = SwissOnSurface
-                )
-
-                Text(
-                    text = "Ask your textbook. Grounded strictly in verified NCERT pages.",
-                    fontSize = 12.sp,
-                    color = SwissOnSurfaceVariant,
-                    lineHeight = 16.sp
-                )
-            }
-
-            // 2. CURRICULUM SCOPE PICKER BAR (Horizontally scrollable with brutalist shadow pills)
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .horizontalScroll(rememberScrollState()),
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // Class Selector Chip
-                Surface(
-                    shape = RoundedCornerShape(2.dp),
-                    color = SwissSurfaceContainerHighest,
-                    border = BorderStroke(1.dp, SwissPrimary),
-                    modifier = Modifier.clickable { showClassPicker = true }
-                ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Text(
-                            text = "CLASS ${if (selectedClassLevel < 10) "0$selectedClassLevel" else selectedClassLevel}",
-                            fontFamily = FontFamily.Monospace,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 11.sp,
-                            color = SwissOnSurface
-                        )
-                        Icon(Icons.Default.ExpandMore, contentDescription = null, modifier = Modifier.size(14.dp))
-                    }
-                }
-
-                // Subject / Book Chip
-                Surface(
-                    shape = RoundedCornerShape(2.dp),
-                    color = SwissSurfaceContainerHighest,
-                    border = BorderStroke(1.dp, SwissPrimary),
-                    modifier = Modifier.clickable { showBookPicker = true }
-                ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
+                        FigmaLabel("BOOK")
                         Text(
                             text = (activeBook?.subject ?: "SCIENCE").uppercase(),
-                            fontFamily = FontFamily.Monospace,
+                            fontFamily = FontFamily.SansSerif,
                             fontWeight = FontWeight.Bold,
-                            fontSize = 11.sp,
-                            color = SwissOnSurface
+                            fontSize = 14.sp,
+                            color = FigmaTheme.Ink
                         )
-                        Icon(Icons.Default.ExpandMore, contentDescription = null, modifier = Modifier.size(14.dp))
                     }
-                }
 
-                // Chapter Chip
-                Surface(
-                    shape = RoundedCornerShape(2.dp),
-                    color = SwissSurfaceContainerHighest,
-                    border = BorderStroke(1.dp, SwissPrimary),
-                    modifier = Modifier.clickable { showChapterPicker = true }
-                ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    // Divider
+                    Box(modifier = Modifier.width(1.dp).height(28.dp).background(FigmaTheme.Hairline))
+
+                    // PAGE / CHAPTER Column
+                    Column(
+                        modifier = Modifier
+                            .clickable { showChapterPicker = true }
+                            .padding(horizontal = 10.dp)
+                            .weight(1f),
+                        verticalArrangement = Arrangement.spacedBy(2.dp)
                     ) {
-                        val chLabel = selectedChapter?.take(18) ?: "ALL CHAPTERS"
+                        FigmaLabel("SCOPE")
                         Text(
-                            text = chLabel.uppercase(),
-                            fontFamily = FontFamily.Monospace,
+                            text = when (selectedScopeMode) {
+                                "CURRENT_PAGE" -> "PAGE 161"
+                                "CURRENT_CHAPTER" -> "CH 10"
+                                else -> "ALL PAGES"
+                            },
+                            fontFamily = FontFamily.SansSerif,
                             fontWeight = FontWeight.Bold,
-                            fontSize = 11.sp,
-                            color = SwissOnSurface
+                            fontSize = 14.sp,
+                            color = FigmaTheme.Ink
                         )
-                        Icon(Icons.Default.ExpandMore, contentDescription = null, modifier = Modifier.size(14.dp))
                     }
-                }
 
-                // Page Range Stamp
-                Surface(
-                    shape = RoundedCornerShape(2.dp),
-                    color = SwissSurfaceContainerHigh
-                ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    // Divider
+                    Box(modifier = Modifier.width(1.dp).height(28.dp).background(FigmaTheme.Hairline))
+
+                    // INDEX STATUS Column
+                    Column(
+                        modifier = Modifier
+                            .padding(start = 10.dp)
+                            .weight(1f),
+                        verticalArrangement = Arrangement.spacedBy(2.dp)
                     ) {
-                        Icon(Icons.Default.MenuBook, contentDescription = null, tint = SwissSecondary, modifier = Modifier.size(13.dp))
-                        Text(
-                            text = activePageRange,
-                            fontFamily = FontFamily.Monospace,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 11.sp,
-                            color = SwissOnSurface
+                        FigmaLabel("INDEX")
+                        FigmaReadyLabel(
+                            text = "READY",
+                            online = true
                         )
                     }
                 }
             }
 
-            // 3. SCOPE SEGMENTED TOGGLE (CURRENT PAGE vs ENTIRE TEXTBOOK)
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(SwissSurfaceContainerHigh, RoundedCornerShape(2.dp))
-                    .padding(3.dp),
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            // 3. QUESTION BOX (Matching prototype .question-box)
+            BrutalistCard(
+                backgroundColor = FigmaTheme.White,
+                shadowOffset = 6.dp
             ) {
-                Surface(
-                    shape = RoundedCornerShape(2.dp),
-                    color = if (selectedScopeMode == "CURRENT_PAGE") SwissPrimary else Color.Transparent,
-                    modifier = Modifier
-                        .weight(1f)
-                        .clickable { selectedScopeMode = "CURRENT_PAGE" }
+                Column(
+                    modifier = Modifier.padding(18.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    Text(
-                        text = "CURRENT PAGE 161",
-                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-                        fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 11.sp,
-                        color = if (selectedScopeMode == "CURRENT_PAGE") Color.White else SwissOnSurfaceVariant,
-                        modifier = Modifier.padding(vertical = 6.dp)
-                    )
-                }
+                    FigmaLabel("WHAT DO YOU WANT TO UNDERSTAND?")
 
-                Surface(
-                    shape = RoundedCornerShape(2.dp),
-                    color = if (selectedScopeMode == "ENTIRE_TEXTBOOK") SwissPrimary else Color.Transparent,
-                    modifier = Modifier
-                        .weight(1f)
-                        .clickable { selectedScopeMode = "ENTIRE_TEXTBOOK" }
-                ) {
-                    Text(
-                        text = "ENTIRE TEXTBOOK",
-                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-                        fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 11.sp,
-                        color = if (selectedScopeMode == "ENTIRE_TEXTBOOK") Color.White else SwissOnSurfaceVariant,
-                        modifier = Modifier.padding(vertical = 6.dp)
-                    )
-                }
-            }
-
-            // 4. QUESTION INPUT CARD (Swiss brutalist container with shadow offset)
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(2.dp),
-                colors = CardDefaults.cardColors(containerColor = SwissSurfaceContainerLowest),
-                border = BorderStroke(1.dp, SwissPrimary)
-            ) {
-                Column {
-                    // Card Top Strip
-                    Row(
+                    Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(SwissSurfaceContainerHigh)
-                            .padding(horizontal = 12.dp, vertical = 6.dp),
+                            .heightIn(min = 90.dp)
+                    ) {
+                        if (inputText.isEmpty()) {
+                            Text(
+                                text = "Why is the focal length of a spherical mirror half its radius of curvature?",
+                                fontFamily = FontFamily.Serif,
+                                fontSize = 16.sp,
+                                lineHeight = 24.sp,
+                                color = FigmaTheme.Muted
+                            )
+                        }
+                        BasicTextField(
+                            value = inputText,
+                            onValueChange = { inputText = it },
+                            textStyle = TextStyle(
+                                fontFamily = FontFamily.SansSerif,
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 18.sp,
+                                lineHeight = 26.sp,
+                                color = FigmaTheme.Ink
+                            ),
+                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                            keyboardActions = KeyboardActions(onDone = {
+                                if (inputText.isNotBlank()) sendPrompt(inputText)
+                            }),
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+
+                    // Action buttons row: [SCAN] + [VOICE] + [CLEAR]
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            Icon(Icons.Default.Help, contentDescription = null, tint = SwissSecondary, modifier = Modifier.size(13.dp))
-                            Text(
-                                text = "YOUR QUESTION",
-                                fontFamily = FontFamily.Monospace,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 11.sp,
-                                color = SwissOnSurface
-                            )
-                        }
-                        Text(
-                            text = "ASK ANY CONCEPT",
-                            fontFamily = FontFamily.Monospace,
-                            fontSize = 10.sp,
-                            color = SwissOnSurfaceVariant
-                        )
-                    }
-
-                    // Card Body
-                    Column(
-                        modifier = Modifier.padding(12.dp),
-                        verticalArrangement = Arrangement.spacedBy(10.dp)
-                    ) {
-                        OutlinedTextField(
-                            value = inputText,
-                            onValueChange = { inputText = it },
-                            placeholder = {
-                                Text(
-                                    text = "Why is the focal length of a spherical mirror half its radius of curvature?",
-                                    fontSize = 13.sp,
-                                    color = SwissOnSurfaceVariant.copy(alpha = 0.5f)
-                                )
-                            },
-                            modifier = Modifier.fillMaxWidth(),
-                            minLines = 3,
-                            maxLines = 5,
-                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                            keyboardActions = KeyboardActions(onDone = {
-                                if (inputText.isNotBlank()) sendPrompt(inputText)
-                            }),
-                            colors = OutlinedTextFieldDefaults.colors(
-                                focusedBorderColor = SwissPrimary,
-                                unfocusedBorderColor = SwissOutlineVariant.copy(alpha = 0.4f),
-                                focusedContainerColor = Color.Transparent,
-                                unfocusedContainerColor = Color.Transparent
-                            )
-                        )
-
-                        // Bottom Actions: [ 📷 SCAN ] + [ 🎙️ HINDI/ENG MIC ] + [ CLEAR ]
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                            // 📷 Scan Textbook Page Button
+                            Box(
+                                modifier = Modifier
+                                    .background(FigmaTheme.Paper)
+                                    .border(1.5.dp, FigmaTheme.Ink)
+                                    .clickable { onNavigateToScan?.invoke() }
+                                    .padding(horizontal = 10.dp, vertical = 7.dp)
                             ) {
-                                // 📷 Scan Textbook Page Button
-                                Surface(
-                                    shape = RoundedCornerShape(2.dp),
-                                    color = SwissSurfaceContainer,
-                                    border = BorderStroke(1.dp, SwissOutlineVariant.copy(alpha = 0.5f)),
-                                    modifier = Modifier.clickable { onNavigateToScan?.invoke() }
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
                                 ) {
-                                    Row(
-                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
-                                        verticalAlignment = Alignment.CenterVertically,
-                                        horizontalArrangement = Arrangement.spacedBy(4.dp)
-                                    ) {
-                                        Icon(Icons.Default.CameraAlt, contentDescription = "Scan Page", modifier = Modifier.size(15.dp), tint = SwissOnSurface)
-                                        Text(
-                                            text = "SCAN",
-                                            fontFamily = FontFamily.Monospace,
-                                            fontWeight = FontWeight.Bold,
-                                            fontSize = 11.sp,
-                                            color = SwissOnSurface
-                                        )
-                                    }
+                                    Icon(
+                                        Icons.Default.CameraAlt,
+                                        contentDescription = "Scan",
+                                        tint = FigmaTheme.Ink,
+                                        modifier = Modifier.size(14.dp)
+                                    )
+                                    Text(
+                                        text = "SCAN",
+                                        fontFamily = FontFamily.Monospace,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 10.sp,
+                                        color = FigmaTheme.Ink
+                                    )
                                 }
+                            }
 
-                                // 🎙️ Voice Input Button with Waveform Animation
-                                val isListening = voiceEngine.state == VoiceState.LISTENING
-                                Surface(
-                                    shape = RoundedCornerShape(2.dp),
-                                    color = if (isListening) SwissSecondary else SwissSecondaryContainer,
-                                    modifier = Modifier.clickable {
+                            // 🎙️ Voice Input Button
+                            val isListening = voiceEngine.state == VoiceState.LISTENING
+                            Box(
+                                modifier = Modifier
+                                    .background(if (isListening) FigmaTheme.Orange else FigmaTheme.Ink)
+                                    .border(1.5.dp, FigmaTheme.Ink)
+                                    .clickable {
                                         if (isListening) {
                                             voiceEngine.stopListening()
                                         } else {
@@ -550,209 +384,99 @@ fun AskScreen(
                                             }
                                         }
                                     }
-                                ) {
-                                    Row(
-                                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
-                                        verticalAlignment = Alignment.CenterVertically,
-                                        horizontalArrangement = Arrangement.spacedBy(6.dp)
-                                    ) {
-                                        Icon(
-                                            if (isListening) Icons.Default.MicOff else Icons.Default.Mic,
-                                            contentDescription = "Voice Input",
-                                            modifier = Modifier.size(15.dp),
-                                            tint = Color.White
-                                        )
-                                        Text(
-                                            text = if (isListening) "LISTENING..." else "HINDI/ENG MIC",
-                                            fontFamily = FontFamily.Monospace,
-                                            fontWeight = FontWeight.Bold,
-                                            fontSize = 11.sp,
-                                            color = Color.White
-                                        )
-
-                                        // Animated Wave Bars
-                                        Row(
-                                            verticalAlignment = Alignment.CenterVertically,
-                                            horizontalArrangement = Arrangement.spacedBy(2.dp)
-                                        ) {
-                                            Box(modifier = Modifier.size(width = 2.dp, height = if (isListening) 12.dp else 6.dp).background(Color.White))
-                                            Box(modifier = Modifier.size(width = 2.dp, height = if (isListening) 16.dp else 10.dp).background(Color.White))
-                                            Box(modifier = Modifier.size(width = 2.dp, height = if (isListening) 10.dp else 6.dp).background(Color.White))
-                                        }
-                                    }
-                                }
-                            }
-
-                            // CLEAR Button
-                            TextButton(
-                                onClick = { inputText = "" },
-                                contentPadding = PaddingValues(horizontal = 6.dp, vertical = 2.dp)
-                            ) {
-                                Text(
-                                    text = "CLEAR",
-                                    fontFamily = FontFamily.Monospace,
-                                    fontSize = 11.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = SwissOnSurfaceVariant
-                                )
-                            }
-                        }
-
-                        // Massive Primary Button: [ ⚡ ASK YOUR TEXTBOOK ] [ ENTER ↵ ]
-                        Button(
-                            onClick = {
-                                val query = inputText.ifBlank { "Why is the focal length of a spherical mirror half its radius of curvature?" }
-                                sendPrompt(query)
-                            },
-                            colors = ButtonDefaults.buttonColors(containerColor = SwissSecondary),
-                            shape = RoundedCornerShape(2.dp),
-                            modifier = Modifier.fillMaxWidth(),
-                            contentPadding = PaddingValues(horizontal = 14.dp, vertical = 12.dp)
-                        ) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
+                                    .padding(horizontal = 10.dp, vertical = 7.dp)
                             ) {
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.spacedBy(6.dp)
                                 ) {
-                                    Icon(Icons.Default.Bolt, contentDescription = null, tint = Color.White, modifier = Modifier.size(18.dp))
-                                    Text(
-                                        text = if (isThinking) "INFERRING FROM EVIDENCE..." else "ASK YOUR TEXTBOOK",
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 14.sp,
-                                        letterSpacing = 0.5.sp,
-                                        color = Color.White
+                                    Icon(
+                                        if (isListening) Icons.Default.MicOff else Icons.Default.Mic,
+                                        contentDescription = "Voice",
+                                        tint = FigmaTheme.White,
+                                        modifier = Modifier.size(14.dp)
                                     )
-                                }
-
-                                Surface(
-                                    shape = RoundedCornerShape(2.dp),
-                                    color = Color.White.copy(alpha = 0.2f)
-                                ) {
                                     Text(
-                                        text = "ENTER ↵",
+                                        text = if (isListening) "LISTENING..." else "MIC",
                                         fontFamily = FontFamily.Monospace,
                                         fontWeight = FontWeight.Bold,
                                         fontSize = 10.sp,
-                                        color = Color.White,
-                                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                        color = FigmaTheme.White
                                     )
                                 }
                             }
                         }
-                    }
-                }
-            }
 
-            // 5. LIVE SEARCHING / EVIDENCE PIPELINE STATUS (Shown during thinking or as active verification)
-            Surface(
-                shape = RoundedCornerShape(2.dp),
-                color = SwissSurfaceContainerLow,
-                border = BorderStroke(1.dp, SwissOutlineVariant.copy(alpha = 0.35f)),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Column(
-                    modifier = Modifier.padding(12.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(6.dp)
-                        ) {
-                            Box(
+                        if (inputText.isNotEmpty()) {
+                            Text(
+                                text = "CLEAR",
+                                fontFamily = FontFamily.Monospace,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 11.sp,
+                                color = FigmaTheme.Muted,
                                 modifier = Modifier
-                                    .size(8.dp)
-                                    .clip(CircleShape)
-                                    .background(SwissGreenLight)
-                            )
-                            Text(
-                                text = if (isThinking) "SEARCHING YOUR TEXTBOOK..." else "OFFLINE EVIDENCE PIPELINE",
-                                fontFamily = FontFamily.Monospace,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 11.sp,
-                                color = SwissOnSurface
-                            )
-                        }
-
-                        Surface(
-                            shape = RoundedCornerShape(2.dp),
-                            color = SwissSurfaceContainerHigh
-                        ) {
-                            Text(
-                                text = (activeBook?.title ?: "NCERT SCIENCE").uppercase(),
-                                fontFamily = FontFamily.Monospace,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 9.sp,
-                                color = SwissOnSurfaceVariant,
-                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
-                            )
-                        }
-                    }
-
-                    // Stepped Verification Rows
-                    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                        PipelineStepRow(
-                            isDone = true,
-                            title = "Checking Chapter 10: Light – Reflection and Refraction",
-                            subtitle = "NCERT Science Class 10 Textbook"
-                        )
-
-                        PipelineStepRow(
-                            isDone = true,
-                            title = "Found relevant textbook pages (Pages 161–163)",
-                            tags = listOf("§10.1 Laws of Reflection", "Fig 10.1 Plane Reflection")
-                        )
-
-                        PipelineStepRow(
-                            isDone = !isThinking,
-                            isActive = isThinking,
-                            title = if (isThinking) "Reading textbook and synthesizing grounded answer..." else "Verified on-device Gemma inference ready",
-                            subtitle = "Strict anti-hallucination evidence gate active"
-                        )
-
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(6.dp),
-                            modifier = Modifier.padding(top = 2.dp)
-                        ) {
-                            Icon(Icons.Default.Verified, contentDescription = null, tint = SwissSecondary, modifier = Modifier.size(13.dp))
-                            Text(
-                                text = "Grounded strictly in verified textbook pages • Works offline",
-                                fontSize = 11.sp,
-                                color = SwissOnSurfaceVariant
+                                    .clickable { inputText = "" }
+                                    .padding(4.dp)
                             )
                         }
                     }
                 }
             }
 
-            // 6. FOUNDATIONAL PROMPTS (CH 10) - STAMPED FOR EXAM
-            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+            // 4. SEARCH SCOPE SELECTOR (Matching prototype .scope)
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                FigmaLabel("SEARCH SCOPE")
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    BrutalistChip(
+                        text = "CURRENT PAGE",
+                        selected = selectedScopeMode == "CURRENT_PAGE",
+                        onClick = { selectedScopeMode = "CURRENT_PAGE" },
+                        modifier = Modifier.weight(1f)
+                    )
+                    BrutalistChip(
+                        text = "CURRENT CHAPTER",
+                        selected = selectedScopeMode == "CURRENT_CHAPTER",
+                        onClick = { selectedScopeMode = "CURRENT_CHAPTER" },
+                        modifier = Modifier.weight(1f)
+                    )
+                    BrutalistChip(
+                        text = "ENTIRE BOOK",
+                        selected = selectedScopeMode == "ENTIRE_BOOK",
+                        onClick = { selectedScopeMode = "ENTIRE_BOOK" },
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+            }
+
+            // 5. PRIMARY ASK BUTTON (Tactile Brutalist Button)
+            BrutalistButton(
+                text = if (isThinking) "SEARCHING LOCAL PAGES..." else "ASK YOUR TEXTBOOK",
+                onClick = {
+                    val query = inputText.ifBlank { "Why is the focal length of a spherical mirror half its radius of curvature?" }
+                    sendPrompt(query)
+                },
+                backgroundColor = FigmaTheme.Orange,
+                textColor = FigmaTheme.Ink,
+                shadowOffset = 5.dp,
+                enabled = !isThinking
+            )
+
+            // 6. FOUNDATIONAL PROMPTS
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = "FOUNDATIONAL PROMPTS (CH 10)",
-                        fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 11.sp,
-                        color = SwissOnSurface
-                    )
+                    FigmaLabel("FOUNDATIONAL PROMPTS (CH 10)")
                     Text(
                         text = "STAMPED FOR EXAM",
                         fontFamily = FontFamily.Monospace,
-                        fontSize = 10.sp,
-                        color = SwissOnSurfaceVariant
+                        fontSize = 9.sp,
+                        color = FigmaTheme.Muted
                     )
                 }
 
@@ -767,160 +491,122 @@ fun AskScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .horizontalScroll(rememberScrollState()),
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     prompts.forEach { (label, fullQuery) ->
-                        Surface(
-                            shape = RoundedCornerShape(2.dp),
-                            color = SwissSurfaceContainerLowest,
-                            border = BorderStroke(1.dp, SwissOutlineVariant.copy(alpha = 0.5f)),
-                            modifier = Modifier.clickable {
-                                inputText = fullQuery
-                                sendPrompt(fullQuery)
-                            }
+                        Box(
+                            modifier = Modifier
+                                .background(FigmaTheme.White)
+                                .border(1.5.dp, FigmaTheme.Ink)
+                                .clickable {
+                                    inputText = fullQuery
+                                    sendPrompt(fullQuery)
+                                }
+                                .padding(horizontal = 12.dp, vertical = 8.dp)
                         ) {
                             Text(
                                 text = label,
+                                fontFamily = FontFamily.SansSerif,
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Medium,
-                                color = SwissOnSurface,
-                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
+                                color = FigmaTheme.Ink
                             )
                         }
                     }
                 }
             }
 
-            // 7. VERIFIED NCERT CITATION & ANSWER CARD (Latest AI Response)
+            // 7. VERIFIED ANSWER & CITATION (Matching prototype .answer-product & .source-card-product)
             val latestAiMessage = messages.lastOrNull { it.sender != "USER" }
             if (latestAiMessage != null) {
-                Surface(
-                    shape = RoundedCornerShape(2.dp),
-                    color = SwissSurfaceContainerLowest,
-                    border = BorderStroke(1.dp, SwissPrimary),
-                    modifier = Modifier.fillMaxWidth()
+                BrutalistCard(
+                    backgroundColor = FigmaTheme.White,
+                    shadowOffset = 7.dp
                 ) {
                     Column(
-                        modifier = Modifier.padding(12.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                        modifier = Modifier.padding(20.dp),
+                        verticalArrangement = Arrangement.spacedBy(14.dp)
                     ) {
-                        // Top Citation Bar
+                        // Answer Header
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                            FigmaLabel("ANSWER")
+                            Box(
+                                modifier = Modifier
+                                    .background(FigmaTheme.Mint)
+                                    .border(1.dp, FigmaTheme.Ink)
+                                    .padding(horizontal = 8.dp, vertical = 3.dp)
                             ) {
-                                Surface(
-                                    shape = RoundedCornerShape(2.dp),
-                                    color = SwissGreenLight
+                                Text(
+                                    text = "VERIFIED",
+                                    fontFamily = FontFamily.Monospace,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 9.sp,
+                                    letterSpacing = 0.8.sp,
+                                    color = FigmaTheme.Ink
+                                )
+                            }
+                        }
+
+                        Text(
+                            text = "Supported by your local textbook evidence.",
+                            fontFamily = FontFamily.Serif,
+                            fontSize = 13.sp,
+                            color = FigmaTheme.Muted
+                        )
+
+                        // Big Answer Text
+                        Text(
+                            text = latestAiMessage.text,
+                            fontFamily = FontFamily.Serif,
+                            fontSize = 15.sp,
+                            lineHeight = 23.sp,
+                            color = FigmaTheme.Ink
+                        )
+
+                        // Speaker / Read aloud
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.End
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .background(FigmaTheme.Paper)
+                                    .border(1.dp, FigmaTheme.Ink)
+                                    .clickable { voiceEngine.speak(latestAiMessage.text) }
+                                    .padding(horizontal = 10.dp, vertical = 6.dp)
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(6.dp)
                                 ) {
+                                    Icon(
+                                        Icons.AutoMirrored.Filled.VolumeUp,
+                                        contentDescription = "Read Aloud",
+                                        tint = FigmaTheme.Ink,
+                                        modifier = Modifier.size(15.dp)
+                                    )
                                     Text(
-                                        text = "VERIFIED NCERT CITATION",
+                                        text = "READ ALOUD",
                                         fontFamily = FontFamily.Monospace,
                                         fontWeight = FontWeight.Bold,
                                         fontSize = 10.sp,
-                                        color = SwissPrimary,
-                                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                        color = FigmaTheme.Ink
                                     )
                                 }
-                                Text(
-                                    text = "PAGE 161",
-                                    fontFamily = FontFamily.Monospace,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 11.sp,
-                                    color = SwissOnSurfaceVariant
-                                )
-                            }
-
-                            Row(
-                                modifier = Modifier.clickable { onNavigateToScan?.invoke() },
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(3.dp)
-                            ) {
-                                Text(
-                                    text = "VIEW PAGE SCAN",
-                                    fontFamily = FontFamily.Monospace,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 10.sp,
-                                    color = SwissSecondary
-                                )
-                                Icon(Icons.Default.OpenInNew, contentDescription = null, tint = SwissSecondary, modifier = Modifier.size(13.dp))
                             }
                         }
 
-                        // Answer Excerpt Container
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(SwissSurfaceContainerLow)
-                                .padding(10.dp),
-                            verticalArrangement = Arrangement.spacedBy(6.dp)
-                        ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(6.dp)
-                            ) {
-                                Text(
-                                    text = "01.",
-                                    fontFamily = FontFamily.Monospace,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 13.sp,
-                                    color = SwissSecondary
-                                )
-                                Text(
-                                    text = "Laws of Reflection & Focal Geometry",
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 14.sp,
-                                    color = SwissOnSurface
-                                )
-                            }
-
-                            Text(
-                                text = latestAiMessage.text,
-                                fontSize = 13.sp,
-                                lineHeight = 19.sp,
-                                color = SwissOnSurface
-                            )
-
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(top = 4.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    text = "Class 10 Science • §10.1 • L. 14–22",
-                                    fontFamily = FontFamily.Monospace,
-                                    fontSize = 10.sp,
-                                    color = SwissOnSurfaceVariant,
-                                    modifier = Modifier.weight(1f, fill = false),
-                                    maxLines = 1
-                                )
-                                Spacer(modifier = Modifier.width(6.dp))
-                                Text(
-                                    text = "EVIDENCE: 98.4%",
-                                    fontFamily = FontFamily.Monospace,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 10.sp,
-                                    color = SwissSecondary,
-                                    maxLines = 1,
-                                    softWrap = false
-                                )
-                            }
-                        }
-
-                        // Geometric Optics Diagram Canvas: FIGURE 10.1
+                        // Optics Diagram Canvas: FIGURE 10.1
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(140.dp)
-                                .background(SwissSurfaceContainer)
-                                .border(1.dp, SwissOutlineVariant.copy(alpha = 0.3f))
+                                .background(FigmaTheme.Paper)
+                                .border(1.dp, FigmaTheme.Ink)
                         ) {
                             Canvas(modifier = Modifier.fillMaxSize()) {
                                 val w = size.width
@@ -929,7 +615,7 @@ fun AskScreen(
                                 // Mirror Surface Baseline
                                 val mirrorY = h * 0.72f
                                 drawLine(
-                                    color = SwissPrimary,
+                                    color = FigmaTheme.Ink,
                                     start = Offset(w * 0.1f, mirrorY),
                                     end = Offset(w * 0.9f, mirrorY),
                                     strokeWidth = 3f
@@ -938,33 +624,33 @@ fun AskScreen(
                                 for (i in 0..12) {
                                     val x = w * (0.12f + i * 0.06f)
                                     drawLine(
-                                        color = SwissOutlineVariant,
+                                        color = FigmaTheme.Muted,
                                         start = Offset(x, mirrorY),
                                         end = Offset(x - 8f, mirrorY + 10f),
                                         strokeWidth = 1.5f
                                     )
                                 }
 
-                                // Normal Line (Dashed)
+                                // Normal Line
                                 val normalX = w * 0.5f
                                 drawLine(
-                                    color = SwissSecondary,
+                                    color = FigmaTheme.Orange,
                                     start = Offset(normalX, h * 0.15f),
                                     end = Offset(normalX, mirrorY),
                                     strokeWidth = 2f
                                 )
 
-                                // Incident Ray (Coming from top left)
+                                // Incident Ray
                                 drawLine(
-                                    color = SwissPrimary,
+                                    color = FigmaTheme.Ink,
                                     start = Offset(w * 0.22f, h * 0.22f),
                                     end = Offset(normalX, mirrorY),
                                     strokeWidth = 2.5f
                                 )
 
-                                // Reflected Ray (Going to top right)
+                                // Reflected Ray
                                 drawLine(
-                                    color = SwissSecondaryContainer,
+                                    color = FigmaTheme.Orange,
                                     start = Offset(normalX, mirrorY),
                                     end = Offset(w * 0.78f, h * 0.22f),
                                     strokeWidth = 2.5f
@@ -972,84 +658,95 @@ fun AskScreen(
 
                                 // Central reflection point
                                 drawCircle(
-                                    color = SwissSecondaryContainer,
+                                    color = FigmaTheme.Orange,
                                     radius = 4f,
                                     center = Offset(normalX, mirrorY)
                                 )
                             }
 
                             // Figure Caption Badge
-                            Surface(
-                                shape = RoundedCornerShape(2.dp),
-                                color = SwissPrimary,
+                            Box(
                                 modifier = Modifier
                                     .align(Alignment.BottomStart)
-                                    .padding(8.dp)
+                                    .background(FigmaTheme.Ink)
+                                    .padding(horizontal = 8.dp, vertical = 4.dp)
                             ) {
                                 Text(
                                     text = "FIGURE 10.1: Reflection of Light & Normal Plane",
-                                    color = Color.White,
+                                    color = FigmaTheme.White,
                                     fontFamily = FontFamily.Monospace,
                                     fontWeight = FontWeight.Bold,
-                                    fontSize = 9.sp,
-                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                    fontSize = 9.sp
                                 )
                             }
+                        }
 
-                            // Speaker Button
-                            IconButton(
-                                onClick = { voiceEngine.speak(latestAiMessage.text) },
-                                modifier = Modifier
-                                    .align(Alignment.TopEnd)
-                                    .padding(6.dp)
-                                    .size(30.dp)
-                                    .background(SwissSurfaceContainerHigh, CircleShape)
+                        // SOURCE CARD (Matching prototype .source-card-product)
+                        // Background: FigmaTheme.Yellow, 1.5dp black border, 5dp shadow
+                        BrutalistCard(
+                            backgroundColor = FigmaTheme.Yellow,
+                            shadowOffset = 5.dp,
+                            onClick = { onNavigateToScan?.invoke() }
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(16.dp),
+                                verticalArrangement = Arrangement.spacedBy(6.dp)
                             ) {
-                                Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = "Read Aloud", tint = SwissPrimary, modifier = Modifier.size(16.dp))
+                                FigmaLabel("SOURCE")
+                                Text(
+                                    text = (activeBook?.title ?: "NCERT CLASS 10 SCIENCE").uppercase(),
+                                    fontFamily = FontFamily.SansSerif,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 18.sp,
+                                    color = FigmaTheme.Ink
+                                )
+                                Text(
+                                    text = "PAGES 161–163 · §10.1 LAWS OF REFLECTION",
+                                    fontFamily = FontFamily.Monospace,
+                                    fontSize = 11.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = FigmaTheme.Ink
+                                )
+                                Text(
+                                    text = "VIEW ACTUAL SOURCE →",
+                                    fontFamily = FontFamily.Monospace,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 11.sp,
+                                    color = FigmaTheme.Ink,
+                                    modifier = Modifier.padding(top = 4.dp)
+                                )
+                            }
+                        }
+
+                        // Capability Notice
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(FigmaTheme.Paper)
+                                .border(1.dp, FigmaTheme.Hairline)
+                                .padding(12.dp)
+                        ) {
+                            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                Text(
+                                    text = "DETERMINISTIC LOCAL ANSWER",
+                                    fontFamily = FontFamily.Monospace,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 10.sp,
+                                    color = FigmaTheme.Ink
+                                )
+                                Text(
+                                    text = "Answers are constructed strictly from indexed local pages without cloud dependencies.",
+                                    fontFamily = FontFamily.Serif,
+                                    fontSize = 12.sp,
+                                    color = FigmaTheme.Muted
+                                )
                             }
                         }
                     }
                 }
             }
 
-            // 8. TEXTBOOK CHAPTER FOOTER BANNER
-            Surface(
-                shape = RoundedCornerShape(2.dp),
-                color = SwissSurfaceContainerHigh,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 12.dp, vertical = 8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(6.dp)
-                    ) {
-                        Icon(Icons.Default.MenuBook, contentDescription = null, tint = SwissSecondary, modifier = Modifier.size(15.dp))
-                        Text(
-                            text = "NCERT CLASS $selectedClassLevel SCIENCE • CH 10",
-                            fontFamily = FontFamily.Monospace,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 11.sp,
-                            color = SwissOnSurface
-                        )
-                    }
-
-                    Text(
-                        text = "100% OFFLINE",
-                        fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 10.sp,
-                        color = SwissGreen
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(100.dp))
         }
     }
 
@@ -1130,82 +827,5 @@ fun AskScreen(
                 TextButton(onClick = { showChapterPicker = false }) { Text("Close") }
             }
         )
-    }
-}
-
-// Subcomponent: Verification Pipeline Step Row
-@Composable
-private fun PipelineStepRow(
-    isDone: Boolean,
-    isActive: Boolean = false,
-    title: String,
-    subtitle: String? = null,
-    tags: List<String> = emptyList()
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalAlignment = Alignment.Top
-    ) {
-        Box(
-            modifier = Modifier
-                .padding(top = 2.dp)
-                .size(16.dp)
-                .background(
-                    when {
-                        isDone -> SwissPrimary
-                        isActive -> SwissSecondaryContainer
-                        else -> SwissSurfaceContainerHigh
-                    },
-                    RoundedCornerShape(2.dp)
-                ),
-            contentAlignment = Alignment.Center
-        ) {
-            if (isDone) {
-                Icon(Icons.Default.Check, contentDescription = null, tint = Color.White, modifier = Modifier.size(11.dp))
-            } else if (isActive) {
-                CircularProgressIndicator(color = Color.White, strokeWidth = 1.5.dp, modifier = Modifier.size(10.dp))
-            }
-        }
-
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = title,
-                fontSize = 12.sp,
-                fontWeight = if (isDone || isActive) FontWeight.SemiBold else FontWeight.Normal,
-                color = if (isActive) SwissSecondary else SwissOnSurface
-            )
-
-            if (!subtitle.isNullOrBlank()) {
-                Text(
-                    text = subtitle,
-                    fontFamily = FontFamily.Monospace,
-                    fontSize = 10.sp,
-                    color = SwissOnSurfaceVariant
-                )
-            }
-
-            if (tags.isNotEmpty()) {
-                Row(
-                    modifier = Modifier.padding(top = 2.dp),
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    tags.forEach { tag ->
-                        Surface(
-                            shape = RoundedCornerShape(2.dp),
-                            color = SwissSurfaceContainerHighest
-                        ) {
-                            Text(
-                                text = tag,
-                                fontFamily = FontFamily.Monospace,
-                                fontSize = 9.sp,
-                                color = SwissOnSurface,
-                                modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp)
-                            )
-                        }
-                    }
-                }
-            }
-        }
     }
 }
