@@ -1,8 +1,10 @@
 package com.dilshad.myapplication.ui.screens
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.Icons
@@ -10,16 +12,13 @@ import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Download
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Security
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -29,7 +28,7 @@ import com.dilshad.myapplication.data.LenteraRepository
 import com.dilshad.myapplication.demo.DemoManager
 import com.dilshad.myapplication.demo.DemoReport
 import com.dilshad.myapplication.domain.rag.CurriculumCorpus
-import com.google.gson.GsonBuilder
+import com.dilshad.myapplication.ui.theme.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -50,8 +49,7 @@ fun SettingsScreen(
     var selectedLanguage by remember { mutableStateOf("English") }
     var demoReport by remember { mutableStateOf<DemoReport?>(null) }
     var isRunningDemoPrep by remember { mutableStateOf(false) }
-    var dataWipedMessage by remember { mutableStateOf("") }
-    var exportMessage by remember { mutableStateOf("") }
+    var statusMessage by remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
         val p = db.dao().getProfile()
@@ -74,258 +72,315 @@ fun SettingsScreen(
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            if (onBack != null) {
-                IconButton(onClick = onBack) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                }
-                Spacer(modifier = Modifier.width(4.dp))
-            }
-            Text(
-                text = "Settings & Device Profile",
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
-            )
-        }
-
-        // Onboarding & Setup Walkthrough Card
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp)
-        ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text(
-                    text = "Onboarding & Walkthrough",
-                    fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "Revisit the 9-step editorial brutalist onboarding walkthrough to configure student role, class level, language, and curriculum books.",
-                    fontSize = 12.sp,
-                    color = Color.Gray
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-                Button(
-                    onClick = { onRedoOnboarding?.invoke() },
-                    modifier = Modifier.fillMaxWidth()
+    Scaffold(
+        containerColor = FigmaTheme.Paper,
+        topBar = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(FigmaTheme.Paper)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 14.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text("Re-run Onboarding Walkthrough")
-                }
-            }
-        }
-
-        // Student Profile Customization Card
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp)
-        ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Default.Person, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("Student Profile", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
-                }
-
-                Spacer(modifier = Modifier.height(10.dp))
-                OutlinedTextField(
-                    value = studentNameInput,
-                    onValueChange = { studentNameInput = it },
-                    label = { Text("Student Name") },
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Spacer(modifier = Modifier.height(10.dp))
-                Button(
-                    onClick = {
-                        scope.launch {
-                            val updated = (studentProfile ?: StudentProfileEntity()).copy(
-                                name = studentNameInput.ifBlank { "Scholar" },
-                                preferredLanguage = selectedLanguage
-                            )
-                            db.dao().saveProfile(updated)
-                            studentProfile = updated
-                            dataWipedMessage = "Profile updated successfully."
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        if (onBack != null) {
+                            Box(
+                                modifier = Modifier
+                                    .size(36.dp)
+                                    .background(FigmaTheme.White)
+                                    .border(1.5.dp, FigmaTheme.Ink)
+                                    .clickable { onBack() },
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    Icons.AutoMirrored.Filled.ArrowBack,
+                                    contentDescription = "Back",
+                                    tint = FigmaTheme.Ink,
+                                    modifier = Modifier.size(18.dp)
+                                )
+                            }
                         }
-                    },
-                    modifier = Modifier.align(Alignment.End)
-                ) {
-                    Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(16.dp))
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text("Save Profile")
+                        Text(
+                            text = "SETTINGS",
+                            fontFamily = FontFamily.Monospace,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 12.sp,
+                            letterSpacing = 1.2.sp,
+                            color = FigmaTheme.Ink
+                        )
+                    }
+                    FigmaReadyLabel("OFFLINE", online = true)
                 }
+                HorizontalDivider(color = FigmaTheme.Hairline, thickness = 1.dp)
             }
         }
-
-        // Language Preference Card
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp)
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(horizontal = 16.dp)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text("AI Tutor Language", fontWeight = FontWeight.Bold)
-                Text("Select your primary instruction language for offline AI reasoning and explanations.", fontSize = 12.sp, color = Color.Gray)
-                Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    listOf("English", "Hindi", "Odia").forEach { lang ->
-                        FilterChip(
-                            selected = selectedLanguage == lang,
-                            onClick = {
-                                selectedLanguage = lang
-                                scope.launch {
-                                    studentProfile?.let { p ->
-                                        val updated = p.copy(preferredLanguage = lang)
-                                        db.dao().saveProfile(updated)
-                                        studentProfile = updated
-                                    }
+            FigmaPageHead(
+                label = "PREFERENCES",
+                title = "YOUR LEARNING,\nYOUR WAY."
+            )
+
+            // LEARNING PROFILE & SETUP CARD
+            BrutalistCard(
+                backgroundColor = FigmaTheme.White,
+                shadowOffset = 6.dp
+            ) {
+                Column(
+                    modifier = Modifier.padding(18.dp),
+                    verticalArrangement = Arrangement.spacedBy(14.dp)
+                ) {
+                    FigmaLabel("LEARNING SETUP")
+
+                    // Class Level
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .border(1.dp, FigmaTheme.Hairline)
+                            .background(FigmaTheme.Paper)
+                            .clickable { onRedoOnboarding?.invoke() }
+                            .padding(horizontal = 14.dp, vertical = 12.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column {
+                            Text("ACTIVE CLASS", fontFamily = FontFamily.Monospace, fontSize = 9.sp, fontWeight = FontWeight.Bold, color = FigmaTheme.Muted)
+                            Text(studentProfile?.classLevel ?: "Class 10", fontFamily = FontFamily.SansSerif, fontWeight = FontWeight.Bold, fontSize = 16.sp, color = FigmaTheme.Ink)
+                        }
+                        Text("CHANGE →", fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold, fontSize = 11.sp, color = FigmaTheme.Orange)
+                    }
+
+                    // Student Name
+                    OutlinedTextField(
+                        value = studentNameInput,
+                        onValueChange = { studentNameInput = it },
+                        label = { Text("Student Name") },
+                        modifier = Modifier.fillMaxWidth(),
+                        singleLine = true,
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = FigmaTheme.Ink,
+                            unfocusedBorderColor = FigmaTheme.Hairline
+                        )
+                    )
+
+                    // Tutor Instruction Language
+                    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                        Text("EXPLANATION LANGUAGE", fontFamily = FontFamily.Monospace, fontSize = 10.sp, fontWeight = FontWeight.Bold, color = FigmaTheme.Ink)
+                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            listOf("English", "Hindi", "Hinglish").forEach { lang ->
+                                val isSel = selectedLanguage.equals(lang, ignoreCase = true)
+                                Box(
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .background(if (isSel) FigmaTheme.Ink else FigmaTheme.Paper)
+                                        .border(1.dp, FigmaTheme.Ink)
+                                        .clickable {
+                                            selectedLanguage = lang
+                                            scope.launch {
+                                                studentProfile?.let { p ->
+                                                    val updated = p.copy(preferredLanguage = lang)
+                                                    db.dao().saveProfile(updated)
+                                                    studentProfile = updated
+                                                }
+                                            }
+                                        }
+                                        .padding(vertical = 10.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = lang.uppercase(),
+                                        fontFamily = FontFamily.Monospace,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 11.sp,
+                                        color = if (isSel) FigmaTheme.White else FigmaTheme.Ink
+                                    )
                                 }
-                            },
-                            label = { Text(if (lang == "Hindi") "Hindi (हिंदी)" else if (lang == "Odia") "Odia (ଓଡ଼ିଆ)" else "English") }
+                            }
+                        }
+                    }
+
+                    // Save Profile Button
+                    BrutalistButton(
+                        text = "SAVE PROFILE DETAILS",
+                        onClick = {
+                            scope.launch {
+                                val updated = (studentProfile ?: StudentProfileEntity()).copy(
+                                    name = studentNameInput.ifBlank { "Scholar" },
+                                    preferredLanguage = selectedLanguage
+                                )
+                                db.dao().saveProfile(updated)
+                                studentProfile = updated
+                                statusMessage = "Profile updated successfully."
+                            }
+                        },
+                        backgroundColor = FigmaTheme.White,
+                        textColor = FigmaTheme.Ink,
+                        shadowOffset = 4.dp
+                    )
+
+                    HorizontalDivider(color = FigmaTheme.Hairline, thickness = 1.dp)
+
+                    // Full Onboarding Re-run Button
+                    BrutalistButton(
+                        text = "RE-RUN 9-STEP ONBOARDING WALKTHROUGH →",
+                        onClick = { onRedoOnboarding?.invoke() },
+                        backgroundColor = FigmaTheme.Orange,
+                        textColor = FigmaTheme.Ink,
+                        shadowOffset = 5.dp
+                    )
+                }
+            }
+
+            // SYSTEM DIAGNOSTICS CARD
+            BrutalistCard(
+                backgroundColor = FigmaTheme.Mint,
+                shadowOffset = 6.dp
+            ) {
+                Column(
+                    modifier = Modifier.padding(18.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    FigmaLabel("OFFLINE INTEGRITY")
+                    Text(
+                        text = "SYSTEM DIAGNOSTICS",
+                        style = FigmaTheme.HeadlineCompact
+                    )
+                    Text(
+                        text = "Verifies ${CurriculumCorpus.chunks.size} preloaded CBSE chunks, SQLite indices, and offline semantic RAG retrieval.",
+                        fontFamily = FontFamily.Serif,
+                        fontSize = 13.sp,
+                        color = FigmaTheme.Ink
+                    )
+
+                    BrutalistButton(
+                        text = if (isRunningDemoPrep) "RUNNING AUDIT..." else "RUN HEALTH AUDIT",
+                        onClick = {
+                            isRunningDemoPrep = true
+                            scope.launch {
+                                val report = DemoManager.prepareDemo(context)
+                                demoReport = report
+                                isRunningDemoPrep = false
+                            }
+                        },
+                        backgroundColor = FigmaTheme.White,
+                        textColor = FigmaTheme.Ink,
+                        shadowOffset = 4.dp
+                    )
+
+                    demoReport?.let { report ->
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(FigmaTheme.White)
+                                .border(1.5.dp, FigmaTheme.Ink)
+                                .padding(12.dp)
+                        ) {
+                            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                Text(report.status, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold, fontSize = 12.sp, color = FigmaTheme.Ink)
+                                Text("Chunks Verified: ${report.corpusChunksLoaded}", fontFamily = FontFamily.Monospace, fontSize = 11.sp, color = FigmaTheme.Muted)
+                                Text("Database: ${report.databaseStatus}", fontFamily = FontFamily.Monospace, fontSize = 11.sp, color = FigmaTheme.Muted)
+                                Text("Offline Pipeline: ${report.offlineStatus}", fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold, fontSize = 11.sp, color = FigmaTheme.Ink)
+                            }
+                        }
+                    }
+                }
+            }
+
+            // DATA STORAGE & RESET CARD
+            BrutalistCard(
+                backgroundColor = FigmaTheme.White,
+                shadowOffset = 6.dp
+            ) {
+                Column(
+                    modifier = Modifier.padding(18.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    FigmaLabel("LOCAL STORAGE & BACKUP")
+                    Text(
+                        text = "PRIVACY & STORAGE",
+                        style = FigmaTheme.HeadlineCompact
+                    )
+                    Text(
+                        text = "All learning analytics, mastery data, and conversations remain 100% on your device. Zero external tracking.",
+                        fontFamily = FontFamily.Serif,
+                        fontSize = 13.sp,
+                        color = FigmaTheme.Muted
+                    )
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        Box(modifier = Modifier.weight(1f)) {
+                            BrutalistButton(
+                                text = "EXPORT JSON",
+                                onClick = {
+                                    scope.launch {
+                                        withContext(Dispatchers.IO) {
+                                            try {
+                                                val jsonString = repository.exportUserData()
+                                                val exportFile = File(context.filesDir, "pocketpathshala_backup.json")
+                                                exportFile.writeText(jsonString)
+                                                statusMessage = "Exported to internal storage: ${exportFile.name}"
+                                            } catch (e: Exception) {
+                                                statusMessage = "Export failed: ${e.message}"
+                                            }
+                                        }
+                                    }
+                                },
+                                backgroundColor = FigmaTheme.Paper,
+                                textColor = FigmaTheme.Ink,
+                                shadowOffset = 3.dp
+                            )
+                        }
+
+                        Box(modifier = Modifier.weight(1f)) {
+                            BrutalistButton(
+                                text = "RESET ALL",
+                                onClick = {
+                                    scope.launch {
+                                        repository.clearUserData()
+                                        OnboardingPreferences.reset(context)
+                                        statusMessage = "Data reset cleanly. Onboarding restored."
+                                    }
+                                },
+                                backgroundColor = FigmaTheme.Salmon,
+                                textColor = FigmaTheme.White,
+                                shadowOffset = 3.dp
+                            )
+                        }
+                    }
+
+                    if (statusMessage.isNotBlank()) {
+                        Text(
+                            text = statusMessage,
+                            fontFamily = FontFamily.Monospace,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 11.sp,
+                            color = FigmaTheme.Orange
                         )
                     }
                 }
             }
-        }
 
-        // Demo Mode Diagnostics Card
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
-        ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Default.PlayArrow, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "System Diagnostics & Model Check",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "Runs end-to-end audit: Verifies ${CurriculumCorpus.chunks.size} preloaded CBSE chunks, Room SQLite database, and offline semantic RAG retrieval.",
-                    fontSize = 12.sp,
-                    color = MaterialTheme.colorScheme.onSecondaryContainer
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-
-                Button(
-                    onClick = {
-                        isRunningDemoPrep = true
-                        scope.launch {
-                            val report = DemoManager.prepareDemo(context)
-                            demoReport = report
-                            isRunningDemoPrep = false
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Icon(Icons.Default.AutoAwesome, contentDescription = null)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("Run Diagnostics & Health Audit")
-                }
-
-                if (isRunningDemoPrep) {
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        CircularProgressIndicator(modifier = Modifier.size(16.dp))
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text("Verifying local models & offline corpus...", fontSize = 12.sp)
-                    }
-                }
-
-                demoReport?.let { report ->
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Surface(
-                        shape = RoundedCornerShape(8.dp),
-                        color = if (report.status.contains("READY") && !report.status.contains("NOT")) Color(0xFFE8F5E9) else Color(0xFFFFEBEE),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Column(modifier = Modifier.padding(12.dp)) {
-                            Text(
-                                text = report.status,
-                                fontWeight = FontWeight.Bold,
-                                color = if (report.status.contains("READY") && !report.status.contains("NOT")) Color(0xFF2E7D32) else Color(0xFFC62828)
-                            )
-                            Text("Corpus Chunks Verified: ${report.corpusChunksLoaded}", fontSize = 12.sp)
-                            Text("Database Status: ${report.databaseStatus}", fontSize = 12.sp)
-                            Text("Offline Pipeline: ${report.offlineStatus}", fontSize = 12.sp, fontWeight = FontWeight.Bold)
-                        }
-                    }
-                }
-            }
-        }
-
-        // Privacy & Real Data Export / Reset
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp)
-        ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text("Privacy & Storage Control", fontWeight = FontWeight.Bold)
-                Text("All learning analytics and chat logs remain 100% on this device. No telemetries or clouds.", fontSize = 12.sp, color = Color.Gray)
-                Spacer(modifier = Modifier.height(12.dp))
-
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    OutlinedButton(
-                        onClick = {
-                            scope.launch {
-                                withContext(Dispatchers.IO) {
-                                    try {
-                                        val jsonString = repository.exportUserData()
-                                        val exportFile = File(context.filesDir, "pocketpathshala_learning_backup.json")
-                                        exportFile.writeText(jsonString)
-                                        exportMessage = "Exported ${exportFile.length()} bytes to internal storage:\n${exportFile.name}"
-                                    } catch (e: Exception) {
-                                        exportMessage = "Export failed: ${e.message}"
-                                    }
-                                }
-                            }
-                        },
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Icon(Icons.Default.Download, contentDescription = null, modifier = Modifier.size(16.dp))
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text("Export JSON", fontSize = 12.sp)
-                    }
-
-                    Button(
-                        onClick = {
-                            scope.launch {
-                                repository.clearUserData()
-                                dataWipedMessage = "All student learning data and attempts reset cleanly."
-                                exportMessage = ""
-                            }
-                        },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD32F2F)),
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Icon(Icons.Default.Delete, contentDescription = null, modifier = Modifier.size(16.dp))
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text("Reset Data", fontSize = 12.sp)
-                    }
-                }
-
-                if (exportMessage.isNotBlank()) {
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(exportMessage, fontSize = 12.sp, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.SemiBold)
-                }
-
-                if (dataWipedMessage.isNotBlank()) {
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(dataWipedMessage, fontSize = 12.sp, color = MaterialTheme.colorScheme.error, fontWeight = FontWeight.SemiBold)
-                }
-            }
+            Spacer(modifier = Modifier.height(20.dp))
         }
     }
 }
