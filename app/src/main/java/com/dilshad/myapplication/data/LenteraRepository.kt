@@ -7,7 +7,9 @@ import androidx.room.withTransaction
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class LenteraRepository(private val database: AppDatabase) {
+typealias LenteraRepository = PocketRepository
+
+class PocketRepository(private val database: AppDatabase) {
     private val dao = database.dao()
     private val gson = Gson()
 

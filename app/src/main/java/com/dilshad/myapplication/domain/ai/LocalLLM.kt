@@ -647,7 +647,7 @@ class OnDeviceLocalLLM : LocalLLM {
             "hi", "hello", "hey", "namaste", "pranam", "kem cho", "vanakkam", "hola",
             "greetings", "good morning", "good afternoon", "good evening", "hi there",
             "hello teacher", "hello sir", "hello mam", "hey there", "yo", "sup",
-            "hey lentera", "hi lentera", "hello lentera", "नमस्ते", "प्रणाम", "ନମସ୍କାର"
+            "hey pocketpathshala", "hi pocketpathshala", "hello pocketpathshala", "नमस्ते", "प्रणाम", "ନମସ୍କାର"
         )
         val isGreeting = greetings.contains(clean) ||
                 clean.startsWith("hi ") || clean.startsWith("hello ") || clean.startsWith("hey ") ||
@@ -656,7 +656,7 @@ class OnDeviceLocalLLM : LocalLLM {
         if (isGreeting) {
             val text = when {
                 isHindi -> buildString {
-                    appendLine("👋 **नमस्ते! मैं LENTERA 2.0 हूँ** — सीबीएसई कक्षा 10 के लिए आपका ऑफलाइन एआई शिक्षक!")
+                    appendLine("👋 **नमस्ते! मैं PocketPathshala हूँ** — सीबीएसई कक्षा 10 के लिए आपका ऑफलाइन एआई शिक्षक!")
                     appendLine()
                     appendLine("मैं बिना किसी इंटरनेट कनेक्शन के 100% आपके डिवाइस पर काम करता हूँ।")
                     appendLine()
@@ -669,14 +669,14 @@ class OnDeviceLocalLLM : LocalLLM {
                     appendLine("आज आप कौन सा अध्याय पढ़ना चाहते हैं?")
                 }
                 isOdia -> buildString {
-                    appendLine("👋 **ନମସ୍କାର! ମୁଁ LENTERA 2.0** — CBSE ଶ୍ରେଣୀ ୧୦ ବିଜ୍ଞାନ ଏବଂ ଗଣିତ ପାଇଁ ଆପଣଙ୍କର ଅଫଲାଇନ୍ AI ଶିକ୍ଷକ!")
+                    appendLine("👋 **ନମସ୍କାର! ମୁଁ PocketPathshala** — CBSE ଶ୍ରେଣୀ ୧୦ ବିଜ୍ଞାନ ଏବଂ ଗଣିତ ପାଇଁ ଆପଣଙ୍କର ଅଫଲାଇନ୍ AI ଶିକ୍ଷକ!")
                     appendLine()
                     appendLine("ଏହି ଆପ୍ ୧୦୦% ଇଣ୍ଟରନେଟ୍ ବିନା ଆପଣଙ୍କ ଫୋନରେ କାମ କରେ।")
                     appendLine()
                     appendLine("ଆଜି ଆପଣ କେଉଁ ବିଷୟ ପଢ଼ିବାକୁ କିମ୍ବା ଅଭ୍ୟାସ କରିବାକୁ ଚାହାଁନ୍ତି?")
                 }
                 else -> buildString {
-                    appendLine("👋 **Hello! I am LENTERA 2.0** — your personal Offline AI STEM Teacher for CBSE Class 10!")
+                    appendLine("👋 **Hello! I am PocketPathshala** — your personal Offline AI STEM Teacher for CBSE Class 10!")
                     appendLine()
                     appendLine("I run 100% on your device with **zero internet connection required**. Here is how we can study together:")
                     appendLine()
@@ -690,14 +690,14 @@ class OnDeviceLocalLLM : LocalLLM {
             }
             return GenerationResult(
                 text = text,
-                sources = listOf("LENTERA Offline AI Teacher"),
+                sources = listOf("PocketPathshala Offline AI Teacher"),
                 confidence = 0.99,
                 isGrounded = true
             )
         }
 
         // 2. Identity & Architecture ("is model actually implemented?")
-        val isIdentityQuery = clean.contains("who are you") || clean.contains("what is lentera") ||
+        val isIdentityQuery = clean.contains("who are you") || clean.contains("what is pocketpathshala") ||
                 clean.contains("what are you") || clean.contains("are you a model") ||
                 clean.contains("is model") || clean.contains("is the model") ||
                 clean.contains("how do you work") || clean.contains("are you real") ||
@@ -706,9 +706,9 @@ class OnDeviceLocalLLM : LocalLLM {
 
         if (isIdentityQuery) {
             val text = buildString {
-                appendLine("🤖 **About LENTERA 2.0 & My On-Device AI Architecture**:")
+                appendLine("🤖 **About PocketPathshala & My On-Device AI Architecture**:")
                 appendLine()
-                appendLine("I am **LENTERA 2.0**, an on-device AI STEM Tutor engineered specifically for CBSE Class 10 students with **zero internet or cloud dependency**.")
+                appendLine("I am **PocketPathshala**, an on-device AI STEM Tutor engineered specifically for CBSE Class 10 students with **zero internet or cloud dependency**.")
                 appendLine()
                 appendLine("### How My On-Device Technology Works:")
                 appendLine("1. 🧠 **Offline Semantic RAG Engine**: Indexes all 16 CBSE Class 10 STEM chapters with weighted scoring, educational synonym expansion, and NCERT curriculum mapping.")
@@ -721,7 +721,7 @@ class OnDeviceLocalLLM : LocalLLM {
             }
             return GenerationResult(
                 text = text,
-                sources = listOf("LENTERA 2.0 Core Architecture"),
+                sources = listOf("PocketPathshala Core Architecture"),
                 confidence = 0.99,
                 isGrounded = true
             )
@@ -736,7 +736,7 @@ class OnDeviceLocalLLM : LocalLLM {
 
         if (isHelpQuery) {
             val text = buildString {
-                appendLine("📚 **LENTERA 2.0 Capabilities & CBSE Class 10 STEM Syllabus**:")
+                appendLine("📚 **PocketPathshala Capabilities & CBSE Class 10 STEM Syllabus**:")
                 appendLine()
                 appendLine("### ⚡ Physics")
                 appendLine("• **Light**: Reflection, Spherical Mirrors, Refraction, Snell's Law, Lenses, Lens Power (P = 1/f).")
@@ -774,7 +774,7 @@ class OnDeviceLocalLLM : LocalLLM {
             val text = "You're very welcome! 😊 Consistent daily practice is the secret to scoring 95%+ in your Class 10 Board Exams. Would you like to practice a quiz question on this topic or try another problem?"
             return GenerationResult(
                 text = text,
-                sources = listOf("LENTERA AI Mentor"),
+                sources = listOf("PocketPathshala AI Mentor"),
                 confidence = 0.99,
                 isGrounded = true
             )
@@ -811,7 +811,7 @@ class OnDeviceLocalLLM : LocalLLM {
             val text = "Goodbye! Keep up the regular revision. Whenever you have a doubt or homework problem, I'll be right here offline. Have a great study session!"
             return GenerationResult(
                 text = text,
-                sources = listOf("LENTERA AI Mentor"),
+                sources = listOf("PocketPathshala AI Mentor"),
                 confidence = 0.99,
                 isGrounded = true
             )

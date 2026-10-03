@@ -1,4 +1,4 @@
-﻿package com.dilshad.myapplication.data.db
+package com.dilshad.myapplication.data.db
 
 import android.content.Context
 import androidx.room.Database
@@ -49,7 +49,12 @@ abstract class AppDatabase : RoomDatabase() {
 
         fun getInstance(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
-                val instance = Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "lentera_database.db")
+                val dbFile = context.applicationContext.getDatabasePath("pocketpathshala_database.db")
+                val oldDbFile = context.applicationContext.getDatabasePath("lentera_database.db")
+                if (!dbFile.exists() && oldDbFile.exists()) {
+                    try { oldDbFile.renameTo(dbFile) } catch (_: Exception) {}
+                }
+                val instance = Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "pocketpathshala_database.db")
                     .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8).build()
                 INSTANCE = instance
                 instance

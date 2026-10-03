@@ -113,7 +113,7 @@ class VoiceEngine(
             else -> Locale.US
         }
         tts?.language = loc
-        tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, "LENTERA_TTS")
+        tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, "POCKETPATHSHALA_TTS")
         state = VoiceState.SPEAKING
     }
 

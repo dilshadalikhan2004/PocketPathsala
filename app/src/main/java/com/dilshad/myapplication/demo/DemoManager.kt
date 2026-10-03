@@ -9,7 +9,7 @@ import com.dilshad.myapplication.domain.rag.CurriculumCorpus
 import com.dilshad.myapplication.domain.rag.LocalRAGEngine
 
 data class DemoReport(
-    val status: String, // "LENTERA DEMO READY" or "LENTERA DEMO NOT READY"
+    val status: String, // "POCKETPATHSHALA READY" or "POCKETPATHSHALA NOT READY"
     val corpusChunksLoaded: Int,
     val conceptsPreloaded: Int,
     val databaseStatus: String,
@@ -90,7 +90,7 @@ object DemoManager {
             failures.add("Database initialization error: ${e.message}")
         }
 
-        val status = if (failures.isEmpty()) "LENTERA DEMO READY" else "LENTERA DEMO NOT READY"
+        val status = if (failures.isEmpty()) "POCKETPATHSHALA READY" else "POCKETPATHSHALA NOT READY"
 
         return DemoReport(
             status = status,

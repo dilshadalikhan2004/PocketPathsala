@@ -19,25 +19,25 @@ class LocalLLMTest {
 
         assertTrue("Expected grounded greeting response", result.isGrounded)
         assertFalse("Response must not say outside offline syllabus", result.text.contains("outside my preloaded offline syllabus"))
-        assertTrue("Expected welcome greeting", result.text.contains("Hello! I am LENTERA 2.0"))
+        assertTrue("Expected welcome greeting", result.text.contains("Hello! I am PocketPathshala"))
     }
 
     @Test
     fun testGreetingHelloAndNamaste() = runBlocking {
         val helloResult = llm.generate("Hello", emptyList(), GenerationOptions())
         assertTrue(helloResult.isGrounded)
-        assertTrue(helloResult.text.contains("LENTERA 2.0"))
+        assertTrue(helloResult.text.contains("PocketPathshala"))
 
         val hindiResult = llm.generate("नमस्ते", emptyList(), GenerationOptions(language = "Hindi"))
         assertTrue(hindiResult.isGrounded)
-        assertTrue(hindiResult.text.contains("नमस्ते! मैं LENTERA 2.0 हूँ"))
+        assertTrue(hindiResult.text.contains("नमस्ते! मैं PocketPathshala हूँ"))
     }
 
     @Test
     fun testIdentityAndModelArchitectureQuery() = runBlocking {
         val queries = listOf(
             "who are you",
-            "what is lentera",
+            "what is pocketpathshala",
             "is model actually implemented",
             "are you real ai"
         )
@@ -53,7 +53,7 @@ class LocalLLMTest {
     fun testHelpAndCapabilities() = runBlocking {
         val result = llm.generate("help", emptyList(), GenerationOptions())
         assertTrue(result.isGrounded)
-        assertTrue(result.text.contains("LENTERA 2.0 Capabilities"))
+        assertTrue(result.text.contains("PocketPathshala Capabilities"))
         assertTrue(result.text.contains("Physics"))
         assertTrue(result.text.contains("Chemistry"))
         assertTrue(result.text.contains("Mathematics"))

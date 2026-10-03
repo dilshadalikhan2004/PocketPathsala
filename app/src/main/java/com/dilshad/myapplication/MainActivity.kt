@@ -50,14 +50,14 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MyApplicationTheme {
-                LenteraMainApp()
+                PocketPathshalaApp()
             }
         }
     }
 }
 
 @Composable
-fun LenteraMainApp() {
+fun PocketPathshalaApp() {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route

@@ -220,14 +220,14 @@ fun SettingsScreen(
                     Spacer(modifier = Modifier.height(12.dp))
                     Surface(
                         shape = RoundedCornerShape(8.dp),
-                        color = if (report.status == "LENTERA DEMO READY") Color(0xFFE8F5E9) else Color(0xFFFFEBEE),
+                        color = if (report.status.contains("READY") && !report.status.contains("NOT")) Color(0xFFE8F5E9) else Color(0xFFFFEBEE),
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Column(modifier = Modifier.padding(12.dp)) {
                             Text(
                                 text = report.status,
                                 fontWeight = FontWeight.Bold,
-                                color = if (report.status == "LENTERA DEMO READY") Color(0xFF2E7D32) else Color(0xFFC62828)
+                                color = if (report.status.contains("READY") && !report.status.contains("NOT")) Color(0xFF2E7D32) else Color(0xFFC62828)
                             )
                             Text("Corpus Chunks Verified: ${report.corpusChunksLoaded}", fontSize = 12.sp)
                             Text("Database Status: ${report.databaseStatus}", fontSize = 12.sp)
@@ -255,7 +255,7 @@ fun SettingsScreen(
                                 withContext(Dispatchers.IO) {
                                     try {
                                         val jsonString = repository.exportUserData()
-                                        val exportFile = File(context.filesDir, "lentera_learning_backup.json")
+                                        val exportFile = File(context.filesDir, "pocketpathshala_learning_backup.json")
                                         exportFile.writeText(jsonString)
                                         exportMessage = "Exported ${exportFile.length()} bytes to internal storage:\n${exportFile.name}"
                                     } catch (e: Exception) {
