@@ -128,6 +128,9 @@ fun BrutalistButton(
     shadowOffset: Dp = 5.dp,
     shadowColor: Color = FigmaTheme.Ink,
     showArrow: Boolean = true,
+    fontSize: androidx.compose.ui.unit.TextUnit = 11.sp,
+    contentPadding: PaddingValues = PaddingValues(horizontal = 12.dp, vertical = 10.dp),
+    minHeight: Dp = 46.dp,
     enabled: Boolean = true,
     leadingIcon: (@Composable () -> Unit)? = null
 ) {
@@ -148,17 +151,17 @@ fun BrutalistButton(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(min = 52.dp)
+                .heightIn(min = minHeight)
                 .background(effectiveBg)
                 .border(borderWidth, borderColor)
                 .clickable(enabled = enabled, onClick = onClick)
-                .padding(horizontal = 16.dp, vertical = 12.dp),
+                .padding(contentPadding),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
                 modifier = Modifier.weight(1f, fill = false)
             ) {
                 if (leadingIcon != null) {
@@ -168,9 +171,10 @@ fun BrutalistButton(
                     text = text.uppercase(),
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 11.sp,
-                    letterSpacing = 0.8.sp,
-                    color = effectiveText
+                    fontSize = fontSize,
+                    letterSpacing = 0.5.sp,
+                    color = effectiveText,
+                    maxLines = 1
                 )
             }
             if (showArrow) {
@@ -178,7 +182,7 @@ fun BrutalistButton(
                     text = "→",
                     fontFamily = FontFamily.SansSerif,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
+                    fontSize = 14.sp,
                     color = effectiveText
                 )
             }

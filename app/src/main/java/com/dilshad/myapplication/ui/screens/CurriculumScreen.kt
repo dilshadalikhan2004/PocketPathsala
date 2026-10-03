@@ -695,27 +695,34 @@ fun BrutalistBookCard(
                 if (isReady) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         BrutalistButton(
-                            text = if (isExpanded) "HIDE CHAPTERS ↑" else "READ CHAPTERS →",
+                            text = if (isExpanded) "HIDE" else "CHAPTERS",
                             onClick = onToggleExpand,
                             backgroundColor = FigmaTheme.Ink,
                             textColor = FigmaTheme.White,
-                            shadowOffset = 4.dp,
-                            modifier = Modifier.weight(1.3f)
+                            shadowOffset = 3.dp,
+                            fontSize = 10.sp,
+                            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 8.dp),
+                            minHeight = 44.dp,
+                            modifier = Modifier.weight(1.1f)
                         )
                         BrutalistButton(
                             text = "ASK TUTOR",
                             onClick = onOpenAsk,
                             backgroundColor = FigmaTheme.Orange,
                             textColor = FigmaTheme.Ink,
-                            shadowOffset = 4.dp,
-                            modifier = Modifier.weight(1f)
+                            shadowOffset = 3.dp,
+                            fontSize = 10.sp,
+                            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 8.dp),
+                            minHeight = 44.dp,
+                            modifier = Modifier.weight(1.1f)
                         )
                         Box(
                             modifier = Modifier
-                                .size(52.dp)
+                                .size(44.dp)
                                 .background(FigmaTheme.White)
                                 .border(1.5.dp, FigmaTheme.Ink)
                                 .clickable { onDelete() },
@@ -847,12 +854,15 @@ fun BrutalistBookCard(
                                         horizontalArrangement = Arrangement.spacedBy(6.dp)
                                     ) {
                                         BrutalistButton(
-                                            text = "READ CHAPTER →",
+                                            text = "READ",
                                             onClick = { onReadChapter(ch.number, ch.title) },
                                             backgroundColor = FigmaTheme.Ink,
                                             textColor = FigmaTheme.White,
                                             shadowOffset = 2.dp,
-                                            modifier = Modifier.weight(1.3f)
+                                            fontSize = 10.sp,
+                                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 6.dp),
+                                            minHeight = 38.dp,
+                                            modifier = Modifier.weight(1.1f)
                                         )
                                         BrutalistButton(
                                             text = "ASK",
@@ -861,6 +871,9 @@ fun BrutalistBookCard(
                                             textColor = FigmaTheme.Ink,
                                             shadowOffset = 2.dp,
                                             showArrow = false,
+                                            fontSize = 10.sp,
+                                            contentPadding = PaddingValues(horizontal = 6.dp, vertical = 6.dp),
+                                            minHeight = 38.dp,
                                             modifier = Modifier.weight(0.8f)
                                         )
                                         BrutalistButton(
@@ -870,6 +883,9 @@ fun BrutalistBookCard(
                                             textColor = FigmaTheme.Ink,
                                             shadowOffset = 2.dp,
                                             showArrow = false,
+                                            fontSize = 10.sp,
+                                            contentPadding = PaddingValues(horizontal = 6.dp, vertical = 6.dp),
+                                            minHeight = 38.dp,
                                             modifier = Modifier.weight(0.8f)
                                         )
                                     }
