@@ -331,6 +331,7 @@ fun HomeScreen(
                         Box(
                             modifier = Modifier
                                 .background(FigmaTheme.Ink)
+                                .clickable { onNavigateToSettings() }
                                 .padding(horizontal = 6.dp, vertical = 3.dp)
                         ) {
                             Text(

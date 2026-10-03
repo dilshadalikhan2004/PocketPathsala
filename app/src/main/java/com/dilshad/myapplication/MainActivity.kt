@@ -27,6 +27,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.platform.LocalContext
 import com.dilshad.myapplication.ui.theme.FigmaTheme
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
@@ -39,6 +40,8 @@ import com.dilshad.myapplication.ui.screens.ClassroomScreen
 import com.dilshad.myapplication.ui.screens.CurriculumScreen
 import com.dilshad.myapplication.ui.screens.HomeScreen
 import com.dilshad.myapplication.ui.screens.MindMapScreen
+import com.dilshad.myapplication.ui.screens.OnboardingPreferences
+import com.dilshad.myapplication.ui.screens.OnboardingScreen
 import com.dilshad.myapplication.ui.screens.PracticeScreen
 import com.dilshad.myapplication.ui.screens.ProgressScreen
 import com.dilshad.myapplication.ui.screens.ScanScreen
@@ -60,12 +63,14 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun PocketPathshalaApp() {
+    val context = LocalContext.current
+    val isOnboardingCompleted = remember { OnboardingPreferences.isCompleted(context) }
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
     // Ensure system back gesture always returns cleanly to Home from other screens/tabs
-    val isHome = currentRoute == Screen.Home.route
+    val isHome = currentRoute == Screen.Home.route || currentRoute == Screen.Onboarding.route
     BackHandler(enabled = !isHome) {
         if (!navController.popBackStack()) {
             navController.popBackStack(Screen.Home.route, inclusive = false)
@@ -102,11 +107,12 @@ fun PocketPathshalaApp() {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
-            Surface(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 14.dp, vertical = 10.dp)
-                    .height(66.dp),
+            if (currentRoute != Screen.Onboarding.route) {
+                Surface(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 14.dp, vertical = 10.dp)
+                        .height(66.dp),
                 shape = RoundedCornerShape(14.dp),
                 color = FigmaTheme.White,
                 border = BorderStroke(1.5.dp, FigmaTheme.Ink),
@@ -176,13 +182,23 @@ fun PocketPathshalaApp() {
                     }
                 }
             }
+            }
         }
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Screen.Home.route,
+            startDestination = if (isOnboardingCompleted) Screen.Home.route else Screen.Onboarding.route,
             modifier = Modifier.padding(innerPadding)
         ) {
+            composable(Screen.Onboarding.route) {
+                OnboardingScreen(
+                    onComplete = {
+                        navController.navigate(Screen.Home.route) {
+                            popUpTo(Screen.Onboarding.route) { inclusive = true }
+                        }
+                    }
+                )
+            }
             composable(Screen.Home.route) {
                 HomeScreen(
                     onNavigateToAsk = { prompt, bookId ->
@@ -267,7 +283,8 @@ fun PocketPathshalaApp() {
             }
             composable(Screen.Settings.route) {
                 SettingsScreen(
-                    onBack = { navController.popBackStack() }
+                    onBack = { navController.popBackStack() },
+                    onRedoOnboarding = { navController.navigate(Screen.Onboarding.route) }
                 )
             }
         }

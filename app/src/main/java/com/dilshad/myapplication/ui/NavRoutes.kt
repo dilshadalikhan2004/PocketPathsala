@@ -24,4 +24,5 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector)
     object Host : Screen("host", "Host", Icons.Default.CastForEducation)
     object MindMap : Screen("mindmap", "Mind Map", Icons.Default.AutoAwesome)
     object Settings : Screen("settings", "Settings", Icons.Default.Settings)
+    object Onboarding : Screen("onboarding", "Onboarding", Icons.Default.AutoAwesome)
 }

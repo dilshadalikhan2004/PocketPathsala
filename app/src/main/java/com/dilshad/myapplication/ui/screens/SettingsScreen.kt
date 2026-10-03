@@ -37,7 +37,8 @@ import java.io.File
 
 @Composable
 fun SettingsScreen(
-    onBack: (() -> Unit)? = null
+    onBack: (() -> Unit)? = null,
+    onRedoOnboarding: (() -> Unit)? = null
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -92,6 +93,33 @@ fun SettingsScreen(
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
+        }
+
+        // Onboarding & Setup Walkthrough Card
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp)
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(
+                    text = "Onboarding & Walkthrough",
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "Revisit the 9-step editorial brutalist onboarding walkthrough to configure student role, class level, language, and curriculum books.",
+                    fontSize = 12.sp,
+                    color = Color.Gray
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                Button(
+                    onClick = { onRedoOnboarding?.invoke() },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Re-run Onboarding Walkthrough")
+                }
+            }
         }
 
         // Student Profile Customization Card
