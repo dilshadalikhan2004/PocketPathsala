@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Cast
@@ -57,7 +58,9 @@ fun detectLocalDeviceIp(): String {
 }
 
 @Composable
-fun ClassroomScreen() {
+fun ClassroomScreen(
+    onBack: (() -> Unit)? = null
+) {
     val scope = rememberCoroutineScope()
     val gson = remember { Gson() }
     val scrollState = rememberScrollState()
@@ -117,13 +120,23 @@ fun ClassroomScreen() {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column {
-                Text(
-                    text = "Local Classroom P2P",
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold
-                )
-                Text("Zero Internet • Direct Hotspot / WiFi", fontSize = 12.sp, color = Color.Gray)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                if (onBack != null) {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                }
+                Column {
+                    Text(
+                        text = "Local Classroom P2P",
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text("Zero Internet • Direct Hotspot / WiFi", fontSize = 12.sp, color = Color.Gray)
+                }
             }
 
             Row {

@@ -18,6 +18,8 @@ import androidx.compose.material.icons.filled.HourglassTop
 import androidx.compose.material.icons.filled.Quiz
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Timer
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -47,7 +49,8 @@ data class AnsweredQuestionRecord(
 fun PracticeScreen(
     initialTopic: String? = null,
     onTopicConsumed: (() -> Unit)? = null,
-    onRemedialTriggered: () -> Unit
+    onRemedialTriggered: () -> Unit,
+    onNavigateToMindMap: () -> Unit = {}
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -55,6 +58,7 @@ fun PracticeScreen(
     val repository = remember { LenteraRepository(db) }
     val gson = remember { Gson() }
 
+    var practiceTab by remember { mutableIntStateOf(0) } // 0: Drill & Exam, 1: Mastery & Mind Map
     var isExamMode by remember { mutableStateOf(false) }
     var selectedTopic by remember { mutableStateOf(initialTopic ?: "Refraction") }
     var currentQuiz by remember { mutableStateOf<QuizEntity?>(null) }
@@ -130,13 +134,57 @@ fun PracticeScreen(
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
+    Column(modifier = Modifier.fillMaxSize()) {
+        // Swiss Segmented Control Tab Row
+        TabRow(
+            selectedTabIndex = practiceTab,
+            containerColor = Color(0xFFF0EEE8),
+            contentColor = Color(0xFFFD591E),
+            indicator = { tabPositions ->
+                TabRowDefaults.SecondaryIndicator(
+                    modifier = Modifier.tabIndicatorOffset(tabPositions[practiceTab]),
+                    color = Color(0xFFFD591E)
+                )
+            }
+        ) {
+            Tab(
+                selected = practiceTab == 0,
+                onClick = { practiceTab = 0 },
+                text = {
+                    Text(
+                        text = "01 PRACTICE DRILL",
+                        fontFamily = FontFamily.Monospace,
+                        fontWeight = if (practiceTab == 0) FontWeight.Bold else FontWeight.Medium,
+                        fontSize = 11.sp
+                    )
+                }
+            )
+            Tab(
+                selected = practiceTab == 1,
+                onClick = { practiceTab = 1 },
+                text = {
+                    Text(
+                        text = "02 MASTERY & MIND MAP",
+                        fontFamily = FontFamily.Monospace,
+                        fontWeight = if (practiceTab == 1) FontWeight.Bold else FontWeight.Medium,
+                        fontSize = 11.sp
+                    )
+                }
+            )
+        }
+
+        if (practiceTab == 1) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                ProgressScreen(onNavigateToMindMap = onNavigateToMindMap)
+            }
+        } else {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -148,7 +196,7 @@ fun PracticeScreen(
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold
                 )
-                Text("Real-time Room DB mastery tracking", fontSize = 12.sp, color = Color.Gray)
+                Text("Adaptive questions with syllabus mastery tracking", fontSize = 12.sp, color = Color.Gray)
             }
 
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -533,4 +581,6 @@ fun PracticeScreen(
             }
         }
     }
+}
+}
 }

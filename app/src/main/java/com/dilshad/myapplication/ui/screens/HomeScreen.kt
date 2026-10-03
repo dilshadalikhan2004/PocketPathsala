@@ -71,11 +71,13 @@ private val SwissGreenLight = Color(0xFF10B981)
 @Composable
 fun HomeScreen(
     onNavigateToAsk: (prompt: String?, bookId: String?) -> Unit,
-    onNavigateToScan: () -> Unit,
+    onNavigateToScan: () -> Unit = {},
     onNavigateToPractice: () -> Unit,
     onNavigateToClassroom: () -> Unit,
     onStartRemedialLesson: () -> Unit,
-    onNavigateToCurriculum: () -> Unit = {}
+    onNavigateToCurriculum: () -> Unit = {},
+    onNavigateToSettings: () -> Unit = {},
+    onNavigateToMindMap: () -> Unit = {}
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -88,11 +90,8 @@ fun HomeScreen(
     var streakDays by remember { mutableIntStateOf(1) }
     var catalogEntries by remember { mutableStateOf<List<BookCatalogEntry>>(emptyList()) }
     var acquisitions by remember { mutableStateOf<Map<String, AcquiredBookEntity>>(emptyMap()) }
-    var lastQuizScoreText by remember { mutableStateOf("4/5") }
 
     // Interactive states
-    var activeLoopStep by remember { mutableIntStateOf(2) } // 1: BOOK, 2: CHAPTER, 3: ASK, 4: DRILL
-    var typedQuestion by remember { mutableStateOf("") }
     var showProfileDialog by remember { mutableStateOf(false) }
 
     // Load dynamic data from Room & NCERT catalog
@@ -131,11 +130,6 @@ fun HomeScreen(
 
             val attempts = db.dao().getAllAttempts()
             totalAttemptsCount = attempts.size
-            if (attempts.isNotEmpty()) {
-                val lastAttempts = attempts.take(5)
-                val correctCount = lastAttempts.count { it.score >= 0.7f }
-                lastQuizScoreText = "$correctCount/${lastAttempts.size}"
-            }
 
             val studyDays = attempts
                 .map { it.timestamp / 86_400_000L }
@@ -161,8 +155,6 @@ fun HomeScreen(
     // Dynamic greeting based on real device hour
     val calendar = remember { Calendar.getInstance() }
     val currentHour = remember { calendar.get(Calendar.HOUR_OF_DAY) }
-    val currentMinute = remember { calendar.get(Calendar.MINUTE) }
-    val formattedTime = remember { String.format(Locale.getDefault(), "%02d:%02d", currentHour, currentMinute) }
     val timeGreeting = remember(currentHour) {
         when (currentHour) {
             in 4..11 -> "Good morning"
@@ -185,7 +177,7 @@ fun HomeScreen(
         when (studentClassNumber) {
             8 -> ActiveModuleData(
                 chapterNumber = "04",
-                bookTitle = "NCERT SCIENCE • TEXTBOOK CORE",
+                bookTitle = "SCIENCE",
                 chapterTitle = "MATERIALS: METALS & NON-METALS",
                 sectionFocus = "§ 4.2 CONDUCTIVITY",
                 conceptTerm = "ductility",
@@ -195,7 +187,7 @@ fun HomeScreen(
             )
             9 -> ActiveModuleData(
                 chapterNumber = "03",
-                bookTitle = "NCERT SCIENCE • TEXTBOOK CORE",
+                bookTitle = "SCIENCE",
                 chapterTitle = "ATOMS AND MOLECULES",
                 sectionFocus = "§ 3.1 LAWS OF CHEMICAL COMBINATION",
                 conceptTerm = "conservation of mass",
@@ -205,7 +197,7 @@ fun HomeScreen(
             )
             6 -> ActiveModuleData(
                 chapterNumber = "04",
-                bookTitle = "NCERT SCIENCE • TEXTBOOK CORE",
+                bookTitle = "SCIENCE",
                 chapterTitle = "SORTING MATERIALS INTO GROUPS",
                 sectionFocus = "§ 4.2 PROPERTIES OF MATERIALS",
                 conceptTerm = "lustre",
@@ -215,7 +207,7 @@ fun HomeScreen(
             )
             7 -> ActiveModuleData(
                 chapterNumber = "01",
-                bookTitle = "NCERT SCIENCE • TEXTBOOK CORE",
+                bookTitle = "SCIENCE",
                 chapterTitle = "NUTRITION IN PLANTS",
                 sectionFocus = "§ 1.2 PHOTOSYNTHESIS",
                 conceptTerm = "chlorophyll",
@@ -225,7 +217,7 @@ fun HomeScreen(
             )
             else -> ActiveModuleData(
                 chapterNumber = "10",
-                bookTitle = "NCERT SCIENCE • TEXTBOOK CORE",
+                bookTitle = "SCIENCE",
                 chapterTitle = "LIGHT: REFLECTION & REFRACTION",
                 sectionFocus = "§ 10.1 LAWS OF REFLECTION",
                 conceptTerm = "reflection",
@@ -313,85 +305,9 @@ fun HomeScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(SwissSurface)
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .padding(horizontal = 16.dp, vertical = 12.dp)
             ) {
-                // Top tactical status line
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Text(
-                            text = formattedTime,
-                            fontFamily = FontFamily.Monospace,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 12.sp,
-                            color = SwissOnSurface
-                        )
-                        Icon(
-                            Icons.Default.AirplanemodeActive,
-                            contentDescription = "Offline Airplane Mode",
-                            modifier = Modifier.size(13.dp),
-                            tint = SwissOnSurface
-                        )
-                    }
-
-                    // Green OFFLINE READY pill
-                    Surface(
-                        shape = CircleShape,
-                        color = SwissSurfaceContainerHigh,
-                        border = BorderStroke(1.dp, SwissOutlineVariant.copy(alpha = 0.4f))
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 3.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(6.dp)
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(7.dp)
-                                    .scale(pulseScale)
-                                    .clip(CircleShape)
-                                    .background(SwissGreenLight)
-                            )
-                            Text(
-                                text = "OFFLINE READY",
-                                fontFamily = FontFamily.Monospace,
-                                fontSize = 10.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = SwissGreen,
-                                letterSpacing = 0.5.sp
-                            )
-                        }
-                    }
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(2.dp)
-                    ) {
-                        Text(
-                            text = "84%",
-                            fontFamily = FontFamily.Monospace,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 12.sp,
-                            color = SwissOnSurface
-                        )
-                        Icon(
-                            Icons.Default.BatteryStd,
-                            contentDescription = "Battery",
-                            modifier = Modifier.size(14.dp),
-                            tint = SwissOnSurface
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(6.dp))
-
-                // App Title & Profile Avatar Row
+                // App Title & Profile Avatar Row (pure app UI, no fake system bar)
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -402,7 +318,7 @@ fun HomeScreen(
                             Text(
                                 text = "POCKETPATHSHALA",
                                 fontWeight = FontWeight.Bold,
-                                fontSize = 16.sp,
+                                fontSize = 17.sp,
                                 letterSpacing = 0.5.sp,
                                 color = SwissOnSurface
                             )
@@ -412,17 +328,18 @@ fun HomeScreen(
                                 color = SwissPrimary
                             ) {
                                 Text(
-                                    text = "STD $studentClassNumber",
+                                    text = "CLASS $studentClassNumber",
                                     color = Color.White,
                                     fontFamily = FontFamily.Monospace,
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 10.sp,
-                                    modifier = Modifier.padding(horizontal = 5.dp, vertical = 1.dp)
+                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
                                 )
                             }
                         }
+                        Spacer(modifier = Modifier.height(2.dp))
                         Text(
-                            text = "NCERT CURRICULUM • OFFLINE READY",
+                            text = "NCERT CURRICULUM",
                             fontFamily = FontFamily.Monospace,
                             fontSize = 10.sp,
                             color = SwissOnSurfaceVariant
@@ -457,76 +374,43 @@ fun HomeScreen(
         ) {
             item { Spacer(modifier = Modifier.height(4.dp)) }
 
-            // 1. TOP EDITORIAL GREETING & TACTICAL STATUS
+            // 1. TOP EDITORIAL GREETING & STREAK STATUS
             item {
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Surface(
-                            shape = RoundedCornerShape(2.dp),
-                            color = SwissPrimary
-                        ) {
-                            Text(
-                                text = "CLASS ${String.format(Locale.getDefault(), "%02d", studentClassNumber)} • SCIENCE TRACK",
-                                color = Color.White,
-                                fontFamily = FontFamily.Monospace,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 10.sp,
-                                letterSpacing = 1.sp,
-                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
-                            )
-                        }
-
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(4.dp)
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(6.dp)
-                                    .clip(CircleShape)
-                                    .background(SwissGreenLight)
-                            )
-                            Text(
-                                text = "Ready to learn offline",
-                                fontFamily = FontFamily.Monospace,
-                                fontSize = 11.sp,
-                                color = SwissOnSurfaceVariant
-                            )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 2.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Text(
-                        text = "DAILY PEDAGOGICAL REGISTER",
-                        fontFamily = FontFamily.Monospace,
-                        fontSize = 11.sp,
+                        text = "$timeGreeting, ${studentProfile?.name?.takeIf { it.isNotBlank() } ?: "Scholar"}",
                         fontWeight = FontWeight.Bold,
-                        color = SwissSecondary,
-                        letterSpacing = 1.sp
-                    )
-
-                    Spacer(modifier = Modifier.height(2.dp))
-
-                    // Real student name with tap-to-edit cue
-                    Text(
-                        text = "$timeGreeting, ${studentProfile?.name?.takeIf { it.isNotBlank() } ?: "Scholar"}.",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 26.sp,
-                        letterSpacing = (-0.5).sp,
+                        fontSize = 14.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                         color = SwissOnSurface,
                         modifier = Modifier.clickable { showProfileDialog = true }
                     )
 
-                    Text(
-                        text = "Ready for day $streakDays of your study plan.",
-                        fontSize = 14.sp,
-                        color = SwissOnSurfaceVariant
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Icon(
+                            Icons.Default.LocalFireDepartment,
+                            contentDescription = "Streak",
+                            tint = SwissSecondaryContainer,
+                            modifier = Modifier.size(15.dp)
+                        )
+                        Text(
+                            text = "DAY $streakDays STREAK",
+                            fontFamily = FontFamily.Monospace,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 10.5.sp,
+                            color = SwissSecondary
+                        )
+                    }
                 }
             }
 
@@ -548,9 +432,12 @@ fun HomeScreen(
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.Top
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
                             Row(
+                                modifier = Modifier
+                                    .weight(1f, fill = false)
+                                    .padding(end = 10.dp),
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(6.dp)
                             ) {
@@ -571,7 +458,9 @@ fun HomeScreen(
                                     text = activeModule.bookTitle,
                                     fontFamily = FontFamily.Monospace,
                                     fontSize = 11.sp,
-                                    color = SwissOnSurfaceVariant
+                                    color = SwissOnSurfaceVariant,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
                                 )
                             }
 
@@ -582,9 +471,9 @@ fun HomeScreen(
                                 shadowElevation = 1.dp
                             ) {
                                 Row(
-                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp),
+                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                                     verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.spacedBy(3.dp)
+                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
                                 ) {
                                     Icon(
                                         Icons.Default.Bookmark,
@@ -595,9 +484,11 @@ fun HomeScreen(
                                     Text(
                                         text = "PAGE ${activeModule.pageNumber}",
                                         fontFamily = FontFamily.Monospace,
-                                        fontSize = 10.sp,
+                                        fontSize = 11.sp,
                                         fontWeight = FontWeight.Bold,
-                                        color = Color.White
+                                        color = Color.White,
+                                        maxLines = 1,
+                                        softWrap = false
                                     )
                                 }
                             }
@@ -625,34 +516,52 @@ fun HomeScreen(
                         }
 
                         // Tactile Excerpt Inset Box with orange left accent border
-                        Box(
+                        Row(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .background(SwissSurfaceContainer)
                                 .border(
                                     width = 1.dp,
-                                    color = SwissOutlineVariant.copy(alpha = 0.2f)
+                                    color = SwissOutlineVariant.copy(alpha = 0.25f)
                                 )
-                                .padding(horizontal = 12.dp, vertical = 10.dp)
+                                .height(IntrinsicSize.Min)
                         ) {
-                            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                            Box(
+                                modifier = Modifier
+                                    .width(3.dp)
+                                    .fillMaxHeight()
+                                    .background(SwissSecondaryContainer)
+                            )
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 12.dp, vertical = 10.dp),
+                                verticalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Text(
                                         text = "ACTIVE CONCEPT FOCUS",
                                         fontFamily = FontFamily.Monospace,
                                         fontWeight = FontWeight.Bold,
-                                        fontSize = 10.sp,
-                                        color = SwissOnSurfaceVariant
+                                        fontSize = 8.5.sp,
+                                        letterSpacing = 0.3.sp,
+                                        color = SwissOnSurfaceVariant,
+                                        maxLines = 1,
+                                        softWrap = false
                                     )
+                                    Spacer(modifier = Modifier.width(6.dp))
                                     Text(
                                         text = activeModule.sectionFocus,
                                         fontFamily = FontFamily.Monospace,
                                         fontWeight = FontWeight.Bold,
-                                        fontSize = 11.sp,
-                                        color = SwissOnSurface
+                                        fontSize = 9.5.sp,
+                                        color = SwissOnSurface,
+                                        maxLines = 1,
+                                        softWrap = false
                                     )
                                 }
                                 Text(
@@ -664,8 +573,13 @@ fun HomeScreen(
                             }
                         }
 
-                        // Mastered Progress Stamp & Stepped Bar
-                        Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                        // Mastered Progress Stamp & Stepped Bar (Clickable to open Mastery Analytics)
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { onStartRemedialLesson() },
+                            verticalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -688,12 +602,26 @@ fun HomeScreen(
                                         color = SwissOnSurface
                                     )
                                 }
-                                Text(
-                                    text = "${masteredCount.coerceAtLeast(10)} / $totalConcepts SECTIONS COMPLETED",
-                                    fontFamily = FontFamily.Monospace,
-                                    fontSize = 11.sp,
-                                    color = SwissOnSurfaceVariant
-                                )
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                ) {
+                                    Text(
+                                        text = "${masteredCount.coerceAtLeast(10)} / $totalConcepts SECTIONS",
+                                        fontFamily = FontFamily.Monospace,
+                                        fontSize = 10.sp,
+                                        fontWeight = FontWeight.Medium,
+                                        color = SwissOnSurfaceVariant,
+                                        maxLines = 1,
+                                        softWrap = false
+                                    )
+                                    Icon(
+                                        Icons.Default.ChevronRight,
+                                        contentDescription = "View Mastery",
+                                        tint = SwissSecondary,
+                                        modifier = Modifier.size(14.dp)
+                                    )
+                                }
                             }
 
                             // 10-Segment Stepped Progress Bar
@@ -777,84 +705,87 @@ fun HomeScreen(
                 }
             }
 
-            // 3. VISUAL PEDAGOGY LOOP (THE SWISS TEXTBOOK WORKFLOW)
+            // 3. DAILY SYLLABUS GOAL & PROGRESS MILESTONE
             item {
-                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "OFFLINE STUDY LOOP",
-                            fontFamily = FontFamily.Monospace,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 11.sp,
-                            color = SwissOnSurfaceVariant
-                        )
-                        Text(
-                            text = "ACTIVE: STEP 0$activeLoopStep",
-                            fontFamily = FontFamily.Monospace,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 11.sp,
-                            color = SwissSecondary
-                        )
-                    }
-
-                    Row(
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(2.dp),
+                    colors = CardDefaults.cardColors(containerColor = SwissSurfaceContainerLow),
+                    border = BorderStroke(1.dp, SwissOutlineVariant.copy(alpha = 0.35f))
+                ) {
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(SwissSurfaceContainerLow)
-                            .border(1.dp, SwissOutlineVariant.copy(alpha = 0.3f))
-                            .padding(4.dp),
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            .padding(12.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        StudyStepItem(
-                            number = "01",
-                            label = "BOOK",
-                            icon = Icons.Default.Check,
-                            isSelected = activeLoopStep == 1,
-                            modifier = Modifier.weight(1f),
-                            onClick = {
-                                activeLoopStep = 1
-                                onNavigateToCurriculum()
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Surface(
+                                shape = RoundedCornerShape(2.dp),
+                                color = SwissSecondaryContainer
+                            ) {
+                                Text(
+                                    text = "DAILY MILESTONE",
+                                    color = Color.White,
+                                    fontFamily = FontFamily.Monospace,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 9.sp,
+                                    letterSpacing = 0.5.sp,
+                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                )
                             }
-                        )
-                        StudyStepItem(
-                            number = "02",
-                            label = "CHAPTER",
-                            icon = Icons.Default.Navigation,
-                            isSelected = activeLoopStep == 2,
-                            modifier = Modifier.weight(1f),
-                            onClick = { activeLoopStep = 2 }
-                        )
-                        StudyStepItem(
-                            number = "03",
-                            label = "ASK TUTOR",
-                            icon = Icons.Default.Mic,
-                            isSelected = activeLoopStep == 3,
-                            modifier = Modifier.weight(1f),
-                            onClick = {
-                                activeLoopStep = 3
-                                onNavigateToAsk(null, activeBookId)
+                            Text(
+                                text = "71% MASTERED",
+                                fontFamily = FontFamily.Monospace,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 11.sp,
+                                color = SwissSecondary
+                            )
+                        }
+
+                        // Milestone Progress Line with on-track status indicator (no redundant drill button)
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                                Text(
+                                    text = "Chapter 10: Light • Section 10.1",
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 13.sp,
+                                    color = SwissOnSurface
+                                )
+                                Text(
+                                    text = "Target: 10 of 14 key concepts completed",
+                                    fontSize = 11.sp,
+                                    color = SwissOnSurfaceVariant
+                                )
                             }
-                        )
-                        StudyStepItem(
-                            number = "04",
-                            label = "DRILL",
-                            icon = Icons.Default.Timer,
-                            isSelected = activeLoopStep == 4,
-                            modifier = Modifier.weight(1f),
-                            onClick = {
-                                activeLoopStep = 4
-                                onNavigateToPractice()
+                            Surface(
+                                shape = RoundedCornerShape(2.dp),
+                                color = SwissGreen.copy(alpha = 0.12f),
+                                border = BorderStroke(1.dp, SwissGreen.copy(alpha = 0.35f))
+                            ) {
+                                Text(
+                                    text = "ON TRACK",
+                                    color = SwissGreen,
+                                    fontFamily = FontFamily.Monospace,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 9.5.sp,
+                                    modifier = Modifier.padding(horizontal = 7.dp, vertical = 4.dp)
+                                )
                             }
-                        )
+                        }
                     }
                 }
             }
 
-            // 4. ASYMMETRIC BENTO GRID: GROUNDED TOOLS
+            // 4. GROUNDED STUDY TOOLS: CONCEPT MIND MAP & P2P MESH CLASSROOM (NON-REDUNDANT)
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Row(
@@ -869,32 +800,35 @@ fun HomeScreen(
                             color = SwissOnSurfaceVariant
                         )
                         Text(
-                            text = "CORE STUDY TOOLS",
+                            text = "INTERACTIVE STUDY",
                             fontFamily = FontFamily.Monospace,
                             fontSize = 10.sp,
                             color = SwissOnSurfaceVariant
                         )
                     }
 
-                    // Bento Item 1: ASK YOUR TEXTBOOK (Full Width)
-                    Card(
+                    // Side-by-side cards: Mind Map Graph & P2P Mesh Study Group
+                    Row(
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(2.dp),
-                        colors = CardDefaults.cardColors(containerColor = SwissSurfaceContainerLowest),
-                        border = BorderStroke(1.dp, SwissOutlineVariant.copy(alpha = 0.4f))
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Column(
-                            modifier = Modifier.padding(14.dp),
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        // Tool 01: Concept Mind Map (Interactive Knowledge Graph)
+                        Card(
+                            modifier = Modifier.weight(1f),
+                            shape = RoundedCornerShape(2.dp),
+                            colors = CardDefaults.cardColors(containerColor = SwissSurfaceContainerLowest),
+                            border = BorderStroke(1.dp, SwissOutlineVariant.copy(alpha = 0.4f))
                         ) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(10.dp),
+                                verticalArrangement = Arrangement.spacedBy(6.dp)
                             ) {
                                 Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Surface(
                                         shape = RoundedCornerShape(2.dp),
@@ -906,144 +840,90 @@ fun HomeScreen(
                                             fontFamily = FontFamily.Monospace,
                                             fontWeight = FontWeight.Bold,
                                             fontSize = 10.sp,
-                                            modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
+                                            modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp)
                                         )
                                     }
                                     Text(
-                                        text = "ASK YOUR TEXTBOOK",
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 13.sp,
-                                        color = SwissOnSurface
+                                        text = "NODE GRAPH",
+                                        fontFamily = FontFamily.Monospace,
+                                        fontSize = 9.sp,
+                                        color = SwissOnSurfaceVariant
                                     )
                                 }
 
-                                Surface(
-                                    shape = RoundedCornerShape(2.dp),
-                                    color = SwissSurfaceContainer,
-                                    modifier = Modifier.clickable {
-                                        onNavigateToAsk("Summarize ${activeModule.chapterTitle} concepts", activeBookId)
+                                Text(
+                                    text = "MIND MAP",
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 12.sp,
+                                    color = SwissOnSurface
+                                )
+
+                                // Mini Geometric Node Graph Canvas with pulsing orange focal node
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(42.dp)
+                                        .background(SwissSurfaceContainer),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Canvas(modifier = Modifier.fillMaxSize()) {
+                                        val w = size.width
+                                        val h = size.height
+                                        val nodeCenter = Offset(w * 0.22f, h * 0.5f)
+                                        val nodeTop = Offset(w * 0.52f, h * 0.28f)
+                                        val nodeBottom = Offset(w * 0.52f, h * 0.72f)
+                                        val nodeRight = Offset(w * 0.82f, h * 0.5f)
+
+                                        drawLine(SwissOutlineVariant, nodeCenter, nodeTop, strokeWidth = 2f)
+                                        drawLine(SwissOutlineVariant, nodeCenter, nodeBottom, strokeWidth = 2f)
+                                        drawLine(SwissOutlineVariant, nodeTop, nodeRight, strokeWidth = 2f)
+                                        drawLine(SwissOutlineVariant, nodeBottom, nodeRight, strokeWidth = 2f)
+
+                                        drawCircle(SwissSecondaryContainer, radius = 5.5f * pulseScale, center = nodeCenter)
+                                        drawCircle(SwissPrimary, radius = 4f, center = nodeTop)
+                                        drawCircle(SwissPrimary, radius = 4f, center = nodeBottom)
+                                        drawCircle(SwissPrimary, radius = 4f, center = nodeRight)
                                     }
+                                }
+
+                                Text(
+                                    text = "${totalConcepts.coerceAtLeast(14)} LINKED AXIOMS",
+                                    fontFamily = FontFamily.Monospace,
+                                    fontSize = 9.sp,
+                                    color = SwissOnSurfaceVariant
+                                )
+
+                                Button(
+                                    onClick = onNavigateToMindMap,
+                                    colors = ButtonDefaults.buttonColors(containerColor = SwissSurfaceContainerHigh),
+                                    shape = RoundedCornerShape(2.dp),
+                                    modifier = Modifier.fillMaxWidth(),
+                                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 6.dp)
                                 ) {
                                     Row(
-                                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 3.dp),
-                                        verticalAlignment = Alignment.CenterVertically,
-                                        horizontalArrangement = Arrangement.spacedBy(3.dp)
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
                                     ) {
-                                        Icon(
-                                            Icons.Default.Mic,
-                                            contentDescription = null,
-                                            tint = SwissSecondary,
-                                            modifier = Modifier.size(13.dp)
-                                        )
                                         Text(
-                                            text = "VOICE ASK",
+                                            text = "EXPAND",
                                             fontFamily = FontFamily.Monospace,
-                                            fontSize = 10.sp,
                                             fontWeight = FontWeight.Bold,
+                                            fontSize = 10.sp,
                                             color = SwissOnSurface
                                         )
-                                    }
-                                }
-                            }
-
-                            Text(
-                                text = "Ask any question directly grounded in your verified NCERT syllabus pages.",
-                                fontSize = 12.sp,
-                                color = SwissOnSurfaceVariant
-                            )
-
-                            // Interactive Search Query Input Field
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .background(SwissSurfaceContainerLow)
-                                    .border(1.dp, SwissOutlineVariant.copy(alpha = 0.3f))
-                                    .padding(horizontal = 8.dp, vertical = 4.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                OutlinedTextField(
-                                    value = typedQuestion,
-                                    onValueChange = { typedQuestion = it },
-                                    placeholder = {
-                                        Text(
-                                            text = "\"Why does copper develop a greenish coat?\"",
-                                            fontSize = 12.sp,
-                                            color = SwissOnSurfaceVariant.copy(alpha = 0.7f)
-                                        )
-                                    },
-                                    singleLine = true,
-                                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                                    keyboardActions = KeyboardActions(onSearch = {
-                                        if (typedQuestion.isNotBlank()) {
-                                            onNavigateToAsk(typedQuestion, activeBookId)
-                                        }
-                                    }),
-                                    colors = OutlinedTextFieldDefaults.colors(
-                                        focusedBorderColor = Color.Transparent,
-                                        unfocusedBorderColor = Color.Transparent,
-                                        focusedContainerColor = Color.Transparent,
-                                        unfocusedContainerColor = Color.Transparent
-                                    ),
-                                    modifier = Modifier.weight(1f)
-                                )
-
-                                IconButton(
-                                    onClick = {
-                                        val query = typedQuestion.ifBlank { "Why does copper develop a greenish coat?" }
-                                        onNavigateToAsk(query, activeBookId)
-                                    },
-                                    modifier = Modifier
-                                        .size(32.dp)
-                                        .background(SwissPrimary, RoundedCornerShape(2.dp))
-                                ) {
-                                    Icon(
-                                        Icons.AutoMirrored.Filled.ArrowForward,
-                                        contentDescription = "Search",
-                                        tint = Color.White,
-                                        modifier = Modifier.size(16.dp)
-                                    )
-                                }
-                            }
-
-                            // Quick prompt suggestion chips
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .horizontalScroll(rememberScrollState()),
-                                horizontalArrangement = Arrangement.spacedBy(6.dp)
-                            ) {
-                                val suggestions = listOf(
-                                    "Why does copper develop a greenish coat?",
-                                    "What is ductility?",
-                                    "Explain conductivity of metals",
-                                    "Difference between metals and non-metals"
-                                )
-                                suggestions.forEach { prompt ->
-                                    Surface(
-                                        shape = RoundedCornerShape(2.dp),
-                                        color = SwissSurfaceContainer,
-                                        border = BorderStroke(1.dp, SwissOutlineVariant.copy(alpha = 0.3f)),
-                                        modifier = Modifier.clickable { typedQuestion = prompt }
-                                    ) {
-                                        Text(
-                                            text = prompt,
-                                            fontSize = 10.sp,
-                                            fontFamily = FontFamily.Monospace,
-                                            color = SwissOnSurfaceVariant,
-                                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 3.dp)
+                                        Icon(
+                                            Icons.Default.Hub,
+                                            contentDescription = null,
+                                            tint = SwissOnSurface,
+                                            modifier = Modifier.size(13.dp)
                                         )
                                     }
                                 }
                             }
                         }
-                    }
 
-                    // Bento Split: Flash Quiz & Mind Map Row
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        // Bento Item 2: Flashquiz
+                        // Tool 02: Offline Study Group (Mesh Classroom P2P)
                         Card(
                             modifier = Modifier.weight(1f),
                             shape = RoundedCornerShape(2.dp),
@@ -1074,153 +954,58 @@ fun HomeScreen(
                                             modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp)
                                         )
                                     }
-                                    Surface(
-                                        shape = RoundedCornerShape(2.dp),
-                                        color = SwissSecondaryContainer
-                                    ) {
-                                        Text(
-                                            text = "$lastQuizScoreText LAST",
-                                            color = Color.White,
-                                            fontFamily = FontFamily.Monospace,
-                                            fontWeight = FontWeight.Bold,
-                                            fontSize = 9.sp,
-                                            modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp)
-                                        )
-                                    }
-                                }
-
-                                Text(
-                                    text = "FLASH QUIZ",
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 12.sp,
-                                    color = SwissOnSurface
-                                )
-                                Text(
-                                    text = "5 rapid questions on ${activeModule.chapterTitle.take(24)}.",
-                                    fontSize = 11.sp,
-                                    color = SwissOnSurfaceVariant,
-                                    maxLines = 2,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-
-                                Spacer(modifier = Modifier.height(2.dp))
-
-                                Button(
-                                    onClick = onNavigateToPractice,
-                                    colors = ButtonDefaults.buttonColors(containerColor = SwissSurfaceContainerHigh),
-                                    shape = RoundedCornerShape(2.dp),
-                                    modifier = Modifier.fillMaxWidth(),
-                                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 6.dp)
-                                ) {
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.SpaceBetween,
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Text(
-                                            text = "START DRILL",
-                                            fontFamily = FontFamily.Monospace,
-                                            fontWeight = FontWeight.Bold,
-                                            fontSize = 10.sp,
-                                            color = SwissOnSurface
-                                        )
-                                        Icon(
-                                            Icons.Default.ElectricBolt,
-                                            contentDescription = null,
-                                            tint = SwissSecondary,
-                                            modifier = Modifier.size(14.dp)
-                                        )
-                                    }
-                                }
-                            }
-                        }
-
-                        // Bento Item 3: Mind Map Graph
-                        Card(
-                            modifier = Modifier.weight(1f),
-                            shape = RoundedCornerShape(2.dp),
-                            colors = CardDefaults.cardColors(containerColor = SwissSurfaceContainerLowest),
-                            border = BorderStroke(1.dp, SwissOutlineVariant.copy(alpha = 0.4f))
-                        ) {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(10.dp),
-                                verticalArrangement = Arrangement.spacedBy(6.dp)
-                            ) {
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Surface(
-                                        shape = RoundedCornerShape(2.dp),
-                                        color = SwissPrimary
-                                    ) {
-                                        Text(
-                                            text = "03",
-                                            color = Color.White,
-                                            fontFamily = FontFamily.Monospace,
-                                            fontWeight = FontWeight.Bold,
-                                            fontSize = 10.sp,
-                                            modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp)
-                                        )
-                                    }
                                     Text(
-                                        text = "NODE GRAPH",
+                                        text = "WI-FI DIRECT",
                                         fontFamily = FontFamily.Monospace,
                                         fontSize = 9.sp,
-                                        color = SwissOnSurfaceVariant
+                                        color = SwissSecondary
                                     )
                                 }
 
                                 Text(
-                                    text = "MIND MAP",
+                                    text = "STUDY GROUP",
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 12.sp,
                                     color = SwissOnSurface
                                 )
 
-                                // Mini Geometric Node Graph Canvas with pulsing orange focal node
+                                // Stylized Mesh P2P Hub visual box
                                 Box(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .height(36.dp)
+                                        .height(42.dp)
                                         .background(SwissSurfaceContainer),
                                     contentAlignment = Alignment.Center
                                 ) {
-                                    Canvas(modifier = Modifier.fillMaxSize()) {
-                                        val w = size.width
-                                        val h = size.height
-                                        val nodeCenter = Offset(w * 0.22f, h * 0.5f)
-                                        val nodeTop = Offset(w * 0.52f, h * 0.28f)
-                                        val nodeBottom = Offset(w * 0.52f, h * 0.72f)
-                                        val nodeRight = Offset(w * 0.82f, h * 0.5f)
-
-                                        // Link lines
-                                        drawLine(SwissOutlineVariant, nodeCenter, nodeTop, strokeWidth = 2f)
-                                        drawLine(SwissOutlineVariant, nodeCenter, nodeBottom, strokeWidth = 2f)
-                                        drawLine(SwissOutlineVariant, nodeTop, nodeRight, strokeWidth = 2f)
-                                        drawLine(SwissOutlineVariant, nodeBottom, nodeRight, strokeWidth = 2f)
-
-                                        // Center pulsing orange node
-                                        drawCircle(SwissSecondaryContainer, radius = 5.5f * pulseScale, center = nodeCenter)
-                                        // Satellite nodes
-                                        drawCircle(SwissPrimary, radius = 4f, center = nodeTop)
-                                        drawCircle(SwissPrimary, radius = 4f, center = nodeBottom)
-                                        drawCircle(SwissPrimary, radius = 4f, center = nodeRight)
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                    ) {
+                                        Icon(
+                                            Icons.Default.WifiTethering,
+                                            contentDescription = null,
+                                            tint = SwissSecondaryContainer,
+                                            modifier = Modifier.size(16.dp)
+                                        )
+                                        Text(
+                                            text = "P2P SYNC",
+                                            fontFamily = FontFamily.Monospace,
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 9.5.sp,
+                                            color = SwissOnSurface
+                                        )
                                     }
                                 }
 
                                 Text(
-                                    text = "${totalConcepts.coerceAtLeast(14)} LINKED AXIOMS",
+                                    text = "PEER CLASSROOM",
                                     fontFamily = FontFamily.Monospace,
                                     fontSize = 9.sp,
                                     color = SwissOnSurfaceVariant
                                 )
 
                                 Button(
-                                    onClick = onNavigateToPractice,
+                                    onClick = onNavigateToClassroom,
                                     colors = ButtonDefaults.buttonColors(containerColor = SwissSurfaceContainerHigh),
                                     shape = RoundedCornerShape(2.dp),
                                     modifier = Modifier.fillMaxWidth(),
@@ -1232,17 +1017,17 @@ fun HomeScreen(
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
                                         Text(
-                                            text = "EXPAND GRAPH",
+                                            text = "CONNECT",
                                             fontFamily = FontFamily.Monospace,
                                             fontWeight = FontWeight.Bold,
                                             fontSize = 10.sp,
                                             color = SwissOnSurface
                                         )
                                         Icon(
-                                            Icons.Default.Hub,
+                                            Icons.Default.Groups,
                                             contentDescription = null,
                                             tint = SwissOnSurface,
-                                            modifier = Modifier.size(14.dp)
+                                            modifier = Modifier.size(13.dp)
                                         )
                                     }
                                 }
@@ -1434,7 +1219,7 @@ fun HomeScreen(
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
-                            text = "VERIFIED NCERT 2024-25",
+                            text = "VERIFIED NCERT",
                             fontFamily = FontFamily.Monospace,
                             fontWeight = FontWeight.Bold,
                             fontSize = 11.sp,
@@ -1446,7 +1231,7 @@ fun HomeScreen(
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = "FULLY AVAILABLE OFFLINE",
+                            text = "CBSE 2024-25 SYLLABUS",
                             fontFamily = FontFamily.Monospace,
                             fontWeight = FontWeight.Bold,
                             fontSize = 11.sp,
@@ -1529,6 +1314,32 @@ fun HomeScreen(
                             )
                         }
                     }
+
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp), color = SwissOutlineVariant.copy(alpha = 0.3f))
+
+                    OutlinedButton(
+                        onClick = {
+                            showProfileDialog = false
+                            onNavigateToSettings()
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(2.dp),
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = SwissOnSurface)
+                    ) {
+                        Icon(
+                            Icons.Default.Settings,
+                            contentDescription = null,
+                            modifier = Modifier.size(15.dp),
+                            tint = SwissSecondary
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(
+                            text = "APP SETTINGS & GEMMA STATUS",
+                            fontFamily = FontFamily.Monospace,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 11.sp
+                        )
+                    }
                 }
             },
             confirmButton = {
@@ -1565,52 +1376,6 @@ fun HomeScreen(
                 }
             }
         )
-    }
-}
-
-// Subcomponent: Study Step item for Visual Pedagogy Loop
-@Composable
-private fun StudyStepItem(
-    number: String,
-    label: String,
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
-    isSelected: Boolean,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
-) {
-    Surface(
-        shape = RoundedCornerShape(2.dp),
-        color = if (isSelected) SwissPrimary else SwissSurfaceContainer,
-        border = BorderStroke(1.dp, if (isSelected) SwissPrimary else Color.Transparent),
-        modifier = modifier.clickable { onClick() }
-    ) {
-        Column(
-            modifier = Modifier.padding(vertical = 8.dp, horizontal = 2.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = number,
-                fontFamily = FontFamily.Monospace,
-                fontSize = 11.sp,
-                fontWeight = FontWeight.Bold,
-                color = if (isSelected) SwissSecondaryContainer else SwissOnSurfaceVariant
-            )
-            Text(
-                text = label,
-                fontFamily = FontFamily.Monospace,
-                fontSize = 9.sp,
-                fontWeight = FontWeight.Bold,
-                color = if (isSelected) Color.White else SwissOnSurface
-            )
-            Spacer(modifier = Modifier.height(3.dp))
-            Icon(
-                icon,
-                contentDescription = null,
-                tint = if (isSelected) SwissSecondaryContainer else SwissOnSurfaceVariant,
-                modifier = Modifier.size(12.dp)
-            )
-        }
     }
 }
 

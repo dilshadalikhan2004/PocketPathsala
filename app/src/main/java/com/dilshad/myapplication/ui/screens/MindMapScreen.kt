@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.CheckCircle
@@ -28,7 +29,9 @@ import com.dilshad.myapplication.domain.rag.CurriculumChunk
 import com.dilshad.myapplication.domain.rag.CurriculumCorpus
 
 @Composable
-fun MindMapScreen() {
+fun MindMapScreen(
+    onBack: (() -> Unit)? = null
+) {
     val context = LocalContext.current
     val db = remember { AppDatabase.getInstance(context) }
     var masteryMap by remember { mutableStateOf<Map<String, MasteryEntity>>(emptyMap()) }
@@ -58,6 +61,12 @@ fun MindMapScreen() {
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
+            if (onBack != null) {
+                IconButton(onClick = onBack) {
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                }
+                Spacer(modifier = Modifier.width(4.dp))
+            }
             Icon(Icons.Default.AutoAwesome, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
             Spacer(modifier = Modifier.width(8.dp))
             Text(

@@ -2,13 +2,17 @@ package com.dilshad.myapplication
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,6 +21,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
@@ -54,42 +62,86 @@ fun LenteraMainApp() {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
+    // Ensure system back gesture always returns cleanly to Home from other screens/tabs
+    val isHome = currentRoute == Screen.Home.route
+    BackHandler(enabled = !isHome) {
+        if (!navController.popBackStack()) {
+            navController.popBackStack(Screen.Home.route, inclusive = false)
+        }
+    }
+
     var pendingAskPrompt by remember { mutableStateOf<String?>(null) }
     var pendingAskBookId by remember { mutableStateOf<String?>(null) }
     var pendingPracticeTopic by remember { mutableStateOf<String?>(null) }
 
+    // Helper to switch between canonical bottom tabs cleanly without backstack explosion
+    val navigateToTab: (String) -> Unit = { targetRoute ->
+        if (targetRoute == Screen.Home.route) {
+            navController.popBackStack(Screen.Home.route, inclusive = false)
+        } else {
+            navController.navigate(targetRoute) {
+                popUpTo(Screen.Home.route) {
+                    saveState = true
+                }
+                launchSingleTop = true
+                restoreState = true
+            }
+        }
+    }
+
+    // 4 canonical product destinations matching Swiss/Stitch layout
     val bottomNavScreens = listOf(
         Screen.Home,
         Screen.Curriculum,
         Screen.Ask,
-        Screen.Scan,
-        Screen.Practice,
-        Screen.Progress,
-        Screen.Classroom,
-        Screen.Host,
-        Screen.Settings
+        Screen.Practice
     )
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
-            NavigationBar {
-                bottomNavScreens.forEach { screen ->
+            NavigationBar(
+                containerColor = Color(0xFFFBF9F3),
+                tonalElevation = 0.dp,
+                modifier = Modifier.border(
+                    BorderStroke(1.dp, Color(0xFFC5C6CD).copy(alpha = 0.35f))
+                )
+            ) {
+                bottomNavScreens.forEachIndexed { index, screen ->
+                    val isSelected = currentRoute == screen.route
                     NavigationBarItem(
-                        selected = currentRoute == screen.route,
+                        selected = isSelected,
                         onClick = {
-                            if (currentRoute != screen.route) {
-                                navController.navigate(screen.route) {
-                                    popUpTo(navController.graph.findStartDestination().id) {
-                                        saveState = true
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
+                            if (screen.route == Screen.Home.route) {
+                                navController.popBackStack(Screen.Home.route, inclusive = false)
+                            } else if (currentRoute != screen.route) {
+                                navigateToTab(screen.route)
                             }
                         },
-                        icon = { Icon(screen.icon, contentDescription = screen.title) },
-                        label = { Text(screen.title, fontSize = 9.sp, maxLines = 1, softWrap = false) }
+                        icon = {
+                            Icon(
+                                imageVector = screen.icon,
+                                contentDescription = screen.title
+                            )
+                        },
+                        label = {
+                            Text(
+                                text = "0${index + 1} ${screen.title.uppercase()}",
+                                fontFamily = FontFamily.Monospace,
+                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                                fontSize = 10.sp,
+                                letterSpacing = 0.5.sp,
+                                maxLines = 1,
+                                softWrap = false
+                            )
+                        },
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = Color(0xFFFD591E),
+                            selectedTextColor = Color(0xFFFD591E),
+                            indicatorColor = Color(0xFFFD591E).copy(alpha = 0.12f),
+                            unselectedIconColor = Color(0xFF75777D),
+                            unselectedTextColor = Color(0xFF75777D)
+                        )
                     )
                 }
             }
@@ -109,21 +161,25 @@ fun LenteraMainApp() {
                         if (!bookId.isNullOrBlank()) {
                             pendingAskBookId = bookId
                         }
-                        navController.navigate(Screen.Ask.route)
+                        navigateToTab(Screen.Ask.route)
                     },
                     onNavigateToScan = { navController.navigate(Screen.Scan.route) },
-                    onNavigateToPractice = { navController.navigate(Screen.Practice.route) },
+                    onNavigateToPractice = { navigateToTab(Screen.Practice.route) },
                     onNavigateToClassroom = { navController.navigate(Screen.Classroom.route) },
                     onStartRemedialLesson = { navController.navigate(Screen.Progress.route) },
-                    onNavigateToCurriculum = { navController.navigate(Screen.Curriculum.route) }
+                    onNavigateToCurriculum = { navigateToTab(Screen.Curriculum.route) },
+                    onNavigateToSettings = { navController.navigate(Screen.Settings.route) },
+                    onNavigateToMindMap = { navController.navigate(Screen.MindMap.route) }
                 )
             }
             composable(Screen.Curriculum.route) {
                 CurriculumScreen(
                     onOpenAsk = { bookId ->
                         pendingAskBookId = bookId
-                        navController.navigate(Screen.Ask.route)
-                    }
+                        navigateToTab(Screen.Ask.route)
+                    },
+                    onNavigateToHost = { navController.navigate(Screen.Host.route) },
+                    onNavigateToClassroom = { navController.navigate(Screen.Classroom.route) }
                 )
             }
             composable(Screen.Ask.route) {
@@ -133,18 +189,19 @@ fun LenteraMainApp() {
                     onPromptConsumed = {
                         pendingAskPrompt = null
                         pendingAskBookId = null
-                    }
+                    },
+                    onNavigateToScan = { navController.navigate(Screen.Scan.route) }
                 )
             }
             composable(Screen.Scan.route) {
                 ScanScreen(
                     onTeachMe = { topic ->
                         pendingAskPrompt = "Explain the concepts and key formulas of $topic with CBSE Class 10 examples."
-                        navController.navigate(Screen.Ask.route)
+                        navigateToTab(Screen.Ask.route)
                     },
                     onTestMe = { topic ->
                         pendingPracticeTopic = topic
-                        navController.navigate(Screen.Practice.route)
+                        navigateToTab(Screen.Practice.route)
                     }
                 )
             }
@@ -152,25 +209,35 @@ fun LenteraMainApp() {
                 PracticeScreen(
                     initialTopic = pendingPracticeTopic,
                     onTopicConsumed = { pendingPracticeTopic = null },
-                    onRemedialTriggered = { navController.navigate(Screen.Progress.route) }
+                    onRemedialTriggered = { navController.navigate(Screen.Progress.route) },
+                    onNavigateToMindMap = { navController.navigate(Screen.MindMap.route) }
                 )
             }
             composable(Screen.Progress.route) {
                 ProgressScreen(
-                    onNavigateToMindMap = { navController.navigate(Screen.MindMap.route) }
+                    onNavigateToMindMap = { navController.navigate(Screen.MindMap.route) },
+                    onBack = { navController.popBackStack() }
                 )
             }
             composable(Screen.Classroom.route) {
-                ClassroomScreen()
+                ClassroomScreen(
+                    onBack = { navController.popBackStack() }
+                )
             }
             composable(Screen.Host.route) {
-                HostScreen()
+                HostScreen(
+                    onBack = { navController.popBackStack() }
+                )
             }
             composable(Screen.MindMap.route) {
-                MindMapScreen()
+                MindMapScreen(
+                    onBack = { navController.popBackStack() }
+                )
             }
             composable(Screen.Settings.route) {
-                SettingsScreen()
+                SettingsScreen(
+                    onBack = { navController.popBackStack() }
+                )
             }
         }
     }

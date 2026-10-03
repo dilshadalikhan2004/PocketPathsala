@@ -20,13 +20,18 @@ import com.dilshad.myapplication.content.*
 import com.dilshad.myapplication.data.db.AppDatabase
 import com.dilshad.myapplication.host.*
 import com.dilshad.myapplication.model.DeterministicTutorModel
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.ui.Alignment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.net.NetworkInterface
 
 @Composable
-fun HostScreen() {
+fun HostScreen(
+    onBack: (() -> Unit)? = null
+) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val db = remember { AppDatabase.getInstance(context) }
@@ -73,7 +78,15 @@ fun HostScreen() {
     DisposableEffect(Unit) { onDispose { server.stop() } }
 
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Text("Teacher host", style = MaterialTheme.typography.headlineSmall)
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            if (onBack != null) {
+                IconButton(onClick = onBack) {
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                }
+                Spacer(modifier = Modifier.width(4.dp))
+            }
+            Text("Teacher host", style = MaterialTheme.typography.headlineSmall)
+        }
         Text("Offline classroom controls. No account or cloud connection is used.")
         Card(Modifier.fillMaxWidth()) {
             Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {

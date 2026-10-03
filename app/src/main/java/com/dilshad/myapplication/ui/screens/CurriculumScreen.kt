@@ -14,6 +14,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.filled.*
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -34,7 +36,9 @@ import kotlinx.coroutines.withContext
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CurriculumScreen(
-    onOpenAsk: (bookId: String?) -> Unit = {}
+    onOpenAsk: (bookId: String?) -> Unit = {},
+    onNavigateToHost: (() -> Unit)? = null,
+    onNavigateToClassroom: (() -> Unit)? = null
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -191,6 +195,99 @@ fun CurriculumScreen(
                 .fillMaxSize()
                 .padding(padding)
         ) {
+            // Offline Mesh Study Hub Banner
+            Surface(
+                shape = RoundedCornerShape(2.dp),
+                color = Color(0xFFF0EEE8),
+                border = BorderStroke(1.dp, Color(0xFFC5C6CD).copy(alpha = 0.4f)),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 6.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(10.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            Icon(
+                                Icons.Default.WifiTethering,
+                                contentDescription = null,
+                                tint = Color(0xFFFD591E),
+                                modifier = Modifier.size(15.dp)
+                            )
+                            Text(
+                                text = "PEER MESH SHARING",
+                                fontFamily = FontFamily.Monospace,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 11.sp,
+                                color = Color(0xFF1B1C18)
+                            )
+                        }
+                        Text(
+                            text = "LOCAL WI-FI",
+                            fontFamily = FontFamily.Monospace,
+                            fontSize = 9.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFFFD591E)
+                        )
+                    }
+
+                    Text(
+                        text = "Broadcast your indexed NCERT books as a local Wi-Fi tutor, or join a peer classroom nearby.",
+                        fontSize = 11.sp,
+                        color = Color(0xFF44474C)
+                    )
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Button(
+                            onClick = { onNavigateToHost?.invoke() },
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF000000)),
+                            shape = RoundedCornerShape(2.dp),
+                            modifier = Modifier.weight(1f),
+                            contentPadding = PaddingValues(vertical = 4.dp, horizontal = 6.dp)
+                        ) {
+                            Icon(Icons.Default.Podcasts, contentDescription = null, modifier = Modifier.size(13.dp))
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                text = "HOST HUB",
+                                fontFamily = FontFamily.Monospace,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 10.sp,
+                                color = Color.White
+                            )
+                        }
+
+                        OutlinedButton(
+                            onClick = { onNavigateToClassroom?.invoke() },
+                            shape = RoundedCornerShape(2.dp),
+                            modifier = Modifier.weight(1f),
+                            contentPadding = PaddingValues(vertical = 4.dp, horizontal = 6.dp)
+                        ) {
+                            Icon(Icons.Default.Groups, contentDescription = null, modifier = Modifier.size(13.dp), tint = Color(0xFF1B1C18))
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                text = "JOIN ROOM",
+                                fontFamily = FontFamily.Monospace,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 10.sp,
+                                color = Color(0xFF1B1C18)
+                            )
+                        }
+                    }
+                }
+            }
+
             // Search Bar
             OutlinedTextField(
                 value = searchQuery,
