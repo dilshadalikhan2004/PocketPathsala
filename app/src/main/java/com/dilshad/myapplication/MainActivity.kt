@@ -221,9 +221,16 @@ fun PocketPathshalaApp() {
             }
             composable(Screen.Curriculum.route) {
                 CurriculumScreen(
-                    onOpenAsk = { bookId ->
+                    onOpenAsk = { bookId, chapter ->
                         pendingAskBookId = bookId
+                        if (!chapter.isNullOrBlank()) {
+                            pendingAskPrompt = "Explain key concepts and formulas from $chapter with NCERT examples."
+                        }
                         navigateToTab(Screen.Ask.route)
+                    },
+                    onNavigateToPractice = { topic ->
+                        pendingPracticeTopic = topic
+                        navigateToTab(Screen.Practice.route)
                     },
                     onNavigateToHost = { navController.navigate(Screen.Host.route) },
                     onNavigateToClassroom = { navController.navigate(Screen.Classroom.route) }

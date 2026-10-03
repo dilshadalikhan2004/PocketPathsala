@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.sp
 import com.dilshad.myapplication.curriculum.AcquiredBookEntity
 import com.dilshad.myapplication.curriculum.BookCatalogEntry
 import com.dilshad.myapplication.curriculum.CurriculumCatalogRepository
+import com.dilshad.myapplication.curriculum.CurriculumSeeder
 import com.dilshad.myapplication.data.db.AppDatabase
 import com.dilshad.myapplication.data.db.entities.AttemptEntity
 import com.dilshad.myapplication.data.db.entities.MasteryEntity
@@ -148,6 +149,8 @@ fun HomeScreen(
             try {
                 val catalog = catalogRepo.load()
                 catalogEntries = catalog.entries
+                val classNum = Regex("\\d+").find(profile.classLevel)?.value?.toIntOrNull() ?: 10
+                CurriculumSeeder.seedDefaultBooks(context, db, classNum)
                 acquisitions = db.curriculumDao().listAcquisitions().associateBy { it.bookId }
             } catch (_: Exception) {}
         }
@@ -495,7 +498,7 @@ fun HomeScreen(
                         // Primary Action Button
                         BrutalistButton(
                             text = "CONTINUE READING · PAGE ${activeModule.pageNumber}",
-                            onClick = { onNavigateToAsk(null, activeBookId) },
+                            onClick = { onNavigateToCurriculum() },
                             backgroundColor = FigmaTheme.Orange,
                             shadowOffset = 5.dp
                         )

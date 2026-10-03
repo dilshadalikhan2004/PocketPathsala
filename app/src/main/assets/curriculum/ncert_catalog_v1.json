@@ -1,426 +1,1158 @@
-﻿{
-    "schemaVersion":  1,
-    "sourceName":  "NCERT",
-    "entries":  [
-                    {
-                        "bookId":  "ncert-class-6-mathematics-en",
-                        "classLevel":  6,
-                        "subject":  "Mathematics",
-                        "language":  "English",
-                        "title":  "NCERT Class 6 Mathematics",
-                        "edition":  "2025",
-                        "officialUrl":  "https://ncert.nic.in/textbook.php",
-                        "chapters":  [
-                                         {
-                                             "chapterId":  "ncert-class-6-mathematics-en-ch-1",
-                                             "number":  "1",
-                                             "title":  "Knowing Our Numbers",
-                                             "sections":  [
-
-                                                          ]
-                                         },
-                                         {
-                                             "chapterId":  "ncert-class-6-mathematics-en-ch-2",
-                                             "number":  "2",
-                                             "title":  "Whole Numbers",
-                                             "sections":  [
-
-                                                          ]
-                                         }
-                                     ],
-                        "licensingNote":  "Metadata only. Textbook body text is not bundled; consult the official NCERT source."
-                    },
-                    {
-                        "bookId":  "ncert-class-6-science-en",
-                        "classLevel":  6,
-                        "subject":  "Science",
-                        "language":  "English",
-                        "title":  "NCERT Class 6 Science",
-                        "edition":  "2025",
-                        "officialUrl":  "https://ncert.nic.in/textbook.php",
-                        "chapters":  [
-                                         {
-                                             "chapterId":  "ncert-class-6-science-en-ch-1",
-                                             "number":  "1",
-                                             "title":  "Food: Where Does It Come From?",
-                                             "sections":  [
-
-                                                          ]
-                                         },
-                                         {
-                                             "chapterId":  "ncert-class-6-science-en-ch-2",
-                                             "number":  "2",
-                                             "title":  "Components of Food",
-                                             "sections":  [
-
-                                                          ]
-                                         }
-                                     ],
-                        "licensingNote":  "Metadata only. Textbook body text is not bundled; consult the official NCERT source."
-                    },
-                    {
-                        "bookId":  "ncert-class-6-history-en",
-                        "classLevel":  6,
-                        "subject":  "History",
-                        "language":  "English",
-                        "title":  "NCERT Class 6 History",
-                        "edition":  "2025",
-                        "officialUrl":  "https://ncert.nic.in/textbook.php",
-                        "chapters":  [
-                                         {
-                                             "chapterId":  "ncert-class-6-history-en-ch-1",
-                                             "number":  "1",
-                                             "title":  "What, Where, How and When?",
-                                             "sections":  [
-
-                                                          ]
-                                         },
-                                         {
-                                             "chapterId":  "ncert-class-6-history-en-ch-2",
-                                             "number":  "2",
-                                             "title":  "On the Trail of the Earliest People",
-                                             "sections":  [
-
-                                                          ]
-                                         }
-                                     ],
-                        "licensingNote":  "Metadata only. Textbook body text is not bundled; consult the official NCERT source."
-                    },
-                    {
-                        "bookId":  "ncert-class-7-mathematics-en",
-                        "classLevel":  7,
-                        "subject":  "Mathematics",
-                        "language":  "English",
-                        "title":  "NCERT Class 7 Mathematics",
-                        "edition":  "2025",
-                        "officialUrl":  "https://ncert.nic.in/textbook.php",
-                        "chapters":  [
-                                         {
-                                             "chapterId":  "ncert-class-7-mathematics-en-ch-1",
-                                             "number":  "1",
-                                             "title":  "Integers",
-                                             "sections":  [
-
-                                                          ]
-                                         },
-                                         {
-                                             "chapterId":  "ncert-class-7-mathematics-en-ch-2",
-                                             "number":  "2",
-                                             "title":  "Fractions and Decimals",
-                                             "sections":  [
-
-                                                          ]
-                                         }
-                                     ],
-                        "licensingNote":  "Metadata only. Textbook body text is not bundled; consult the official NCERT source."
-                    },
-                    {
-                        "bookId":  "ncert-class-7-science-en",
-                        "classLevel":  7,
-                        "subject":  "Science",
-                        "language":  "English",
-                        "title":  "NCERT Class 7 Science",
-                        "edition":  "2025",
-                        "officialUrl":  "https://ncert.nic.in/textbook.php",
-                        "chapters":  [
-                                         {
-                                             "chapterId":  "ncert-class-7-science-en-ch-1",
-                                             "number":  "1",
-                                             "title":  "Nutrition in Plants",
-                                             "sections":  [
-
-                                                          ]
-                                         },
-                                         {
-                                             "chapterId":  "ncert-class-7-science-en-ch-2",
-                                             "number":  "2",
-                                             "title":  "Nutrition in Animals",
-                                             "sections":  [
-
-                                                          ]
-                                         }
-                                     ],
-                        "licensingNote":  "Metadata only. Textbook body text is not bundled; consult the official NCERT source."
-                    },
-                    {
-                        "bookId":  "ncert-class-7-history-en",
-                        "classLevel":  7,
-                        "subject":  "History",
-                        "language":  "English",
-                        "title":  "NCERT Class 7 History",
-                        "edition":  "2025",
-                        "officialUrl":  "https://ncert.nic.in/textbook.php",
-                        "chapters":  [
-                                         {
-                                             "chapterId":  "ncert-class-7-history-en-ch-1",
-                                             "number":  "1",
-                                             "title":  "Tracing Changes Through a Thousand Years",
-                                             "sections":  [
-
-                                                          ]
-                                         },
-                                         {
-                                             "chapterId":  "ncert-class-7-history-en-ch-2",
-                                             "number":  "2",
-                                             "title":  "New Kings and Kingdoms",
-                                             "sections":  [
-
-                                                          ]
-                                         }
-                                     ],
-                        "licensingNote":  "Metadata only. Textbook body text is not bundled; consult the official NCERT source."
-                    },
-                    {
-                        "bookId":  "ncert-class-8-mathematics-en",
-                        "classLevel":  8,
-                        "subject":  "Mathematics",
-                        "language":  "English",
-                        "title":  "NCERT Class 8 Mathematics",
-                        "edition":  "2025",
-                        "officialUrl":  "https://ncert.nic.in/textbook.php",
-                        "chapters":  [
-                                         {
-                                             "chapterId":  "ncert-class-8-mathematics-en-ch-1",
-                                             "number":  "1",
-                                             "title":  "Rational Numbers",
-                                             "sections":  [
-
-                                                          ]
-                                         },
-                                         {
-                                             "chapterId":  "ncert-class-8-mathematics-en-ch-2",
-                                             "number":  "2",
-                                             "title":  "Linear Equations in One Variable",
-                                             "sections":  [
-
-                                                          ]
-                                         }
-                                     ],
-                        "licensingNote":  "Metadata only. Textbook body text is not bundled; consult the official NCERT source."
-                    },
-                    {
-                        "bookId":  "ncert-class-8-science-en",
-                        "classLevel":  8,
-                        "subject":  "Science",
-                        "language":  "English",
-                        "title":  "NCERT Class 8 Science",
-                        "edition":  "2025",
-                        "officialUrl":  "https://ncert.nic.in/textbook.php",
-                        "chapters":  [
-                                         {
-                                             "chapterId":  "ncert-class-8-science-en-ch-1",
-                                             "number":  "1",
-                                             "title":  "Crop Production and Management",
-                                             "sections":  [
-
-                                                          ]
-                                         },
-                                         {
-                                             "chapterId":  "ncert-class-8-science-en-ch-2",
-                                             "number":  "2",
-                                             "title":  "Microorganisms: Friend and Foe",
-                                             "sections":  [
-
-                                                          ]
-                                         }
-                                     ],
-                        "licensingNote":  "Metadata only. Textbook body text is not bundled; consult the official NCERT source."
-                    },
-                    {
-                        "bookId":  "ncert-class-8-history-en",
-                        "classLevel":  8,
-                        "subject":  "History",
-                        "language":  "English",
-                        "title":  "NCERT Class 8 History",
-                        "edition":  "2025",
-                        "officialUrl":  "https://ncert.nic.in/textbook.php",
-                        "chapters":  [
-                                         {
-                                             "chapterId":  "ncert-class-8-history-en-ch-1",
-                                             "number":  "1",
-                                             "title":  "How, When and Where",
-                                             "sections":  [
-
-                                                          ]
-                                         },
-                                         {
-                                             "chapterId":  "ncert-class-8-history-en-ch-2",
-                                             "number":  "2",
-                                             "title":  "From Trade to Territory",
-                                             "sections":  [
-
-                                                          ]
-                                         }
-                                     ],
-                        "licensingNote":  "Metadata only. Textbook body text is not bundled; consult the official NCERT source."
-                    },
-                    {
-                        "bookId":  "ncert-class-9-mathematics-en",
-                        "classLevel":  9,
-                        "subject":  "Mathematics",
-                        "language":  "English",
-                        "title":  "NCERT Class 9 Mathematics",
-                        "edition":  "2025",
-                        "officialUrl":  "https://ncert.nic.in/textbook.php",
-                        "chapters":  [
-                                         {
-                                             "chapterId":  "ncert-class-9-mathematics-en-ch-1",
-                                             "number":  "1",
-                                             "title":  "Number Systems",
-                                             "sections":  [
-
-                                                          ]
-                                         },
-                                         {
-                                             "chapterId":  "ncert-class-9-mathematics-en-ch-2",
-                                             "number":  "2",
-                                             "title":  "Polynomials",
-                                             "sections":  [
-
-                                                          ]
-                                         }
-                                     ],
-                        "licensingNote":  "Metadata only. Textbook body text is not bundled; consult the official NCERT source."
-                    },
-                    {
-                        "bookId":  "ncert-class-9-science-en",
-                        "classLevel":  9,
-                        "subject":  "Science",
-                        "language":  "English",
-                        "title":  "NCERT Class 9 Science",
-                        "edition":  "2025",
-                        "officialUrl":  "https://ncert.nic.in/textbook.php",
-                        "chapters":  [
-                                         {
-                                             "chapterId":  "ncert-class-9-science-en-ch-1",
-                                             "number":  "1",
-                                             "title":  "Matter in Our Surroundings",
-                                             "sections":  [
-
-                                                          ]
-                                         },
-                                         {
-                                             "chapterId":  "ncert-class-9-science-en-ch-2",
-                                             "number":  "2",
-                                             "title":  "Is Matter Around Us Pure?",
-                                             "sections":  [
-
-                                                          ]
-                                         }
-                                     ],
-                        "licensingNote":  "Metadata only. Textbook body text is not bundled; consult the official NCERT source."
-                    },
-                    {
-                        "bookId":  "ncert-class-9-history-en",
-                        "classLevel":  9,
-                        "subject":  "History",
-                        "language":  "English",
-                        "title":  "NCERT Class 9 History",
-                        "edition":  "2025",
-                        "officialUrl":  "https://ncert.nic.in/textbook.php",
-                        "chapters":  [
-                                         {
-                                             "chapterId":  "ncert-class-9-history-en-ch-1",
-                                             "number":  "1",
-                                             "title":  "The French Revolution",
-                                             "sections":  [
-
-                                                          ]
-                                         },
-                                         {
-                                             "chapterId":  "ncert-class-9-history-en-ch-2",
-                                             "number":  "2",
-                                             "title":  "Socialism in Europe and the Russian Revolution",
-                                             "sections":  [
-
-                                                          ]
-                                         }
-                                     ],
-                        "licensingNote":  "Metadata only. Textbook body text is not bundled; consult the official NCERT source."
-                    },
-                    {
-                        "bookId":  "ncert-class-10-mathematics-en",
-                        "classLevel":  10,
-                        "subject":  "Mathematics",
-                        "language":  "English",
-                        "title":  "NCERT Class 10 Mathematics",
-                        "edition":  "2025",
-                        "officialUrl":  "https://ncert.nic.in/textbook.php",
-                        "chapters":  [
-                                         {
-                                             "chapterId":  "ncert-class-10-mathematics-en-ch-1",
-                                             "number":  "1",
-                                             "title":  "Real Numbers",
-                                             "sections":  [
-
-                                                          ]
-                                         },
-                                         {
-                                             "chapterId":  "ncert-class-10-mathematics-en-ch-2",
-                                             "number":  "2",
-                                             "title":  "Polynomials",
-                                             "sections":  [
-
-                                                          ]
-                                         }
-                                     ],
-                        "licensingNote":  "Metadata only. Textbook body text is not bundled; consult the official NCERT source."
-                    },
-                    {
-                        "bookId":  "ncert-class-10-science-en",
-                        "classLevel":  10,
-                        "subject":  "Science",
-                        "language":  "English",
-                        "title":  "NCERT Class 10 Science",
-                        "edition":  "2025",
-                        "officialUrl":  "https://ncert.nic.in/textbook.php",
-                        "chapters":  [
-                                         {
-                                             "chapterId":  "ncert-class-10-science-en-ch-1",
-                                             "number":  "1",
-                                             "title":  "Chemical Reactions and Equations",
-                                             "sections":  [
-
-                                                          ]
-                                         },
-                                         {
-                                             "chapterId":  "ncert-class-10-science-en-ch-2",
-                                             "number":  "2",
-                                             "title":  "Acids, Bases and Salts",
-                                             "sections":  [
-
-                                                          ]
-                                         }
-                                     ],
-                        "licensingNote":  "Metadata only. Textbook body text is not bundled; consult the official NCERT source."
-                    },
-                    {
-                        "bookId":  "ncert-class-10-history-en",
-                        "classLevel":  10,
-                        "subject":  "History",
-                        "language":  "English",
-                        "title":  "NCERT Class 10 History",
-                        "edition":  "2025",
-                        "officialUrl":  "https://ncert.nic.in/textbook.php",
-                        "chapters":  [
-                                         {
-                                             "chapterId":  "ncert-class-10-history-en-ch-1",
-                                             "number":  "1",
-                                             "title":  "The Rise of Nationalism in Europe",
-                                             "sections":  [
-
-                                                          ]
-                                         },
-                                         {
-                                             "chapterId":  "ncert-class-10-history-en-ch-2",
-                                             "number":  "2",
-                                             "title":  "Nationalism in India",
-                                             "sections":  [
-
-                                                          ]
-                                         }
-                                     ],
-                        "licensingNote":  "Metadata only. Textbook body text is not bundled; consult the official NCERT source."
-                    }
-                ]
+{
+    "schemaVersion": 1,
+    "sourceName": "NCERT",
+    "entries": [
+        {
+            "bookId": "ncert-class-10-science-en",
+            "classLevel": 10,
+            "subject": "Science",
+            "language": "English",
+            "title": "NCERT Class 10 Science",
+            "edition": "2024-25",
+            "officialUrl": "https://ncert.nic.in/textbook.php?jesc1=0-13",
+            "chapters": [
+                {
+                    "chapterId": "ncert-class-10-science-en-ch-1",
+                    "number": "1",
+                    "title": "Chemical Reactions and Equations",
+                    "sections": ["Chemical Equations", "Types of Chemical Reactions", "Corrosion and Rancidity"]
+                },
+                {
+                    "chapterId": "ncert-class-10-science-en-ch-2",
+                    "number": "2",
+                    "title": "Acids, Bases and Salts",
+                    "sections": ["Chemical Properties of Acids & Bases", "pH Scale in Everyday Life", "Salts and Their Uses"]
+                },
+                {
+                    "chapterId": "ncert-class-10-science-en-ch-3",
+                    "number": "3",
+                    "title": "Metals and Non-metals",
+                    "sections": ["Physical Properties", "Reactivity Series", "Extraction of Metals", "Corrosion"]
+                },
+                {
+                    "chapterId": "ncert-class-10-science-en-ch-4",
+                    "number": "4",
+                    "title": "Carbon and Its Compounds",
+                    "sections": ["Covalent Bonding in Carbon", "Versatile Nature of Carbon", "Homologous Series", "Soaps and Detergents"]
+                },
+                {
+                    "chapterId": "ncert-class-10-science-en-ch-5",
+                    "number": "5",
+                    "title": "Life Processes",
+                    "sections": ["Autotrophic & Heterotrophic Nutrition", "Respiration in Organisms", "Transportation in Humans & Plants", "Excretion & Nephrons"]
+                },
+                {
+                    "chapterId": "ncert-class-10-science-en-ch-6",
+                    "number": "6",
+                    "title": "Control and Coordination",
+                    "sections": ["Human Nervous System", "Reflex Arc", "Plant Hormones & Movements", "Endocrine Glands"]
+                },
+                {
+                    "chapterId": "ncert-class-10-science-en-ch-7",
+                    "number": "7",
+                    "title": "How do Organisms Reproduce?",
+                    "sections": ["Modes of Asexual Reproduction", "Sexual Reproduction in Plants", "Human Reproductive System", "Reproductive Health"]
+                },
+                {
+                    "chapterId": "ncert-class-10-science-en-ch-8",
+                    "number": "8",
+                    "title": "Heredity",
+                    "sections": ["Accumulation of Variation", "Mendel's Laws of Inheritance", "Sex Determination in Humans"]
+                },
+                {
+                    "chapterId": "ncert-class-10-science-en-ch-9",
+                    "number": "9",
+                    "title": "Light - Reflection and Refraction",
+                    "sections": ["Laws of Reflection", "Spherical Mirrors & Mirror Formula", "Refraction & Snell's Law", "Spherical Lenses & Power of Lens"]
+                },
+                {
+                    "chapterId": "ncert-class-10-science-en-ch-10",
+                    "number": "10",
+                    "title": "The Human Eye and the Colourful World",
+                    "sections": ["Power of Accommodation", "Defects of Vision & Correction", "Dispersion through Prism", "Atmospheric Refraction & Scattering"]
+                },
+                {
+                    "chapterId": "ncert-class-10-science-en-ch-11",
+                    "number": "11",
+                    "title": "Electricity",
+                    "sections": ["Electric Current & Potential Difference", "Ohm's Law & Resistance", "Series and Parallel Combinations", "Joule's Law of Heating & Electric Power"]
+                },
+                {
+                    "chapterId": "ncert-class-10-science-en-ch-12",
+                    "number": "12",
+                    "title": "Magnetic Effects of Electric Current",
+                    "sections": ["Magnetic Field & Field Lines", "Field due to Current-Carrying Conductor", "Fleming's Left-Hand Rule", "Domestic Electric Circuits"]
+                },
+                {
+                    "chapterId": "ncert-class-10-science-en-ch-13",
+                    "number": "13",
+                    "title": "Our Environment",
+                    "sections": ["Ecosystem & Food Chains", "10% Energy Law", "Ozone Layer Depletion", "Waste Management"]
+                }
+            ],
+            "licensingNote": "Official NCERT National Curriculum Framework."
+        },
+        {
+            "bookId": "ncert-class-10-mathematics-en",
+            "classLevel": 10,
+            "subject": "Mathematics",
+            "language": "English",
+            "title": "NCERT Class 10 Mathematics",
+            "edition": "2024-25",
+            "officialUrl": "https://ncert.nic.in/textbook.php?jemh1=0-14",
+            "chapters": [
+                {
+                    "chapterId": "ncert-class-10-mathematics-en-ch-1",
+                    "number": "1",
+                    "title": "Real Numbers",
+                    "sections": ["Fundamental Theorem of Arithmetic", "Revisiting Irrational Numbers"]
+                },
+                {
+                    "chapterId": "ncert-class-10-mathematics-en-ch-2",
+                    "number": "2",
+                    "title": "Polynomials",
+                    "sections": ["Geometrical Meaning of Zeroes", "Relationship between Zeroes and Coefficients"]
+                },
+                {
+                    "chapterId": "ncert-class-10-mathematics-en-ch-3",
+                    "number": "3",
+                    "title": "Pair of Linear Equations in Two Variables",
+                    "sections": ["Graphical Method of Solution", "Algebraic Methods: Substitution & Elimination", "Consistency Conditions"]
+                },
+                {
+                    "chapterId": "ncert-class-10-mathematics-en-ch-4",
+                    "number": "4",
+                    "title": "Quadratic Equations",
+                    "sections": ["Standard Form ax² + bx + c = 0", "Solution by Factorisation", "Quadratic Formula", "Nature of Roots & Discriminant"]
+                },
+                {
+                    "chapterId": "ncert-class-10-mathematics-en-ch-5",
+                    "number": "5",
+                    "title": "Arithmetic Progressions",
+                    "sections": ["nth Term of an AP", "Sum of First n Terms of an AP"]
+                },
+                {
+                    "chapterId": "ncert-class-10-mathematics-en-ch-6",
+                    "number": "6",
+                    "title": "Triangles",
+                    "sections": ["Similar Figures", "Criteria for Similarity: AAA, SSS, SAS", "Areas of Similar Triangles", "Pythagoras Theorem"]
+                },
+                {
+                    "chapterId": "ncert-class-10-mathematics-en-ch-7",
+                    "number": "7",
+                    "title": "Coordinate Geometry",
+                    "sections": ["Distance Formula", "Section Formula & Mid-point"]
+                },
+                {
+                    "chapterId": "ncert-class-10-mathematics-en-ch-8",
+                    "number": "8",
+                    "title": "Introduction to Trigonometry",
+                    "sections": ["Trigonometric Ratios", "Trigonometric Ratios of Specific Angles", "Trigonometric Identities"]
+                },
+                {
+                    "chapterId": "ncert-class-10-mathematics-en-ch-9",
+                    "number": "9",
+                    "title": "Some Applications of Trigonometry",
+                    "sections": ["Heights and Distances", "Angle of Elevation and Depression"]
+                },
+                {
+                    "chapterId": "ncert-class-10-mathematics-en-ch-10",
+                    "number": "10",
+                    "title": "Circles",
+                    "sections": ["Tangent to a Circle", "Number of Tangents from a Point on a Circle"]
+                },
+                {
+                    "chapterId": "ncert-class-10-mathematics-en-ch-11",
+                    "number": "11",
+                    "title": "Areas Related to Circles",
+                    "sections": ["Perimeter and Area of a Circle", "Areas of Sector and Segment of a Circle"]
+                },
+                {
+                    "chapterId": "ncert-class-10-mathematics-en-ch-12",
+                    "number": "12",
+                    "title": "Surface Areas and Volumes",
+                    "sections": ["Surface Area of Combination of Solids", "Volume of Combination of Solids", "Conversion of Solid Shapes"]
+                },
+                {
+                    "chapterId": "ncert-class-10-mathematics-en-ch-13",
+                    "number": "13",
+                    "title": "Statistics",
+                    "sections": ["Mean of Grouped Data", "Mode of Grouped Data", "Median of Grouped Data"]
+                },
+                {
+                    "chapterId": "ncert-class-10-mathematics-en-ch-14",
+                    "number": "14",
+                    "title": "Probability",
+                    "sections": ["Classical Definition of Probability", "Elementary Events & Complementary Events"]
+                }
+            ],
+            "licensingNote": "Official NCERT National Curriculum Framework."
+        },
+        {
+            "bookId": "ncert-class-10-history-en",
+            "classLevel": 10,
+            "subject": "History",
+            "language": "English",
+            "title": "NCERT Class 10 India and the Contemporary World II",
+            "edition": "2024-25",
+            "officialUrl": "https://ncert.nic.in/textbook.php?jess1=0-5",
+            "chapters": [
+                {
+                    "chapterId": "ncert-class-10-history-en-ch-1",
+                    "number": "1",
+                    "title": "The Rise of Nationalism in Europe",
+                    "sections": ["The French Revolution and the Idea of the Nation", "The Making of Nationalism in Europe", "The Age of Revolutions: 1830-1848", "Visualizing the Nation"]
+                },
+                {
+                    "chapterId": "ncert-class-10-history-en-ch-2",
+                    "number": "2",
+                    "title": "Nationalism in India",
+                    "sections": ["The First World War, Khilafat and Non-Cooperation", "Differing Strands within the Movement", "Towards Civil Disobedience", "The Sense of Collective Belonging"]
+                },
+                {
+                    "chapterId": "ncert-class-10-history-en-ch-3",
+                    "number": "3",
+                    "title": "The Making of a Global World",
+                    "sections": ["The Pre-modern World", "The Nineteenth Century (1815-1914)", "The Inter-war Economy", "Rebuilding a World Economy"]
+                },
+                {
+                    "chapterId": "ncert-class-10-history-en-ch-4",
+                    "number": "4",
+                    "title": "The Age of Industrialisation",
+                    "sections": ["Before the Industrial Revolution", "Hand Labour and Steam Power", "Industrialisation in the Colonies", "Factories Come Up"]
+                },
+                {
+                    "chapterId": "ncert-class-10-history-en-ch-5",
+                    "number": "5",
+                    "title": "Print Culture and the Modern World",
+                    "sections": ["The First Printed Books", "Print Comes to Europe", "The Print Revolution and its Impact", "India and the World of Print"]
+                }
+            ],
+            "licensingNote": "Official NCERT National Curriculum Framework."
+        },
+        {
+            "bookId": "ncert-class-9-science-en",
+            "classLevel": 9,
+            "subject": "Science",
+            "language": "English",
+            "title": "NCERT Class 9 Science",
+            "edition": "2024-25",
+            "officialUrl": "https://ncert.nic.in/textbook.php?iesc1=0-12",
+            "chapters": [
+                {
+                    "chapterId": "ncert-class-9-science-en-ch-1",
+                    "number": "1",
+                    "title": "Matter in Our Surroundings",
+                    "sections": ["Physical Nature of Matter", "Characteristics of Particles", "States of Matter", "Evaporation & Sublimation"]
+                },
+                {
+                    "chapterId": "ncert-class-9-science-en-ch-2",
+                    "number": "2",
+                    "title": "Is Matter Around Us Pure?",
+                    "sections": ["Mixtures vs Pure Substances", "Solutions, Suspensions and Colloids", "Separating Components of a Mixture", "Physical and Chemical Changes"]
+                },
+                {
+                    "chapterId": "ncert-class-9-science-en-ch-3",
+                    "number": "3",
+                    "title": "Atoms and Molecules",
+                    "sections": ["Laws of Chemical Combination", "Dalton's Atomic Theory", "Atomic Mass & Mole Concept", "Writing Chemical Formulae"]
+                },
+                {
+                    "chapterId": "ncert-class-9-science-en-ch-4",
+                    "number": "4",
+                    "title": "Structure of the Atom",
+                    "sections": ["Charged Particles in Matter", "Thomson, Rutherford and Bohr Models", "Valency & Atomic Number", "Isotopes and Isobars"]
+                },
+                {
+                    "chapterId": "ncert-class-9-science-en-ch-5",
+                    "number": "5",
+                    "title": "The Fundamental Unit of Life",
+                    "sections": ["Discovery of Cell", "Plasma Membrane & Osmosis", "Nucleus & Cytoplasm", "Cell Organelles: Mitochondria, Plastids, ER"]
+                },
+                {
+                    "chapterId": "ncert-class-9-science-en-ch-6",
+                    "number": "6",
+                    "title": "Tissues",
+                    "sections": ["Plant Tissues: Meristematic & Permanent", "Animal Tissues: Epithelial, Connective, Muscular, Nervous"]
+                },
+                {
+                    "chapterId": "ncert-class-9-science-en-ch-7",
+                    "number": "7",
+                    "title": "Motion",
+                    "sections": ["Describing Motion & Displacement", "Speed, Velocity & Acceleration", "Graphical Representation", "Equations of Motion"]
+                },
+                {
+                    "chapterId": "ncert-class-9-science-en-ch-8",
+                    "number": "8",
+                    "title": "Force and Laws of Motion",
+                    "sections": ["Balanced and Unbalanced Forces", "Newton's First Law & Inertia", "Newton's Second Law & Momentum", "Newton's Third Law & Conservation"]
+                },
+                {
+                    "chapterId": "ncert-class-9-science-en-ch-9",
+                    "number": "9",
+                    "title": "Gravitation",
+                    "sections": ["Universal Law of Gravitation", "Free Fall & Acceleration due to Gravity (g)", "Mass vs Weight", "Thrust, Pressure & Archimedes Principle"]
+                },
+                {
+                    "chapterId": "ncert-class-9-science-en-ch-10",
+                    "number": "10",
+                    "title": "Work and Energy",
+                    "sections": ["Scientific Conception of Work", "Kinetic Energy & Potential Energy", "Law of Conservation of Energy", "Rate of Doing Work (Power)"]
+                },
+                {
+                    "chapterId": "ncert-class-9-science-en-ch-11",
+                    "number": "11",
+                    "title": "Sound",
+                    "sections": ["Production & Propagation of Sound", "Sound Waves: Longitudinal Waves", "Speed, Frequency & Amplitude", "Reflection of Sound & Echo", "Structure of Human Ear"]
+                },
+                {
+                    "chapterId": "ncert-class-9-science-en-ch-12",
+                    "number": "12",
+                    "title": "Improvement in Food Resources",
+                    "sections": ["Crop Variety Improvement", "Crop Production Management", "Crop Protection Management", "Animal Husbandry"]
+                }
+            ],
+            "licensingNote": "Official NCERT National Curriculum Framework."
+        },
+        {
+            "bookId": "ncert-class-9-mathematics-en",
+            "classLevel": 9,
+            "subject": "Mathematics",
+            "language": "English",
+            "title": "NCERT Class 9 Mathematics",
+            "edition": "2024-25",
+            "officialUrl": "https://ncert.nic.in/textbook.php?iemh1=0-12",
+            "chapters": [
+                {
+                    "chapterId": "ncert-class-9-mathematics-en-ch-1",
+                    "number": "1",
+                    "title": "Number Systems",
+                    "sections": ["Irrational Numbers", "Real Numbers and their Decimal Expansions", "Operations on Real Numbers", "Laws of Exponents"]
+                },
+                {
+                    "chapterId": "ncert-class-9-mathematics-en-ch-2",
+                    "number": "2",
+                    "title": "Polynomials",
+                    "sections": ["Polynomials in One Variable", "Zeroes of a Polynomial", "Remainder Theorem & Factor Theorem", "Algebraic Identities"]
+                },
+                {
+                    "chapterId": "ncert-class-9-mathematics-en-ch-3",
+                    "number": "3",
+                    "title": "Coordinate Geometry",
+                    "sections": ["Cartesian System", "Plotting Points in the Plane"]
+                },
+                {
+                    "chapterId": "ncert-class-9-mathematics-en-ch-4",
+                    "number": "4",
+                    "title": "Linear Equations in Two Variables",
+                    "sections": ["Linear Equations", "Graph of a Linear Equation in Two Variables"]
+                },
+                {
+                    "chapterId": "ncert-class-9-mathematics-en-ch-5",
+                    "number": "5",
+                    "title": "Introduction to Euclid's Geometry",
+                    "sections": ["Euclid's Definitions, Axioms and Postulates", "Equivalent Versions of Euclid's Fifth Postulate"]
+                },
+                {
+                    "chapterId": "ncert-class-9-mathematics-en-ch-6",
+                    "number": "6",
+                    "title": "Lines and Angles",
+                    "sections": ["Intersecting Lines and Non-intersecting Lines", "Pairs of Angles", "Lines Parallel to the Same Line", "Angle Sum Property of a Triangle"]
+                },
+                {
+                    "chapterId": "ncert-class-9-mathematics-en-ch-7",
+                    "number": "7",
+                    "title": "Triangles",
+                    "sections": ["Congruence of Triangles", "Criteria for Congruence: SAS, ASA, AAS, SSS, RHS", "Inequalities in a Triangle"]
+                },
+                {
+                    "chapterId": "ncert-class-9-mathematics-en-ch-8",
+                    "number": "8",
+                    "title": "Quadrilaterals",
+                    "sections": ["Properties of a Parallelogram", "The Mid-point Theorem"]
+                },
+                {
+                    "chapterId": "ncert-class-9-mathematics-en-ch-9",
+                    "number": "9",
+                    "title": "Circles",
+                    "sections": ["Angle Subtended by a Chord", "Perpendicular from Centre to Chord", "Cyclic Quadrilaterals"]
+                },
+                {
+                    "chapterId": "ncert-class-9-mathematics-en-ch-10",
+                    "number": "10",
+                    "title": "Heron's Formula",
+                    "sections": ["Area of a Triangle by Heron's Formula", "Application in Finding Areas of Quadrilaterals"]
+                },
+                {
+                    "chapterId": "ncert-class-9-mathematics-en-ch-11",
+                    "number": "11",
+                    "title": "Surface Areas and Volumes",
+                    "sections": ["Surface Area of Right Circular Cone & Sphere", "Volume of Right Circular Cone & Sphere"]
+                },
+                {
+                    "chapterId": "ncert-class-9-mathematics-en-ch-12",
+                    "number": "12",
+                    "title": "Statistics",
+                    "sections": ["Graphical Representation of Data: Bar Graphs, Histograms, Frequency Polygons"]
+                }
+            ],
+            "licensingNote": "Official NCERT National Curriculum Framework."
+        },
+        {
+            "bookId": "ncert-class-9-history-en",
+            "classLevel": 9,
+            "subject": "History",
+            "language": "English",
+            "title": "NCERT Class 9 India and the Contemporary World I",
+            "edition": "2024-25",
+            "officialUrl": "https://ncert.nic.in/textbook.php?iess1=0-5",
+            "chapters": [
+                {
+                    "chapterId": "ncert-class-9-history-en-ch-1",
+                    "number": "1",
+                    "title": "The French Revolution",
+                    "sections": ["French Society During the Late Eighteenth Century", "The Outbreak of the Revolution", "France Abolishes Monarchy and Becomes a Republic", "The Revolution and Everyday Life"]
+                },
+                {
+                    "chapterId": "ncert-class-9-history-en-ch-2",
+                    "number": "2",
+                    "title": "Socialism in Europe and the Russian Revolution",
+                    "sections": ["The Age of Social Change", "The Russian Revolution", "The February Revolution in Petrograd", "What Changed after October?"]
+                },
+                {
+                    "chapterId": "ncert-class-9-history-en-ch-3",
+                    "number": "3",
+                    "title": "Nazism and the Rise of Hitler",
+                    "sections": ["Birth of the Weimar Republic", "Hitler's Rise to Power", "The Nazi Worldview", "Youth in Nazi Germany"]
+                },
+                {
+                    "chapterId": "ncert-class-9-history-en-ch-4",
+                    "number": "4",
+                    "title": "Forest Society and Colonialism",
+                    "sections": ["Why Deforestation?", "The Rise of Commercial Forestry", "Rebellion in the Forest", "Forest Transformations in Java"]
+                },
+                {
+                    "chapterId": "ncert-class-9-history-en-ch-5",
+                    "number": "5",
+                    "title": "Pastoralists in the Modern World",
+                    "sections": ["Pastoral Nomads and their Movements", "Colonial Rule and Pastoral Life", "Pastoralism in Africa"]
+                }
+            ],
+            "licensingNote": "Official NCERT National Curriculum Framework."
+        },
+        {
+            "bookId": "ncert-class-8-science-en",
+            "classLevel": 8,
+            "subject": "Science",
+            "language": "English",
+            "title": "NCERT Class 8 Science",
+            "edition": "2024-25",
+            "officialUrl": "https://ncert.nic.in/textbook.php?hesc1=0-13",
+            "chapters": [
+                {
+                    "chapterId": "ncert-class-8-science-en-ch-1",
+                    "number": "1",
+                    "title": "Crop Production and Management",
+                    "sections": ["Agricultural Practices", "Preparation of Soil & Sowing", "Adding Manure and Fertilisers", "Irrigation & Harvesting"]
+                },
+                {
+                    "chapterId": "ncert-class-8-science-en-ch-2",
+                    "number": "2",
+                    "title": "Microorganisms: Friend and Foe",
+                    "sections": ["Where do Microorganisms Live?", "Friendly Microorganisms", "Harmful Microorganisms", "Food Preservation & Nitrogen Fixation"]
+                },
+                {
+                    "chapterId": "ncert-class-8-science-en-ch-3",
+                    "number": "3",
+                    "title": "Coal and Petroleum",
+                    "sections": ["Inexhaustible and Exhaustible Natural Resources", "Coal and its By-products", "Petroleum Refining", "Natural Gas"]
+                },
+                {
+                    "chapterId": "ncert-class-8-science-en-ch-4",
+                    "number": "4",
+                    "title": "Combustion and Flame",
+                    "sections": ["What is Combustion?", "How do We Control Fire?", "Types of Combustion", "Flame Structure & Fuel Efficiency"]
+                },
+                {
+                    "chapterId": "ncert-class-8-science-en-ch-5",
+                    "number": "5",
+                    "title": "Conservation of Plants and Animals",
+                    "sections": ["Deforestation and its Causes", "Biosphere Reserves & National Parks", "Flora and Fauna", "Endemic and Endangered Species"]
+                },
+                {
+                    "chapterId": "ncert-class-8-science-en-ch-6",
+                    "number": "6",
+                    "title": "Reproduction in Animals",
+                    "sections": ["Modes of Reproduction", "Sexual Reproduction & Fertilisation", "Asexual Reproduction: Budding & Binary Fission"]
+                },
+                {
+                    "chapterId": "ncert-class-8-science-en-ch-7",
+                    "number": "7",
+                    "title": "Reaching the Age of Adolescence",
+                    "sections": ["Adolescence and Puberty", "Changes at Puberty", "Role of Hormones in Initiating Reproductive Function", "Nutritional Needs of Adolescents"]
+                },
+                {
+                    "chapterId": "ncert-class-8-science-en-ch-8",
+                    "number": "8",
+                    "title": "Force and Pressure",
+                    "sections": ["Force: A Push or a Pull", "Forces are due to an Interaction", "Contact and Non-contact Forces", "Pressure and Atmospheric Pressure"]
+                },
+                {
+                    "chapterId": "ncert-class-8-science-en-ch-9",
+                    "number": "9",
+                    "title": "Friction",
+                    "sections": ["Force of Friction", "Factors Affecting Friction", "Friction: A Necessary Evil", "Increasing and Reducing Friction", "Fluid Friction"]
+                },
+                {
+                    "chapterId": "ncert-class-8-science-en-ch-10",
+                    "number": "10",
+                    "title": "Sound",
+                    "sections": ["Sound is Produced by a Vibrating Body", "Sound Needs a Medium for Propagation", "We Hear Sound Through Our Ears", "Amplitude, Time Period and Frequency", "Noise Pollution"]
+                },
+                {
+                    "chapterId": "ncert-class-8-science-en-ch-11",
+                    "number": "11",
+                    "title": "Chemical Effects of Electric Current",
+                    "sections": ["Do Liquids Conduct Electricity?", "Chemical Effects of Electric Current", "Electroplating and its Applications"]
+                },
+                {
+                    "chapterId": "ncert-class-8-science-en-ch-12",
+                    "number": "12",
+                    "title": "Some Natural Phenomena",
+                    "sections": ["Lightning & Electric Discharge", "Earthquakes and Richter Scale", "Protection against Earthquakes"]
+                },
+                {
+                    "chapterId": "ncert-class-8-science-en-ch-13",
+                    "number": "13",
+                    "title": "Light",
+                    "sections": ["What Makes Things Visible?", "Laws of Reflection", "Regular and Diffused Reflection", "Multiple Images & Kaleidoscope", "Care of Eyes"]
+                }
+            ],
+            "licensingNote": "Official NCERT National Curriculum Framework."
+        },
+        {
+            "bookId": "ncert-class-8-mathematics-en",
+            "classLevel": 8,
+            "subject": "Mathematics",
+            "language": "English",
+            "title": "NCERT Class 8 Mathematics",
+            "edition": "2024-25",
+            "officialUrl": "https://ncert.nic.in/textbook.php?hemh1=0-13",
+            "chapters": [
+                {
+                    "chapterId": "ncert-class-8-mathematics-en-ch-1",
+                    "number": "1",
+                    "title": "Rational Numbers",
+                    "sections": ["Properties of Rational Numbers", "Representation on the Number Line"]
+                },
+                {
+                    "chapterId": "ncert-class-8-mathematics-en-ch-2",
+                    "number": "2",
+                    "title": "Linear Equations in One Variable",
+                    "sections": ["Solving Equations with Linear Expressions", "Applications of Linear Equations"]
+                },
+                {
+                    "chapterId": "ncert-class-8-mathematics-en-ch-3",
+                    "number": "3",
+                    "title": "Understanding Quadrilaterals",
+                    "sections": ["Polygons and Convexity", "Angle Sum Property", "Kinds of Quadrilaterals"]
+                },
+                {
+                    "chapterId": "ncert-class-8-mathematics-en-ch-4",
+                    "number": "4",
+                    "title": "Data Handling",
+                    "sections": ["Organising Data", "Pie Charts & Probability"]
+                },
+                {
+                    "chapterId": "ncert-class-8-mathematics-en-ch-5",
+                    "number": "5",
+                    "title": "Square and Square Roots",
+                    "sections": ["Properties of Square Numbers", "Finding Square Root by Prime Factorisation & Long Division"]
+                },
+                {
+                    "chapterId": "ncert-class-8-mathematics-en-ch-6",
+                    "number": "6",
+                    "title": "Cube and Cube Roots",
+                    "sections": ["Cubes and Prime Factorisation", "Cube Roots"]
+                },
+                {
+                    "chapterId": "ncert-class-8-mathematics-en-ch-7",
+                    "number": "7",
+                    "title": "Comparing Quantities",
+                    "sections": ["Ratio and Percentage", "Discount, Profit and Loss", "Compound Interest Formula"]
+                },
+                {
+                    "chapterId": "ncert-class-8-mathematics-en-ch-8",
+                    "number": "8",
+                    "title": "Algebraic Expressions and Identities",
+                    "sections": ["Terms, Factors and Coefficients", "Multiplication of Algebraic Expressions", "Standard Identities"]
+                },
+                {
+                    "chapterId": "ncert-class-8-mathematics-en-ch-9",
+                    "number": "9",
+                    "title": "Mensuration",
+                    "sections": ["Area of Trapezium and General Quadrilateral", "Surface Area of Cube, Cuboid and Cylinder", "Volume and Capacity"]
+                },
+                {
+                    "chapterId": "ncert-class-8-mathematics-en-ch-10",
+                    "number": "10",
+                    "title": "Exponents and Powers",
+                    "sections": ["Powers with Negative Exponents", "Laws of Exponents", "Scientific Notation"]
+                },
+                {
+                    "chapterId": "ncert-class-8-mathematics-en-ch-11",
+                    "number": "11",
+                    "title": "Direct and Inverse Proportions",
+                    "sections": ["Direct Proportion (x/y = k)", "Inverse Proportion (x × y = k)"]
+                },
+                {
+                    "chapterId": "ncert-class-8-mathematics-en-ch-12",
+                    "number": "12",
+                    "title": "Factorisation",
+                    "sections": ["Method of Common Factors", "Factorisation by Regrouping Terms", "Division of Algebraic Expressions"]
+                },
+                {
+                    "chapterId": "ncert-class-8-mathematics-en-ch-13",
+                    "number": "13",
+                    "title": "Introduction to Graphs",
+                    "sections": ["A Line Graph", "Linear Graphs and Coordinates"]
+                }
+            ],
+            "licensingNote": "Official NCERT National Curriculum Framework."
+        },
+        {
+            "bookId": "ncert-class-8-history-en",
+            "classLevel": 8,
+            "subject": "History",
+            "language": "English",
+            "title": "NCERT Class 8 Our Pasts III",
+            "edition": "2024-25",
+            "officialUrl": "https://ncert.nic.in/textbook.php?hess1=0-8",
+            "chapters": [
+                {
+                    "chapterId": "ncert-class-8-history-en-ch-1",
+                    "number": "1",
+                    "title": "How, When and Where",
+                    "sections": ["How Important are Dates?", "Which Dates?", "How do We Periodise?"]
+                },
+                {
+                    "chapterId": "ncert-class-8-history-en-ch-2",
+                    "number": "2",
+                    "title": "From Trade to Territory: The Company Establishes Power",
+                    "sections": ["East India Company Comes East", "Company Rule Expands", "Tipu Sultan & Maratha Wars"]
+                },
+                {
+                    "chapterId": "ncert-class-8-history-en-ch-3",
+                    "number": "3",
+                    "title": "Ruling the Countryside",
+                    "sections": ["The Company Becomes the Diwan", "Revenue for the Company", "The Problem of Indigo"]
+                },
+                {
+                    "chapterId": "ncert-class-8-history-en-ch-4",
+                    "number": "4",
+                    "title": "Tribals, Dikus and the Vision of a Golden Age",
+                    "sections": ["How did Tribal Groups Live?", "How did Colonial Rule Affect Tribal Lives?", "Birsa Munda and his Movement"]
+                },
+                {
+                    "chapterId": "ncert-class-8-history-en-ch-5",
+                    "number": "5",
+                    "title": "When People Rebel: 1857 and After",
+                    "sections": ["Policies and the People", "Through the Eyes of the People", "A Mutiny Becomes a Popular Rebellion", "The Company Fights Back"]
+                },
+                {
+                    "chapterId": "ncert-class-8-history-en-ch-6",
+                    "number": "6",
+                    "title": "Civilising the 'Native', Educating the Nation",
+                    "sections": ["How the British Saw Education", "The Tradition of Orientalism", "English Education Act 1835", "Mahatma Gandhi and Rabindranath Tagore on Education"]
+                },
+                {
+                    "chapterId": "ncert-class-8-history-en-ch-7",
+                    "number": "7",
+                    "title": "Women, Caste and Reform",
+                    "sections": ["Working Towards Change", "Changing the Lives of Widows", "Girls Begin Going to School", "Caste and Social Reform"]
+                },
+                {
+                    "chapterId": "ncert-class-8-history-en-ch-8",
+                    "number": "8",
+                    "title": "The Making of the National Movement: 1870s-1947",
+                    "sections": ["The Emergence of Nationalism", "The Growth of Mass Nationalism", "The Advent of Mahatma Gandhi", "Towards Independence and Partition"]
+                }
+            ],
+            "licensingNote": "Official NCERT National Curriculum Framework."
+        },
+        {
+            "bookId": "ncert-class-7-science-en",
+            "classLevel": 7,
+            "subject": "Science",
+            "language": "English",
+            "title": "NCERT Class 7 Science",
+            "edition": "2024-25",
+            "officialUrl": "https://ncert.nic.in/textbook.php?gesc1=0-13",
+            "chapters": [
+                {
+                    "chapterId": "ncert-class-7-science-en-ch-1",
+                    "number": "1",
+                    "title": "Nutrition in Plants",
+                    "sections": ["Mode of Nutrition in Plants", "Photosynthesis - Food Making Process", "Other Modes of Nutrition: Parasitic & Saprotrophic", "How Nutrients are Replenished in Soil"]
+                },
+                {
+                    "chapterId": "ncert-class-7-science-en-ch-2",
+                    "number": "2",
+                    "title": "Nutrition in Animals",
+                    "sections": ["Different Ways of Taking Food", "Digestion in Humans", "Digestion in Grass-eating Animals", "Feeding and Digestion in Amoeba"]
+                },
+                {
+                    "chapterId": "ncert-class-7-science-en-ch-3",
+                    "number": "3",
+                    "title": "Heat",
+                    "sections": ["Hot and Cold", "Measuring Temperature: Clinical Thermometer", "Transfer of Heat: Conduction, Convection, Radiation", "Kinds of Clothes in Summer and Winter"]
+                },
+                {
+                    "chapterId": "ncert-class-7-science-en-ch-4",
+                    "number": "4",
+                    "title": "Acids, Bases and Salts",
+                    "sections": ["Acids and Bases", "Natural Indicators Around Us: Litmus, Turmeric, China Rose", "Neutralisation in Everyday Life"]
+                },
+                {
+                    "chapterId": "ncert-class-7-science-en-ch-5",
+                    "number": "5",
+                    "title": "Physical and Chemical Changes",
+                    "sections": ["Physical Changes", "Chemical Changes & Rusting of Iron", "Crystallisation"]
+                },
+                {
+                    "chapterId": "ncert-class-7-science-en-ch-6",
+                    "number": "6",
+                    "title": "Respiration in Organisms",
+                    "sections": ["Why do We Respire?", "Breathing and Breathing Rate", "How do We Breathe?", "Breathing in Other Animals & Underwater"]
+                },
+                {
+                    "chapterId": "ncert-class-7-science-en-ch-7",
+                    "number": "7",
+                    "title": "Transportation in Animals and Plants",
+                    "sections": ["Circulatory System: Blood, Blood Vessels, Heart", "Excretion in Animals", "Transport of Substances in Plants: Xylem and Phloem"]
+                },
+                {
+                    "chapterId": "ncert-class-7-science-en-ch-8",
+                    "number": "8",
+                    "title": "Reproduction in Plants",
+                    "sections": ["Modes of Reproduction: Asexual & Vegetative Propagation", "Sexual Reproduction: Flowers & Pollination", "Fruits and Seed Formation", "Seed Dispersal"]
+                },
+                {
+                    "chapterId": "ncert-class-7-science-en-ch-9",
+                    "number": "9",
+                    "title": "Motion and Time",
+                    "sections": ["Slow or Fast", "Speed = Distance / Time", "Measurement of Time: Simple Pendulum", "Distance-Time Graph"]
+                },
+                {
+                    "chapterId": "ncert-class-7-science-en-ch-10",
+                    "number": "10",
+                    "title": "Electric Current and its Effects",
+                    "sections": ["Symbols of Electric Components", "Heating Effect of Electric Current", "Magnetic Effect of Electric Current: Electromagnet", "Electric Bell"]
+                },
+                {
+                    "chapterId": "ncert-class-7-science-en-ch-11",
+                    "number": "11",
+                    "title": "Light",
+                    "sections": ["Light Travels Along a Straight Line", "Reflection of Light from Mirrors", "Right or Left in Plane Mirror", "Playing with Spherical Mirrors & Lenses", "Sunlight - White or Coloured?"]
+                },
+                {
+                    "chapterId": "ncert-class-7-science-en-ch-12",
+                    "number": "12",
+                    "title": "Forests: Our Lifeline",
+                    "sections": ["Visit to a Forest", "Forest as a Dynamic Living Entity", "Food Webs and Oxygen Cycle in Forests"]
+                },
+                {
+                    "chapterId": "ncert-class-7-science-en-ch-13",
+                    "number": "13",
+                    "title": "Wastewater Story",
+                    "sections": ["Water, Our Lifeline", "What is Sewage?", "Wastewater Treatment Plant (WWTP)", "Better Housekeeping Practices"]
+                }
+            ],
+            "licensingNote": "Official NCERT National Curriculum Framework."
+        },
+        {
+            "bookId": "ncert-class-7-mathematics-en",
+            "classLevel": 7,
+            "subject": "Mathematics",
+            "language": "English",
+            "title": "NCERT Class 7 Mathematics",
+            "edition": "2024-25",
+            "officialUrl": "https://ncert.nic.in/textbook.php?gemh1=0-13",
+            "chapters": [
+                {
+                    "chapterId": "ncert-class-7-mathematics-en-ch-1",
+                    "number": "1",
+                    "title": "Integers",
+                    "sections": ["Recall of Integers", "Properties of Addition and Subtraction", "Multiplication of Integers", "Division of Integers"]
+                },
+                {
+                    "chapterId": "ncert-class-7-mathematics-en-ch-2",
+                    "number": "2",
+                    "title": "Fractions and Decimals",
+                    "sections": ["Multiplication of Fractions", "Division of Fractions", "Multiplication of Decimal Numbers", "Division of Decimal Numbers"]
+                },
+                {
+                    "chapterId": "ncert-class-7-mathematics-en-ch-3",
+                    "number": "3",
+                    "title": "Data Handling",
+                    "sections": ["Representative Values: Arithmetic Mean, Mode and Median", "Bar Graphs and Double Bar Graphs", "Chance and Probability"]
+                },
+                {
+                    "chapterId": "ncert-class-7-mathematics-en-ch-4",
+                    "number": "4",
+                    "title": "Simple Equations",
+                    "sections": ["Setting up of an Equation", "Solving an Equation by Transposition", "Applications of Simple Equations"]
+                },
+                {
+                    "chapterId": "ncert-class-7-mathematics-en-ch-5",
+                    "number": "5",
+                    "title": "Lines and Angles",
+                    "sections": ["Related Angles: Complementary and Supplementary", "Intersecting Lines and Transversal", "Angles Made by a Transversal"]
+                },
+                {
+                    "chapterId": "ncert-class-7-mathematics-en-ch-6",
+                    "number": "6",
+                    "title": "The Triangle and its Properties",
+                    "sections": ["Medians and Altitudes of a Triangle", "Exterior Angle Property", "Angle Sum Property of a Triangle", "Pythagoras Property"]
+                },
+                {
+                    "chapterId": "ncert-class-7-mathematics-en-ch-7",
+                    "number": "7",
+                    "title": "Comparing Quantities",
+                    "sections": ["Equivalent Ratios", "Percentage - Another Way of Comparing", "Use of Percentages", "Prices Related to Buying and Selling", "Simple Interest"]
+                },
+                {
+                    "chapterId": "ncert-class-7-mathematics-en-ch-8",
+                    "number": "8",
+                    "title": "Rational Numbers",
+                    "sections": ["Need for Rational Numbers", "Positive and Negative Rational Numbers", "Operations on Rational Numbers"]
+                },
+                {
+                    "chapterId": "ncert-class-7-mathematics-en-ch-9",
+                    "number": "9",
+                    "title": "Perimeter and Area",
+                    "sections": ["Squares and Rectangles", "Area of a Parallelogram and Triangle", "Circles: Circumference and Area"]
+                },
+                {
+                    "chapterId": "ncert-class-7-mathematics-en-ch-10",
+                    "number": "10",
+                    "title": "Algebraic Expressions",
+                    "sections": ["How are Expressions Formed?", "Terms of an Expression", "Like and Unlike Terms", "Addition and Subtraction of Algebraic Expressions"]
+                },
+                {
+                    "chapterId": "ncert-class-7-mathematics-en-ch-11",
+                    "number": "11",
+                    "title": "Exponents and Powers",
+                    "sections": ["Exponents", "Laws of Exponents", "Expressing Large Numbers in the Standard Form"]
+                },
+                {
+                    "chapterId": "ncert-class-7-mathematics-en-ch-12",
+                    "number": "12",
+                    "title": "Symmetry",
+                    "sections": ["Lines of Symmetry for Regular Polygons", "Rotational Symmetry", "Line Symmetry and Rotational Symmetry"]
+                },
+                {
+                    "chapterId": "ncert-class-7-mathematics-en-ch-13",
+                    "number": "13",
+                    "title": "Visualising Solid Shapes",
+                    "sections": ["Plane Figures and Solid Shapes", "Faces, Edges and Vertices", "Nets for Building 3D Shapes", "Drawing Solids on Flat Surface"]
+                }
+            ],
+            "licensingNote": "Official NCERT National Curriculum Framework."
+        },
+        {
+            "bookId": "ncert-class-7-history-en",
+            "classLevel": 7,
+            "subject": "History",
+            "language": "English",
+            "title": "NCERT Class 7 Our Pasts II",
+            "edition": "2024-25",
+            "officialUrl": "https://ncert.nic.in/textbook.php?gess1=0-8",
+            "chapters": [
+                {
+                    "chapterId": "ncert-class-7-history-en-ch-1",
+                    "number": "1",
+                    "title": "Introduction: Tracing Changes Through a Thousand Years",
+                    "sections": ["New and Old Terminologies", "Historians and their Sources", "New Social and Political Groups", "Regions and Empires"]
+                },
+                {
+                    "chapterId": "ncert-class-7-history-en-ch-2",
+                    "number": "2",
+                    "title": "Kings and Kingdoms",
+                    "sections": ["The Emergence of New Dynasties", "Administration in the Kingdoms", "Prashastis and Land Grants", "Warfare for Wealth: Cholas"]
+                },
+                {
+                    "chapterId": "ncert-class-7-history-en-ch-3",
+                    "number": "3",
+                    "title": "Delhi: 12th to 15th Century",
+                    "sections": ["Finding out about the Delhi Sultans", "From Garrison Town to Empire", "A Closer Look: Administration and Consolidation under the Khaljis and Tughluqs"]
+                },
+                {
+                    "chapterId": "ncert-class-7-history-en-ch-4",
+                    "number": "4",
+                    "title": "The Mughals (16th to 17th Century)",
+                    "sections": ["Who Were the Mughals?", "Mughal Military Campaigns", "Mughal Traditions of Succession", "Akbar's Policies and Mansabdars"]
+                },
+                {
+                    "chapterId": "ncert-class-7-history-en-ch-5",
+                    "number": "5",
+                    "title": "Tribes, Nomads and Settled Communities",
+                    "sections": ["Beyond Big Cities: Tribal Societies", "Who Were Tribal People?", "How Nomads and Mobile People Lived", "The Gonds and Ahoms"]
+                },
+                {
+                    "chapterId": "ncert-class-7-history-en-ch-6",
+                    "number": "6",
+                    "title": "Devotional Paths to the Divine",
+                    "sections": ["The Idea of a Supreme God", "A New Kind of Bhakti in South India", "Philosophy and Bhakti: Shankara and Ramanuja", "Basavanna's Virashaivism", "The Saints of Maharashtra"]
+                },
+                {
+                    "chapterId": "ncert-class-7-history-en-ch-7",
+                    "number": "7",
+                    "title": "The Making of Regional Cultures",
+                    "sections": ["The Cheras and the Development of Malayalam", "Rulers and Religious Traditions: The Jagannatha Cult", "The Rajputs and Heroic Traditions", "The Story of Kathak"]
+                },
+                {
+                    "chapterId": "ncert-class-7-history-en-ch-8",
+                    "number": "8",
+                    "title": "Eighteenth-Century Political Formations",
+                    "sections": ["The Crisis of the Empire and the Later Mughals", "Emergence of New States: Awadh, Bengal and Hyderabad", "The Watan Jagirs of the Rajputs", "Seizing Independence: Sikhs, Marathas and Jats"]
+                }
+            ],
+            "licensingNote": "Official NCERT National Curriculum Framework."
+        },
+        {
+            "bookId": "ncert-class-6-science-en",
+            "classLevel": 6,
+            "subject": "Science",
+            "language": "English",
+            "title": "NCERT Class 6 Science",
+            "edition": "2024-25",
+            "officialUrl": "https://ncert.nic.in/textbook.php?fesc1=0-11",
+            "chapters": [
+                {
+                    "chapterId": "ncert-class-6-science-en-ch-1",
+                    "number": "1",
+                    "title": "Components of Food",
+                    "sections": ["What do Different Food Items Contain?", "What do Various Nutrients do for Our Body?", "Balanced Diet", "Deficiency Diseases"]
+                },
+                {
+                    "chapterId": "ncert-class-6-science-en-ch-2",
+                    "number": "2",
+                    "title": "Sorting Materials into Groups",
+                    "sections": ["Objects Around Us", "Properties of Materials: Appearance, Hardness, Soluble or Insoluble, Transparency"]
+                },
+                {
+                    "chapterId": "ncert-class-6-science-en-ch-3",
+                    "number": "3",
+                    "title": "Separation of Substances",
+                    "sections": ["Methods of Separation: Handpicking, Threshing, Winnowing, Sieving, Sedimentation, Decantation, Filtration, Evaporation"]
+                },
+                {
+                    "chapterId": "ncert-class-6-science-en-ch-4",
+                    "number": "4",
+                    "title": "Getting to Know Plants",
+                    "sections": ["Herbs, Shrubs and Trees", "Stem and Leaf: Venation & Transpiration", "Root: Tap Root and Fibrous Root", "Flower: Petals, Sepals, Pistil, Stamens"]
+                },
+                {
+                    "chapterId": "ncert-class-6-science-en-ch-5",
+                    "number": "5",
+                    "title": "Body Movements",
+                    "sections": ["Human Body and its Movements: Ball and Socket Joint, Pivotal Joint, Hinge Joint", "Skeleton: Bones and Cartilage", "Gait of Animals: Earthworm, Snail, Cockroach, Birds, Fish, Snake"]
+                },
+                {
+                    "chapterId": "ncert-class-6-science-en-ch-6",
+                    "number": "6",
+                    "title": "The Living Organisms — Characteristics and Habitats",
+                    "sections": ["Organisms and their Surroundings", "Habitat and Adaptation: Terrestrial and Aquatic", "Characteristics of Living Organisms"]
+                },
+                {
+                    "chapterId": "ncert-class-6-science-en-ch-7",
+                    "number": "7",
+                    "title": "Motion and Measurement of Distances",
+                    "sections": ["Story of Transport", "Standard Units of Measurement: SI Unit Metre", "Correct Measurement of Length", "Types of Motion: Rectilinear, Circular, Periodic"]
+                },
+                {
+                    "chapterId": "ncert-class-6-science-en-ch-8",
+                    "number": "8",
+                    "title": "Light, Shadows and Reflections",
+                    "sections": ["Transparent, Opaque and Translucent Objects", "What Exactly are Shadows?", "A Pinhole Camera", "Mirrors and Reflections"]
+                },
+                {
+                    "chapterId": "ncert-class-6-science-en-ch-9",
+                    "number": "9",
+                    "title": "Electricity and Circuits",
+                    "sections": ["Electric Cell & Bulb", "An Electric Circuit", "Electric Switch", "Electric Conductors and Insulators"]
+                },
+                {
+                    "chapterId": "ncert-class-6-science-en-ch-10",
+                    "number": "10",
+                    "title": "Fun with Magnets",
+                    "sections": ["Magnetic and Non-magnetic Materials", "Poles of Magnet", "Finding Directions with a Magnet", "Attraction and Repulsion Between Magnets"]
+                },
+                {
+                    "chapterId": "ncert-class-6-science-en-ch-11",
+                    "number": "11",
+                    "title": "Air Around Us",
+                    "sections": ["Is Air Present Everywhere Around Us?", "What is Air Made Up Of: Oxygen, Nitrogen, CO₂, Dust", "How is Oxygen Replaced in the Atmosphere?"]
+                }
+            ],
+            "licensingNote": "Official NCERT National Curriculum Framework."
+        },
+        {
+            "bookId": "ncert-class-6-mathematics-en",
+            "classLevel": 6,
+            "subject": "Mathematics",
+            "language": "English",
+            "title": "NCERT Class 6 Mathematics",
+            "edition": "2024-25",
+            "officialUrl": "https://ncert.nic.in/textbook.php?femh1=0-12",
+            "chapters": [
+                {
+                    "chapterId": "ncert-class-6-mathematics-en-ch-1",
+                    "number": "1",
+                    "title": "Knowing Our Numbers",
+                    "sections": ["Comparing Numbers", "Large Numbers in Practice", "Indian and International Place Value Systems", "Roman Numerals"]
+                },
+                {
+                    "chapterId": "ncert-class-6-mathematics-en-ch-2",
+                    "number": "2",
+                    "title": "Whole Numbers",
+                    "sections": ["Predecessor and Successor", "The Number Line", "Properties of Whole Numbers"]
+                },
+                {
+                    "chapterId": "ncert-class-6-mathematics-en-ch-3",
+                    "number": "3",
+                    "title": "Playing with Numbers",
+                    "sections": ["Factors and Multiples", "Prime and Composite Numbers", "Tests for Divisibility", "HCF and LCM"]
+                },
+                {
+                    "chapterId": "ncert-class-6-mathematics-en-ch-4",
+                    "number": "4",
+                    "title": "Basic Geometrical Ideas",
+                    "sections": ["Points, Line Segment, Line and Ray", "Curves and Polygons", "Angles and Triangles", "Quadrilaterals and Circles"]
+                },
+                {
+                    "chapterId": "ncert-class-6-mathematics-en-ch-5",
+                    "number": "5",
+                    "title": "Understanding Elementary Shapes",
+                    "sections": ["Measuring Line Segments", "Angles - Right and Straight", "Classification of Triangles", "Quadrilaterals and Polygons", "Three Dimensional Shapes"]
+                },
+                {
+                    "chapterId": "ncert-class-6-mathematics-en-ch-6",
+                    "number": "6",
+                    "title": "Integers",
+                    "sections": ["Introduction to Negative Numbers", "Integers on a Number Line", "Addition and Subtraction of Integers"]
+                },
+                {
+                    "chapterId": "ncert-class-6-mathematics-en-ch-7",
+                    "number": "7",
+                    "title": "Fractions",
+                    "sections": ["A Fraction on the Number Line", "Proper, Improper and Mixed Fractions", "Equivalent Fractions", "Comparing and Operating Fractions"]
+                },
+                {
+                    "chapterId": "ncert-class-6-mathematics-en-ch-8",
+                    "number": "8",
+                    "title": "Decimals",
+                    "sections": ["Tenths and Hundredths", "Comparing Decimals", "Using Decimals in Money, Length and Weight", "Addition and Subtraction of Decimals"]
+                },
+                {
+                    "chapterId": "ncert-class-6-mathematics-en-ch-9",
+                    "number": "9",
+                    "title": "Data Handling",
+                    "sections": ["Recording Data", "Tally Marks & Pictographs", "Interpretation and Drawing of Bar Graphs"]
+                },
+                {
+                    "chapterId": "ncert-class-6-mathematics-en-ch-10",
+                    "number": "10",
+                    "title": "Mensuration",
+                    "sections": ["Perimeter of Rectangle, Square and Regular Figures", "Area of Rectangle and Square"]
+                },
+                {
+                    "chapterId": "ncert-class-6-mathematics-en-ch-11",
+                    "number": "11",
+                    "title": "Algebra",
+                    "sections": ["Matchstick Patterns", "The Idea of a Variable", "Examples of Variables", "What is an Equation?"]
+                },
+                {
+                    "chapterId": "ncert-class-6-mathematics-en-ch-12",
+                    "number": "12",
+                    "title": "Ratio and Proportion",
+                    "sections": ["Ratio", "Proportion", "Unitary Method"]
+                }
+            ],
+            "licensingNote": "Official NCERT National Curriculum Framework."
+        },
+        {
+            "bookId": "ncert-class-6-history-en",
+            "classLevel": 6,
+            "subject": "History",
+            "language": "English",
+            "title": "NCERT Class 6 Our Pasts I",
+            "edition": "2024-25",
+            "officialUrl": "https://ncert.nic.in/textbook.php?fess1=0-10",
+            "chapters": [
+                {
+                    "chapterId": "ncert-class-6-history-en-ch-1",
+                    "number": "1",
+                    "title": "What, Where, How and When?",
+                    "sections": ["Where did People Live?", "Names of the Land", "Finding out about the Past: Manuscripts & Inscriptions"]
+                },
+                {
+                    "chapterId": "ncert-class-6-history-en-ch-2",
+                    "number": "2",
+                    "title": "From Hunting-Gathering to Growing Food",
+                    "sections": ["The Earliest People", "Choosing a Place to Live", "Finding out about Fire", "A Changing Environment & Farming"]
+                },
+                {
+                    "chapterId": "ncert-class-6-history-en-ch-3",
+                    "number": "3",
+                    "title": "In the Earliest Cities",
+                    "sections": ["The Story of Harappa", "What was Special About These Cities?", "Houses, Drains and Streets", "Life in the City & Crafts"]
+                },
+                {
+                    "chapterId": "ncert-class-6-history-en-ch-4",
+                    "number": "4",
+                    "title": "What Books and Burials Tell Us",
+                    "sections": ["One of the Oldest Books in the World (Vedas)", "How Historians Study the Rigveda", "Silent Sentinels: The Story of Megaliths"]
+                },
+                {
+                    "chapterId": "ncert-class-6-history-en-ch-5",
+                    "number": "5",
+                    "title": "Kingdoms, Kings and an Early Republic",
+                    "sections": ["How Some Men Became Rulers (Ashvamedha)", "Janapadas and Mahajanapadas", "Taxes & Changes in Agriculture", "A Closer Look: Magadha and Vajji"]
+                },
+                {
+                    "chapterId": "ncert-class-6-history-en-ch-6",
+                    "number": "6",
+                    "title": "New Questions and Ideas",
+                    "sections": ["The Story of the Buddha", "Upanishads", "Jainism", "The Sangha and Monasteries"]
+                },
+                {
+                    "chapterId": "ncert-class-6-history-en-ch-7",
+                    "number": "7",
+                    "title": "From a Kingdom to an Empire (Ashoka)",
+                    "sections": ["A Very Big Kingdom = An Empire", "How are Empires Different from Kingdoms?", "Ashoka: The Emperor Who Gave up War", "What was Ashoka's Dhamma?"]
+                },
+                {
+                    "chapterId": "ncert-class-6-history-en-ch-8",
+                    "number": "8",
+                    "title": "Villages, Towns and Trades",
+                    "sections": ["Iron Tools and Agriculture", "Other Steps to Increase Production: Irrigation", "Who Lived in the Villages?", "Coins and Cities with Many Functions"]
+                },
+                {
+                    "chapterId": "ncert-class-6-history-en-ch-9",
+                    "number": "9",
+                    "title": "Traders, Kings and Pilgrims",
+                    "sections": ["How to Find Out About Trade and Traders", "New Kingdoms Along the Coasts", "The Story of the Silk Route", "The Spread of Buddhism"]
+                },
+                {
+                    "chapterId": "ncert-class-6-history-en-ch-10",
+                    "number": "10",
+                    "title": "New Empires and Kingdoms",
+                    "sections": ["Prashastis and What They Tell Us (Samudragupta)", "Genealogies & Harshavardhana", "The Pallavas, Chalukyas and Pulakeshin"]
+                }
+            ],
+            "licensingNote": "Official NCERT National Curriculum Framework."
+        }
+    ]
 }
